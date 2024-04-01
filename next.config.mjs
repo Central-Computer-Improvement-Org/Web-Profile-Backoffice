@@ -5,10 +5,13 @@ const nextConfig = {
    images: {
       unoptimized: true,
    },
-   // TODO : komen output, assetPrefix & basePath jika running lokal, aktifkan kembali ketika push
+   // TODO : komen config dibawah jika running lokal, aktifkan kembali ketika push
    output: "export",
    assetPrefix: 'https://central-computer-improvement-org.github.io/Web-Profile-Backoffice',
-   basePath: '/Web-Profile-Backoffice'
+   basePath: '/Web-Profile-Backoffice',
+   experimental: {
+      missingSuspenseWithCSRBailout: false,
+   },
 };
 
 
