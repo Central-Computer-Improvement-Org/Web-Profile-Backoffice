@@ -49,12 +49,12 @@ const Login = () => {
          localStorage.setItem('username', email);
          localStorage.setItem('checkbox', rememberMe);
          // router.push('/dashboard');
-         OurRedirect('/dashboard');
+         OurRedirect('./dashboard');
       } else {
          localStorage.removeItem('username');
          localStorage.removeItem('checkbox');
          // router.push('/dashboard');
-         OurRedirect('/dashboard');
+         OurRedirect('./dashboard');
       }
    };
 
