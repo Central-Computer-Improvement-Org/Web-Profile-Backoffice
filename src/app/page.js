@@ -8,7 +8,7 @@ export default function Index() {
 
   useEffect(() => {
     // router.replace('/login'); // Mengarahkan pengguna dari / ke /login
-    OurRedirect('./login');
+    OurRedirect('./dashboard');
   }, []); // Komponen ini hanya dijalankan sekali setelah mounting
 
   return null; // Atau tampilkan pesan atau komponen lain jika perlu
