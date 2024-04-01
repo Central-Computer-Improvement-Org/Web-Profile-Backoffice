@@ -8,7 +8,7 @@ const nextConfig = {
    // TODO : komen output, assetPrefix & basePath jika running lokal, aktifkan kembali ketika push
    output: "export",
    assetPrefix: 'https://central-computer-improvement-org.github.io/Web-Profile-Backoffice',
-   basePath: '/web-profile-Backoffice'
+   basePath: '/Web-profile-Backoffice'
 };
 
 
