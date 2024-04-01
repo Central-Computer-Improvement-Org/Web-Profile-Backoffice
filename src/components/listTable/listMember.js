@@ -1,11 +1,19 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import Image from 'next/image';
-import Women from '../../../public/assets/avatar/women.webp';
 import DefaultLink from '../link/defaultLink';
-import { FaPhoneVolume, FaLinkedin } from 'react-icons/fa';
-import DefaultButton from '../button/defaultButton';
+import moment from 'moment';
 
-const ListMember = () => {
+const ListMember = ({
+  photoUrl,
+  name,
+  email,
+  devisi,
+  major,
+  entryUniversity,
+  entryCommunity,
+  status,
+  nim,
+}) => {
   return (
     <tr className="bg-white border-b   hover:bg-gray-50 text-gray-700 ">
       <td className="w-4 p-4">
@@ -26,8 +34,8 @@ const ListMember = () => {
       >
         <div className="flex gap-2 items-center">
           <div className="w-10 h-10 rounded-full">
-            <Image
-              src={Women}
+            <img
+              src={photoUrl}
               width={0}
               height={0}
               className="w-full h-full object-cover rounded-full"
@@ -35,46 +43,38 @@ const ListMember = () => {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xs font-semibold text-gray-700">
-              Nayla Amira Putri
-            </h1>
-            <p className="text-sm text-gray-500">nayla.amira@gmail.com</p>
+            <h1 className="text-xs font-semibold text-gray-700">{name}</h1>
+            <p className="text-sm text-gray-500">{email}</p>
           </div>
         </div>
       </th>
-      <td className="text-xs font-medium px-6 py-4">WEB Development</td>
-      <td className="text-xs font-medium px-6 py-4">S1 Informatika</td>
-      <td className="text-xs font-medium px-6 py-4">2023</td>
-      <td className="text-xs font-medium px-6 py-4">2023</td>
+      <td className="text-xs font-medium px-6 py-4">{devisi}</td>
+      <td className="text-xs font-medium px-6 py-4">{major}</td>
+      <td className="text-xs font-medium px-6 py-4">
+        {moment(entryUniversity).format(' D MMM YYYY')}
+      </td>
+      <td className="text-xs font-medium px-6 py-4">
+        {moment(entryCommunity).format(' DD MMM YYYY')}
+      </td>
       <td className="text-xs font-normal px-6 py-4">
         <div className="flex gap-2 items-center">
-          <span className="w-2 h-2 rounded-full bg-green-500" />
-          <p>Active</p>
+          <span
+            className={`w-2 h-2 rounded-full ${
+              status ? 'bg-green-500' : 'bg-red-500'
+            }`}
+          />
+          <p>{status ? 'Active' : 'Offline'}</p>
         </div>
       </td>
-      {/* <td className="text-xs font-medium px-6 py-4 ">
-        <DefaultButton
-          href={'/member/edit'}
-          size={'small'}
-          status={'primary'}
-          icon={<FaPhoneVolume />}
-        />
-        <DefaultButton
-          href={'/member/delete'}
-          size={'small'}
-          status={'secondary'}
-          icon={<FaLinkedin />}
-        />
-      </td> */}
       <td className="text-xs font-medium px-6 py-4 flex gap-3">
         <DefaultLink
-          href={'/member/edit'}
+          href={`/member/editMember?nim=${nim}`}
           size={'small'}
           status={'primary'}
           title={'Edit'}
         />
         <DefaultLink
-          href={'/member/delete'}
+          href={`/member/delete/${nim}`}
           size={'small'}
           status={'secondary'}
           title={'Delete'}

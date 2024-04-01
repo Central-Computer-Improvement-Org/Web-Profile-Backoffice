@@ -128,7 +128,6 @@ const Login = () => {
                 full
                 status={'primary'}
                 size={'base'}
-                icon={<IoMdEye />}
               />
             </form>
           </div>
