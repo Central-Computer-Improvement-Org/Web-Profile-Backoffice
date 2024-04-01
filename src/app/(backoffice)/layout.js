@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 //import Components
@@ -10,7 +9,7 @@ import MenuSidebar from '@/components/menuSidebar';
 //import Icon
 import { BiSolidDashboard } from 'react-icons/bi';
 import { BsCalendar2EventFill, BsFillPeopleFill } from 'react-icons/bs';
-import { IoNewspaper, IoSettings, IoLogOut } from 'react-icons/io5';
+import { IoNewspaper, IoSettings } from 'react-icons/io5';
 import { AiFillProject } from 'react-icons/ai';
 import { FaAward } from 'react-icons/fa6';
 import { FaProjectDiagram } from 'react-icons/fa';
@@ -22,9 +21,8 @@ import NextBreadcrumb from '@/components/breadcrumbs';
 import OurRedirect from '../utils/OurRedirect';
 
 const MainLayout = ({ children }) => {
-  const router = useRouter();
   const handleLogout = () => {
-    OurRedirect('/login');
+    OurRedirect('./login');
   };
   return (
     <div>

@@ -34,7 +34,7 @@ export default function EditMemberPage() {
     // Cek apakah query 'nim' ada atau tidak
     if (!nim) {
       // Jika tidak ada, arahkan pengguna ke halaman 404
-      OurRedirect('/member');
+      OurRedirect('./member');
       return; // Hentikan eksekusi useEffect
     }
 
