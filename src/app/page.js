@@ -6,10 +6,12 @@ import OurRedirect from './utils/OurRedirect';
 export default function Index() {
    const router = useRouter();
 
-   useEffect(() => {
-      // router.replace('/login'); // Mengarahkan pengguna dari / ke /login
-      OurRedirect('./dashboard');
-   }, []); // Komponen ini hanya dijalankan sekali setelah mounting
+   OurRedirect('./dashboard');
+
+   // useEffect(() => {
+   //    // router.replace('/login'); // Mengarahkan pengguna dari / ke /login
+   //    OurRedirect('./dashboard');
+   // }, []); // Komponen ini hanya dijalankan sekali setelah mounting
 
    return null; // Atau tampilkan pesan atau komponen lain jika perlu
 }
