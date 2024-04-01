@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-export default function DefaultButton({
+export default function DefaultLink({
   href,
   size,
   full = false,
