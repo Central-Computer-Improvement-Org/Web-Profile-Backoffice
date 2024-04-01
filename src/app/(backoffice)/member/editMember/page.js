@@ -1,5 +1,6 @@
 'use client';
 import DefaultButton from '@/components/button/defaultButton';
+import DefaultLink from '@/components/link/defaultLink';
 import InputField from '@/components/form/inputField';
 import InputSelect from '@/components/form/inputSelect';
 import HeadTitle from '@/components/headTitle';
@@ -241,7 +242,7 @@ export default function EditMemberPage() {
                     type={'submit'}
                     onClick={() => {}}
                   />
-                  <DefaultButton
+                  <DefaultLink
                     size={'small'}
                     status={'secondary'}
                     title={'Back'}

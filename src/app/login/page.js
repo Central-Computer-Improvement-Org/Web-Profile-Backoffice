@@ -49,12 +49,20 @@ const Login = () => {
       localStorage.setItem('username', email);
       localStorage.setItem('checkbox', rememberMe);
       // router.push('/dashboard');
+<<<<<<< HEAD
       OurRedirect('/dashboard');
+=======
+      OurRedirect('./dashboard');
+>>>>>>> 29360c2 (RBLD-44 | CRUD UI Member | Member)
     } else {
       localStorage.removeItem('username');
       localStorage.removeItem('checkbox');
       // router.push('/dashboard');
+<<<<<<< HEAD
       OurRedirect('/dashboard');
+=======
+      OurRedirect('./dashboard');
+>>>>>>> 29360c2 (RBLD-44 | CRUD UI Member | Member)
     }
   };
 
