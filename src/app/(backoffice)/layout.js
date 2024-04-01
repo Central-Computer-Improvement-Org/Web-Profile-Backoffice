@@ -19,11 +19,12 @@ import { CgProfile } from 'react-icons/cg';
 //import Images
 import Logo from '../../../public/assets/image/logo.png';
 import NextBreadcrumb from '@/components/breadcrumbs';
+import OurRedirect from '../utils/OurRedirect';
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
   const handleLogout = () => {
-    router.push('/login');
+    OurRedirect('/login');
   };
   return (
     <div>

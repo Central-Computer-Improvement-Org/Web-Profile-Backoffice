@@ -7,6 +7,7 @@ import HeadTitle from '@/components/headTitle';
 import axios from 'axios';
 import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import OurRedirect from '@/app/utils/OurRedirect';
 
 export default function EditMemberPage() {
   const searchParams = useSearchParams();
@@ -33,7 +34,7 @@ export default function EditMemberPage() {
     // Cek apakah query 'nim' ada atau tidak
     if (!nim) {
       // Jika tidak ada, arahkan pengguna ke halaman 404
-      router.push('/member');
+      OurRedirect('/member');
       return; // Hentikan eksekusi useEffect
     }
 
