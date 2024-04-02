@@ -18,7 +18,6 @@ import { CgProfile } from 'react-icons/cg';
 //import Images
 import Logo from '../../../public/assets/image/logo.png';
 import NextBreadcrumb from '@/components/breadcrumbs';
-import OurRedirect from '../utils/OurRedirect';
 import { redirect, useRouter } from 'next/navigation';
 
 const MainLayout = ({ children }) => {
@@ -26,8 +25,6 @@ const MainLayout = ({ children }) => {
 
    const handleLogout = () => {
       router.push('/login')
-      // redirect('/login')
-      // OurRedirect('./login');
    };
    return (
       <div>
@@ -60,49 +57,49 @@ const MainLayout = ({ children }) => {
                <ul className="space-y-2 font-medium">
                   <li>
                      <MenuSidebar
-                        href="/dashboard"
+                        href="./dashboard"
                         icon={<BiSolidDashboard className="text-xl" />}
                         title={'Dashboard'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/event"
+                        href="./event"
                         icon={<BsCalendar2EventFill className="text-xl" />}
                         title={'Event'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/news"
+                        href="./news"
                         icon={<IoNewspaper className="text-xl" />}
                         title={'News'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/division"
+                        href="./division"
                         icon={<FaProjectDiagram className="text-xl" />}
                         title={'Division'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/member"
+                        href="./member"
                         icon={<BsFillPeopleFill className="text-xl" />}
                         title={'Member'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/project"
+                        href="./project"
                         icon={<AiFillProject className="text-xl" />}
                         title={'Project'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/award"
+                        href="./award"
                         icon={<FaAward className="text-xl" />}
                         title={'Award'}
                      />
@@ -111,14 +108,14 @@ const MainLayout = ({ children }) => {
                <ul className="space-y-2 font-medium">
                   <li>
                      <MenuSidebar
-                        href="/profile"
+                        href="./profile"
                         icon={<CgProfile className="text-xl" />}
                         title={'Profile'}
                      />
                   </li>
                   <li>
                      <MenuSidebar
-                        href="/setting"
+                        href="./setting"
                         icon={<IoSettings className="text-xl" />}
                         title={'Setting'}
                      />
