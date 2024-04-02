@@ -11,10 +11,10 @@ export default function AddMemberPage() {
   const [divisionId, setDivisionId] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [mayor, setMayor] = useState('');
+  const [major, setMajor] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [profile, setProfile] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [status, setStatus] = useState();
   const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState('');
   const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState('');
@@ -42,7 +42,6 @@ export default function AddMemberPage() {
                 <InputSelect
                   id={'roleId'}
                   name={'role'}
-                  placeholder={'Ketua'}
                   type={'text'}
                   value={roleId}
                   required
@@ -61,7 +60,6 @@ export default function AddMemberPage() {
                 <InputSelect
                   id={'divisionId'}
                   name={'division'}
-                  placeholder={'Web Development'}
                   type={'text'}
                   value={divisionId}
                   required
@@ -106,15 +104,15 @@ export default function AddMemberPage() {
               </div>
               <div className="col-span-6 sm:col-span-3">
                 <InputField
-                  id={'mayor'}
-                  name={'mayor'}
+                  id={'major'}
+                  name={'major'}
                   placeholder={'e.g. S1 Informatika'}
                   type={'text'}
-                  value={mayor}
+                  value={major}
                   required
-                  label={'Mayor'}
+                  label={'Major'}
                   onChange={(e) => {
-                    setMayor(e.target.value);
+                    setMajor(e.target.value);
                   }}
                 />
               </div>
@@ -126,7 +124,7 @@ export default function AddMemberPage() {
                   type={'text'}
                   value={linkedinUrl}
                   required
-                  label={'Linkend URL'}
+                  label={'Linkedin URL'}
                   onChange={(e) => {
                     setLinkedinUrl(e.target.value);
                   }}
@@ -140,6 +138,7 @@ export default function AddMemberPage() {
                   type={'text'}
                   value={phoneNumber}
                   required
+                  // label={'Phone Number'}
                   label={'Phone number'}
                   onChange={(e) => {
                     setPhoneNumber(e.target.value);
@@ -148,14 +147,15 @@ export default function AddMemberPage() {
               </div>
               <div className="col-span-6 sm:col-span-3">
                 <InputField
-                  id={'profile'}
-                  name={'profile'}
+                  id={'profilePicture'}
+                  name={'profilePicture'}
                   type={'file'}
-                  value={profile}
+                  value={profilePicture}
                   required
-                  label={'Profile'}
+                  // label={'Profile Picture'}
+                  label={'Profile picture'}
                   onChange={(e) => {
-                    setProfile(e.target.value);
+                    setProfilePicture(e.target.value);
                   }}
                 />
               </div>
@@ -171,7 +171,7 @@ export default function AddMemberPage() {
                   }}
                 >
                   <option value={true}>Active</option>
-                  <option value={false}>Offline</option>
+                  <option value={false}>Inactive</option>
                 </InputSelect>
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -181,6 +181,7 @@ export default function AddMemberPage() {
                   type={'date'}
                   value={yearUniversityEnrolled}
                   required
+                  // label={'Entry University'}
                   label={'Entry university'}
                   onChange={(e) => {
                     setYearUniversityEnrolled(e.target.value);
@@ -194,6 +195,7 @@ export default function AddMemberPage() {
                   type={'date'}
                   value={yearCommunityEnrolled}
                   required
+                  // label={'Entry Community'}
                   label={'Entry community'}
                   onChange={(e) => {
                     setYearCommunityEnrolled(e.target.value);

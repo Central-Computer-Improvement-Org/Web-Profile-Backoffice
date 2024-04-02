@@ -22,7 +22,7 @@ export default function Page() {
   const rowMenu = [
     // Perbaiki penulisan rowMenu
     { menu: 'NAME' },
-    { menu: 'DEVISI' },
+    { menu: 'DIVISION' },
     { menu: 'MAJOR' },
     { menu: 'ENTRY UNIVERSITY' },
     { menu: 'ENTRY COMMUNITY' },

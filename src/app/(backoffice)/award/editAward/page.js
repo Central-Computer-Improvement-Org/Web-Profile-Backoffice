@@ -1,26 +1,26 @@
-"use client";
-import DefaultButton from "@/components/button/defaultButton";
-import DefaultLink from "@/components/link/defaultLink";
-import { host } from "@/app/utils/urlApi";
-import InputField from "@/components/form/inputField";
-import TextareaField from "@/components/form/textareaField";
-import HeadTitle from "@/components/headTitle";
-import axios from "axios";
-import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import OurRedirect from "@/app/utils/OurRedirect";
+'use client';
+import DefaultButton from '@/components/button/defaultButton';
+import DefaultLink from '@/components/link/defaultLink';
+import { host } from '@/app/utils/urlApi';
+import InputField from '@/components/form/inputField';
+import TextareaField from '@/components/form/textareaField';
+import HeadTitle from '@/components/headTitle';
+import axios from 'axios';
+import { useSearchParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import OurRedirect from '@/app/utils/OurRedirect';
 
 export default function EditAwardPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const id = searchParams.get("id");
+  const id = searchParams.get('id');
 
-  const [issuer, setIssuer] = useState("");
-  const [description, setDescription] = useState("");
+  const [issuer, setIssuer] = useState('');
+  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!id) {
-      OurRedirect("./award");
+      OurRedirect('./award');
       return;
     }
     axios
@@ -38,7 +38,7 @@ export default function EditAwardPage() {
   }, [id]);
   return (
     <div>
-      <HeadTitle title={"Edit Award"}>
+      <HeadTitle title={'Edit Award'}>
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : (
@@ -47,13 +47,13 @@ export default function EditAwardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
                 <div className="sm:col-span-6">
                   <InputField
-                    id={"issuer"}
-                    name={"issuer"}
-                    placeholder={"e.g Gemastik"}
-                    type={"text"}
+                    id={'issuer'}
+                    name={'issuer'}
+                    placeholder={'e.g Gemastik'}
+                    type={'text'}
                     value={issuer}
                     required
-                    label={"Issuer"}
+                    label={'Issuer'}
                     onChange={(e) => {
                       setIssuer(e.target.value);
                     }}
@@ -61,12 +61,12 @@ export default function EditAwardPage() {
                 </div>
                 <div className="sm:col-span-6">
                   <TextareaField
-                    id={"description"}
-                    name={"description"}
-                    placeholder={"e.g Description ..."}
+                    id={'description'}
+                    name={'description'}
+                    placeholder={'e.g Description ...'}
                     value={description}
                     required
-                    label={"Description"}
+                    label={'Description'}
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
@@ -74,10 +74,10 @@ export default function EditAwardPage() {
                 </div>
                 <div className="sm:col-span-6">
                   <DefaultButton
-                    size={"small"}
-                    status={"primary"}
-                    title={"Save all"}
-                    type={"submit"}
+                    size={'small'}
+                    status={'primary'}
+                    title={'Save all'}
+                    type={'submit'}
                     onClick={() => {}}
                   />
                 </div>

@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 //import Components
 import DefaultButton from '@/components/button/defaultButton';
@@ -18,11 +19,24 @@ import { CgProfile } from 'react-icons/cg';
 //import Images
 import Logo from '../../../public/assets/image/logo.png';
 import NextBreadcrumb from '@/components/breadcrumbs';
-import OurRedirect from '../utils/OurRedirect';
+import Dropdown from '@/components/dropDown';
 
 const MainLayout = ({ children }) => {
+  const router = useRouter();
   const handleLogout = () => {
-    OurRedirect('./login');
+    router.push('/login');
+  };
+  const awardOptions = [
+    { menu: 'Award List', href: '/award' },
+    { menu: 'Contributor Award', href: '/award' },
+  ];
+  const projectOptions = [
+    { menu: 'Project List', href: '/project' },
+    { menu: 'Contributor Project', href: '/project' },
+  ];
+
+  const handleSelect = (selectedOption) => {
+    // console.log('Selected option:', selectedOption);
   };
   return (
     <div>
@@ -89,17 +103,19 @@ const MainLayout = ({ children }) => {
               />
             </li>
             <li>
-              <MenuSidebar
-                href="/project"
+              <Dropdown
                 icon={<AiFillProject className="text-xl" />}
                 title={'Project'}
+                options={projectOptions}
+                onSelect={handleSelect}
               />
             </li>
             <li>
-              <MenuSidebar
-                href="/award"
+              <Dropdown
                 icon={<FaAward className="text-xl" />}
                 title={'Award'}
+                options={awardOptions}
+                onSelect={handleSelect}
               />
             </li>
           </ul>

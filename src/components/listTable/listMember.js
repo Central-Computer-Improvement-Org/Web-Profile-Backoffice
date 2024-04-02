@@ -63,7 +63,7 @@ const ListMember = ({
               status ? 'bg-green-500' : 'bg-red-500'
             }`}
           />
-          <p>{status ? 'Active' : 'Offline'}</p>
+          <p>{status ? 'Active' : 'Inactive'}</p>
         </div>
       </td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3">

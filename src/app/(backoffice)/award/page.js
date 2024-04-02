@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { host } from "@/app/utils/urlApi";
-import ListAward from "@/components/listTable/listAward";
-import axios from "axios";
-import InputField from "@/components/form/inputField";
+import React, { useEffect, useState } from 'react';
+import { host } from '@/app/utils/urlApi';
+import ListAward from '@/components/listTable/listAward';
+import axios from 'axios';
+import InputField from '@/components/form/inputField';
 
-import { IoIosSearch } from "react-icons/io";
-import { FaPlus } from "react-icons/fa6";
+import { IoIosSearch } from 'react-icons/io';
+import { FaPlus } from 'react-icons/fa6';
 
-import DefaultLink from "@/components/link/defaultLink";
-import HeadTitle from "@/components/headTitle";
-import DefaultTable from "@/components/table/defaultTable";
+import DefaultLink from '@/components/link/defaultLink';
+import HeadTitle from '@/components/headTitle';
+import DefaultTable from '@/components/table/defaultTable';
 
 export default function AwardPage() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const rowMenu = [{ menu: "ISSUER" }, { menu: "DESCRIPTION" }];
+  const rowMenu = [{ menu: 'ISSUER' }, { menu: 'DESCRIPTION' }];
   useEffect(() => {
     axios
       .get(`${host}/api/award`)
@@ -32,7 +32,7 @@ export default function AwardPage() {
   });
   return (
     <div>
-      <HeadTitle title={"All Awards"}>
+      <HeadTitle title={'All Awards'}>
         <div className="flex lg:mt-4">
           <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
             <form className="lg:pr-3" action="#" method="GET">
@@ -41,10 +41,10 @@ export default function AwardPage() {
               </label>
               <div className="relative mt-1 lg:w-64 xl:w-96">
                 <InputField
-                  id={"search"}
-                  name={"search"}
-                  placeholder={"Search for Award"}
-                  type={"text"}
+                  id={'search'}
+                  name={'search'}
+                  placeholder={'Search for Award'}
+                  type={'text'}
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -56,10 +56,10 @@ export default function AwardPage() {
           </div>
           <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
             <DefaultLink
-              size={"small"}
-              status={"primary"}
-              title={"Add Award"}
-              href={"/award/addAward"}
+              size={'small'}
+              status={'primary'}
+              title={'Add Award'}
+              href={'/award/addAward'}
               icon={<FaPlus />}
               onClick={() => {}}
             />
@@ -121,7 +121,7 @@ export default function AwardPage() {
               </svg>
             </a>
             <span className="text-sm font-normal text-gray-500 ">
-              Showing <span className="font-semibold text-gray-900 ">1-20</span>{" "}
+              Showing <span className="font-semibold text-gray-900 ">1-20</span>{' '}
               of <span className="font-semibold text-gray-900 ">2290</span>
             </span>
           </div>

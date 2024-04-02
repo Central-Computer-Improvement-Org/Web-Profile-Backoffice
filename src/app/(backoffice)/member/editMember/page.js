@@ -13,17 +13,16 @@ export default function EditMemberPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const nim = searchParams.get('nim');
-  console.log(nim);
 
   // State untuk menyimpan data member
   const [roleId, setRoleId] = useState('');
   const [divisionId, setDivisionId] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [mayor, setMayor] = useState('');
+  const [major, setMajor] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [profile, setProfile] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [status, setStatus] = useState();
   const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState('');
   const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState('');
@@ -31,14 +30,10 @@ export default function EditMemberPage() {
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   useEffect(() => {
-    // Cek apakah query 'nim' ada atau tidak
     if (!nim) {
-      // Jika tidak ada, arahkan pengguna ke halaman 404
-      OurRedirect('./member');
-      return; // Hentikan eksekusi useEffect
+      router.push('/member');
+      return;
     }
-
-    // Lakukan request data member berdasarkan NIM dari query parameter
     axios
       .get(`http://localhost:3000/api/memberByNim`)
       .then(function (response) {
@@ -48,10 +43,10 @@ export default function EditMemberPage() {
         setDivisionId(data.divisionId);
         setName(data.name);
         setEmail(data.email);
-        setMayor(data.mayor);
+        setMajor(data.major);
         setLinkedinUrl(data.linkedinUrl);
         setPhoneNumber(data.phoneNumber);
-        setProfile(data.profile);
+        setProfilePicture(data.profilePicture);
         setStatus(data.status);
         setYearUniversityEnrolled(data.yearUniversityEnrolled);
         setYearCommunityEnrolled(data.yearCommunityEnrolled);
@@ -61,7 +56,7 @@ export default function EditMemberPage() {
         console.log(error);
         setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
       });
-  }, [nim]);
+  }, [nim, router]);
   return (
     <div>
       <HeadTitle title={'Edit Member'}>
@@ -88,7 +83,6 @@ export default function EditMemberPage() {
                   <InputSelect
                     id={'roleId'}
                     name={'role'}
-                    placeholder={'Ketua'}
                     type={'text'}
                     value={roleId}
                     label={'Role'}
@@ -97,7 +91,7 @@ export default function EditMemberPage() {
                     }}
                   >
                     <option>Ketua</option>
-                    <option>sekertaris</option>
+                    <option>Sekertaris</option>
                     <option>Bendahara</option>
                     <option>Anggota</option>
                   </InputSelect>
@@ -106,7 +100,6 @@ export default function EditMemberPage() {
                   <InputSelect
                     id={'divisionId'}
                     name={'division'}
-                    placeholder={'Web Development'}
                     type={'text'}
                     value={divisionId}
                     label={'Division'}
@@ -148,14 +141,14 @@ export default function EditMemberPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <InputField
-                    id={'mayor'}
-                    name={'mayor'}
+                    id={'major'}
+                    name={'major'}
                     placeholder={'e.g. S1 Informatika'}
                     type={'text'}
-                    value={mayor}
-                    label={'Mayor'}
+                    value={major}
+                    label={'Major'}
                     onChange={(e) => {
-                      setMayor(e.target.value);
+                      setMajor(e.target.value);
                     }}
                   />
                 </div>
@@ -166,7 +159,7 @@ export default function EditMemberPage() {
                     placeholder={'e.g. https://www.linkedin.com/in/example/'}
                     type={'text'}
                     value={linkedinUrl}
-                    label={'Linkend URL'}
+                    label={'Linkedin URL'}
                     onChange={(e) => {
                       setLinkedinUrl(e.target.value);
                     }}
@@ -179,6 +172,7 @@ export default function EditMemberPage() {
                     placeholder={'e.g. 083211234567'}
                     type={'text'}
                     value={phoneNumber}
+                    // label={'Phone Number'}
                     label={'Phone number'}
                     onChange={(e) => {
                       setPhoneNumber(e.target.value);
@@ -187,13 +181,14 @@ export default function EditMemberPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <InputField
-                    id={'profile'}
-                    name={'profile'}
+                    id={'profilePicture'}
+                    name={'profilePicture'}
                     type={'file'}
-                    value={profile}
-                    label={'Profile'}
+                    value={profilePicture}
+                    // label={'Profile Picture'}
+                    label={'Profile picture'}
                     onChange={(e) => {
-                      setProfile(e.target.value);
+                      setProfilePicture(e.target.value);
                     }}
                   />
                 </div>
@@ -208,7 +203,7 @@ export default function EditMemberPage() {
                     }}
                   >
                     <option value={true}>Active</option>
-                    <option value={false}>Offline</option>
+                    <option value={false}>Inactive</option>
                   </InputSelect>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
@@ -217,6 +212,7 @@ export default function EditMemberPage() {
                     name={'entryUniversity'}
                     type={'date'}
                     value={yearUniversityEnrolled}
+                    // label={'Entry University'}
                     label={'Entry university'}
                     onChange={(e) => {
                       setYearUniversityEnrolled(e.target.value);
@@ -229,6 +225,7 @@ export default function EditMemberPage() {
                     name={'entryCommunity'}
                     type={'date'}
                     value={yearCommunityEnrolled}
+                    // label={'Entry Community'}
                     label={'Entry community'}
                     onChange={(e) => {
                       setYearCommunityEnrolled(e.target.value);
