@@ -19,10 +19,10 @@ export default function EditMemberPage() {
   const [divisionId, setDivisionId] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [mayor, setMayor] = useState('');
+  const [major, setMajor] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [profile, setProfile] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [status, setStatus] = useState();
   const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState('');
   const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState('');

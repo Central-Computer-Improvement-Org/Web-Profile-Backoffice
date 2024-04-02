@@ -19,7 +19,7 @@ export async function GET(request) {
       },
       name: 'Tasya Syifaunnisa',
       email: 'tsaya.siifa@gmail.com',
-      mayor: 'S1 Informatika',
+      major: 'S1 Informatika',
       linkedinUrl: 'https://www.linkedin.com/in/tasya-syifaunnisa-4b489927a/',
       phoneNumber: '083167889342',
       profileUrl:
