@@ -6,7 +6,6 @@ import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useRouter } from 'next/navigation';
 import InputField from '@/components/form/inputField';
 import DefaultButton from '@/components/button/defaultButton';
-import OurRedirect from '../utils/OurRedirect';
 
 const Login = () => {
    const router = useRouter();
@@ -48,12 +47,10 @@ const Login = () => {
       if (rememberMe && email !== '' && password !== '') {
          localStorage.setItem('username', email);
          localStorage.setItem('checkbox', rememberMe);
-         // OurRedirect('/dashboard');
          router.push('/dashboard');
       } else {
          localStorage.removeItem('username');
          localStorage.removeItem('checkbox');
-         // OurRedirect('/dashboard');
          router.push('/dashboard');
       }
    };
