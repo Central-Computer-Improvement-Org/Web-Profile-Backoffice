@@ -12,6 +12,7 @@ import { FaPlus } from "react-icons/fa6";
 import DefaultLink from "@/components/link/defaultLink";
 import HeadTitle from "@/components/headTitle";
 import DefaultTable from "@/components/table/defaultTable";
+import request from "@/app/utils/request";
 
 export default function AwardPage() {
    const [search, setSearch] = useState("");
