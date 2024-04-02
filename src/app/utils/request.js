@@ -2,8 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const request = axios.create({
-   // baseURL: `${process.env.REACT_APP_API_URL}/api/`,
-   baseURL: 'https://localhost:7023/api/',
+   baseURL: `https://central-computer-improvement-org.github.io/Web-Profile-Backoffice/api`,
+   // baseURL: `'https://localhost:7023/api/'`,
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json',
