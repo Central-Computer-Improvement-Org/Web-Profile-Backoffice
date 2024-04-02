@@ -31,7 +31,7 @@ const expiredTokenHandler = () => {
   // store.dispatch(getLoginData({}))
   localStorage.clear();
   Cookies.remove('token');
-  //   window.location.href = './login';
+  //   window.location.href = './login'; //di uncomment saat sudah integrasi api login
   // return error;
 };
 
@@ -39,12 +39,12 @@ const errorHandler = (error) => {
   // TODO: Remove this code after you got the response information
   // error.code === 'ERR_NETWORK' should not exist
   if (error.response && error.response.status === 401) {
-    expiredTokenHandler();
+    //  expiredTokenHandler(); //di uncomment saat sudah integrasi api login
   } else if (error.code === 'ERR_NETWORK') {
     window.history.pushState({}, 'Redirect Network Error', '/login');
     console.log(error);
     if (error.response?.status === 401) {
-      // expiredTokenHandler();
+      // expiredTokenHandler(); //di uncomment saat sudah integrasi api login
     }
   }
   return error;
