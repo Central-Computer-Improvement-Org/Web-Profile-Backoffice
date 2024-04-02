@@ -51,7 +51,7 @@ export default function AddMemberPage() {
                   }}
                 >
                   <option>Ketua</option>
-                  <option>sekertaris</option>
+                  <option>Sekertaris</option>
                   <option>Bendahara</option>
                   <option>Anggota</option>
                 </InputSelect>

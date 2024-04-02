@@ -10,7 +10,7 @@ export default function Index() {
   //   router.replace('/login'); // Mengarahkan pengguna dari / ke /login
 
   useEffect(() => {
-    router.replace('/login'); // Mengarahkan pengguna dari / ke /login
+    router.push('/login'); // Mengarahkan pengguna dari / ke /login
     // OurRedirect('./dashboard');
   }, [router]); // Komponen ini hanya dijalankan sekali setelah mounting
 
