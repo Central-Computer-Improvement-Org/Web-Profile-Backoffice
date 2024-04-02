@@ -13,7 +13,7 @@ const nextConfig = {
             permanent: false
          }
       ]
-   }
+   },
    // TODO : komen config dibawah jika running lokal, aktifkan kembali ketika push
    output: "export",
    assetPrefix: 'https://central-computer-improvement-org.github.io/Web-Profile-Backoffice',
