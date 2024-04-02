@@ -50,7 +50,7 @@ const Login = () => {
          router.push('/dashboard');
       } else {
          localStorage.removeItem('username');
-         localStorage.removeItem('checkbox');
+         localStorage.removeItem('checkboxasdasdasd');
          router.push('/dashboard');
       }
    };
