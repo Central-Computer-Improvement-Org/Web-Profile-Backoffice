@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from '../../../public/assets/image/logo.png';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useRouter } from 'next/navigation';
@@ -45,16 +45,18 @@ const Login = () => {
    const handleSubmit = (e) => {
       e.preventDefault();
 
-    if (rememberMe && email !== '' && password !== '') {
-      localStorage.setItem('username', email);
-      localStorage.setItem('checkbox', rememberMe);
-      OurRedirect('./dashboard');
-    } else {
-      localStorage.removeItem('username');
-      localStorage.removeItem('checkbox');
-      OurRedirect('./dashboard');
-    }
-  };
+      if (rememberMe && email !== '' && password !== '') {
+         localStorage.setItem('username', email);
+         localStorage.setItem('checkbox', rememberMe);
+         // OurRedirect('/dashboard');
+         router.push('/dashboard');
+      } else {
+         localStorage.removeItem('username');
+         localStorage.removeItem('checkbox');
+         // OurRedirect('/dashboard');
+         router.push('/dashboard');
+      }
+   };
 
    return (
       <section className="bg-gray-50 ">
@@ -99,43 +101,43 @@ const Login = () => {
                         label={'Password'}
                      />
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="rememberMe"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                      checked={rememberMe}
-                      onChange={handleRememberMeChange}
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label htmlFor="remember" className="text-gray-500">
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-primary-600 hover:underline"
-                >
-                  Forgot password?
-                </a>
-              </div>
-              <DefaultButton
-                title={'Sign in'}
-                type={'submit'}
-                full
-                status={'primary'}
-                size={'base'}
-              />
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+                     <div className="flex items-center justify-between">
+                        <div className="flex items-start">
+                           <div className="flex items-center h-5">
+                              <input
+                                 id="rememberMe"
+                                 type="checkbox"
+                                 className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
+                                 checked={rememberMe}
+                                 onChange={handleRememberMeChange}
+                              />
+                           </div>
+                           <div className="ml-3 text-sm">
+                              <label htmlFor="remember" className="text-gray-500">
+                                 Remember me
+                              </label>
+                           </div>
+                        </div>
+                        <a
+                           href="#"
+                           className="text-sm font-medium text-primary-600 hover:underline"
+                        >
+                           Forgot password?
+                        </a>
+                     </div>
+                     <DefaultButton
+                        title={'Sign in'}
+                        type={'submit'}
+                        full
+                        status={'primary'}
+                        size={'base'}
+                     />
+                  </form>
+               </div>
+            </div>
+         </div>
+      </section>
+   );
 };
 
 export default Login;
