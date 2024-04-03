@@ -12,6 +12,7 @@ import DefaultLink from '@/components/link/defaultLink';
 import DefaultButton from '@/components/button/defaultButton';
 import HeadTitle from '@/components/headTitle';
 import DefaultTable from '@/components/table/defaultTable';
+import request from '@/app/utils/request';
 
 export default function Page() {
   // Gunakan huruf besar untuk nama fungsi komponen
@@ -31,8 +32,8 @@ export default function Page() {
   ];
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/member')
+    request
+      .get('/member')
       .then(function (response) {
         setDatas(response.data.data);
         setLoading(false);
@@ -45,7 +46,7 @@ export default function Page() {
 
   return (
     <div>
-      <HeadTitle title={'All members'}>
+      <HeadTitle title={'All Members'}>
         <div className="flex lg:mt-4">
           <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
             <form className="lg:pr-3" action="#" method="GET">

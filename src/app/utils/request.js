@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const request = axios.create({
   baseURL: `https://central-computer-improvement-org.github.io/Web-Profile-Backoffice/api`,
-  // baseURL: `'https://localhost:7023/api/'`,
+  // baseURL: `http://localhost:3000/api/`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const errorHandler = (error) => {
   if (error.response && error.response.status === 401) {
     //  expiredTokenHandler(); //di uncomment saat sudah integrasi api login
   } else if (error.code === 'ERR_NETWORK') {
-    window.history.pushState({}, 'Redirect Network Error', '/login');
+    // window.history.pushState({}, 'Redirect Network Error', '/login');
     console.log(error);
     if (error.response?.status === 401) {
       // expiredTokenHandler(); //di uncomment saat sudah integrasi api login

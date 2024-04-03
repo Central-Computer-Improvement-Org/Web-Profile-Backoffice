@@ -19,6 +19,7 @@ import { CgProfile } from 'react-icons/cg';
 //import Images
 import Logo from '../../../public/assets/image/logo.png';
 import NextBreadcrumb from '@/components/breadcrumbs';
+import Link from 'next/link';
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const MainLayout = ({ children }) => {
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
-              <a href="https://flowbite.com" className="flex gap-2">
+              <Link href="#" className="flex gap-2">
                 <Image
                   width={0}
                   height={0}
@@ -43,7 +44,7 @@ const MainLayout = ({ children }) => {
                 <span className="self-center text-gray-500 text-3xl font-semibold whitespace-nowrap ">
                   CCI
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -57,49 +58,49 @@ const MainLayout = ({ children }) => {
           <ul className="space-y-2 font-medium">
             <li>
               <MenuSidebar
-                href="./dashboard"
+                href="/dashboard"
                 icon={<BiSolidDashboard className="text-xl" />}
                 title={'Dashboard'}
               />
             </li>
             <li>
               <MenuSidebar
-                href="./event"
+                href="/event"
                 icon={<BsCalendar2EventFill className="text-xl" />}
                 title={'Event'}
               />
             </li>
             <li>
               <MenuSidebar
-                href="./news"
+                href="/news"
                 icon={<IoNewspaper className="text-xl" />}
                 title={'News'}
               />
             </li>
             <li>
               <MenuSidebar
-                href="./division"
+                href="/division"
                 icon={<FaProjectDiagram className="text-xl" />}
                 title={'Division'}
               />
             </li>
             <li>
               <MenuSidebar
-                href="./member"
+                href="/member"
                 icon={<BsFillPeopleFill className="text-xl" />}
                 title={'Member'}
               />
             </li>
             <li>
               <MenuSidebar
-                href="./project"
+                href="/project"
                 icon={<AiFillProject className="text-xl" />}
                 title={'Project'}
               />
             </li>
             <li>
               <MenuSidebar
-                href="./award"
+                href="/award"
                 icon={<FaAward className="text-xl" />}
                 title={'Award'}
               />

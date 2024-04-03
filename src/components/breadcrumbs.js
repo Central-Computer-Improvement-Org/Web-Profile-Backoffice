@@ -41,19 +41,20 @@ const NextBreadcrumb = ({
             let itemLink = capitalizeLinks
               ? link[0].toUpperCase() + link.slice(1, link.length)
               : link;
+            console.log(href);
             return (
               <React.Fragment key={index}>
                 {pathNames.length > 0 && separator}
                 <li>
                   <div className="flex items-center">
-                    <a
+                    <Link
                       href={href}
                       className={`ml-1 ${
                         activeClasses ? activeClasses : 'text-gray-700'
                       } hover:text-primary-600 md:ml-2`}
                     >
                       {itemLink}
-                    </a>
+                    </Link>
                   </div>
                 </li>
               </React.Fragment>

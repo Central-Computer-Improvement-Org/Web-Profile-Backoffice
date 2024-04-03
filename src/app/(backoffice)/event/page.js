@@ -1,37 +1,38 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client";
-import React, { useEffect, useState } from "react";
-import ListEvent from "@/components/listTable/listEvent";
-import axios from "axios";
-import InputField from "@/components/form/inputField";
+'use client';
+import React, { useEffect, useState } from 'react';
+import ListEvent from '@/components/listTable/listEvent';
+import axios from 'axios';
+import InputField from '@/components/form/inputField';
 
-import { IoIosSearch } from "react-icons/io";
-import { FaPlus } from "react-icons/fa6";
+import { IoIosSearch } from 'react-icons/io';
+import { FaPlus } from 'react-icons/fa6';
 
-import DefaultLink from "@/components/link/defaultLink";
-import DefaultButton from "@/components/button/defaultButton";
-import HeadTitle from "@/components/headTitle";
-import DefaultTable from "@/components/table/defaultTable";
+import DefaultLink from '@/components/link/defaultLink';
+import DefaultButton from '@/components/button/defaultButton';
+import HeadTitle from '@/components/headTitle';
+import DefaultTable from '@/components/table/defaultTable';
+import Link from 'next/link';
 
 export default function EventPage() {
   // Gunakan huruf besar untuk nama fungsi komponen
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
     // Perbaiki penulisan rowMenu
-    { menu: "NAME" },
-    { menu: "DIVISION" },
-    { menu: "DESCRIPTION" },
-    { menu: "HELD ON" },
-    { menu: "BUDGET" },
-    { menu: "" },
+    { menu: 'NAME' },
+    { menu: 'DIVISION' },
+    { menu: 'DESCRIPTION' },
+    { menu: 'HELD ON' },
+    { menu: 'BUDGET' },
+    { menu: '' },
   ];
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/event")
+      .get('http://localhost:3000/api/event')
       .then(function (response) {
         setDatas(response.data.data);
         setLoading(false);
@@ -44,7 +45,7 @@ export default function EventPage() {
 
   return (
     <div>
-      <HeadTitle title={"All Event"}>
+      <HeadTitle title={'All Event'}>
         <div className="flex lg:mt-4">
           <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
             <form className="lg:pr-3" action="#" method="GET">
@@ -53,10 +54,10 @@ export default function EventPage() {
               </label>
               <div className="relative mt-1 lg:w-64 xl:w-96">
                 <InputField
-                  id={"search"}
-                  name={"search"}
-                  placeholder={"Search for event"}
-                  type={"text"}
+                  id={'search'}
+                  name={'search'}
+                  placeholder={'Search for event'}
+                  type={'text'}
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -68,10 +69,10 @@ export default function EventPage() {
           </div>
           <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
             <DefaultLink
-              size={"small"}
-              status={"primary"}
-              title={"Add event"}
-              href={"/event/addEvent"}
+              size={'small'}
+              status={'primary'}
+              title={'Add event'}
+              href={'/event/addEvent'}
               icon={<FaPlus />}
               onClick={() => {}}
             />
@@ -101,7 +102,7 @@ export default function EventPage() {
             )}
           </DefaultTable>
           <div className="flex items-center mb-4 sm:mb-0 py-5">
-            <a
+            <Link
               href="#"
               className="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 "
             >
@@ -117,7 +118,7 @@ export default function EventPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-            </a>
+            </Link>
             <a
               href="#"
               className="inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
@@ -136,7 +137,7 @@ export default function EventPage() {
               </svg>
             </a>
             <span className="text-sm font-normal text-gray-500 ">
-              Showing <span className="font-semibold text-gray-900 ">1-20</span>{" "}
+              Showing <span className="font-semibold text-gray-900 ">1-20</span>{' '}
               of <span className="font-semibold text-gray-900 ">2290</span>
             </span>
           </div>

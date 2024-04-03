@@ -1,6 +1,7 @@
 // components/Dropdown.js
 
 'use client';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
@@ -60,14 +61,14 @@ const Dropdown = ({ options, onSelect, href, icon, title }) => {
         <ul className=" ">
           {options.map((option, index) => (
             <li key={index}>
-              <a
+              <Link
                 href={option.href}
                 className={`flex items-center p-2 text-base ${
                   isActive ? 'text-gray-900' : 'text-gray-500'
                 } transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 `}
               >
                 {option.menu}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
