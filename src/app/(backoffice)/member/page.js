@@ -22,7 +22,7 @@ export default function Page() {
   const rowMenu = [
     // Perbaiki penulisan rowMenu
     { menu: 'NAME' },
-    { menu: 'DEVISI' },
+    { menu: 'DIVISION' },
     { menu: 'MAJOR' },
     { menu: 'ENTRY UNIVERSITY' },
     { menu: 'ENTRY COMMUNITY' },
@@ -95,7 +95,7 @@ export default function Page() {
                   name={data.name}
                   email={data.email}
                   devisi={data.divisionId.name}
-                  major={data.mayor}
+                  major={data.major}
                   entryUniversity={data.yearUniversityEnrolled}
                   entryCommunity={data.yearCommunityEnrolled}
                   status={data.isActive}
