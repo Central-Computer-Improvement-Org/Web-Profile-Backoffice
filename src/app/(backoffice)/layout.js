@@ -1,30 +1,30 @@
-'use client';
-import React from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+"use client";
+import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 //import Components
-import DefaultButton from '@/components/button/defaultButton';
-import MenuSidebar from '@/components/menuSidebar';
+import DefaultButton from "@/components/button/defaultButton";
+import MenuSidebar from "@/components/menuSidebar";
 
 //import Icon
-import { BiSolidDashboard } from 'react-icons/bi';
-import { BsCalendar2EventFill, BsFillPeopleFill } from 'react-icons/bs';
-import { IoNewspaper, IoSettings } from 'react-icons/io5';
-import { AiFillProject } from 'react-icons/ai';
-import { FaAward } from 'react-icons/fa6';
-import { FaProjectDiagram } from 'react-icons/fa';
-import { CgProfile } from 'react-icons/cg';
+import { BiSolidDashboard } from "react-icons/bi";
+import { BsCalendar2EventFill, BsFillPeopleFill } from "react-icons/bs";
+import { IoNewspaper, IoSettings } from "react-icons/io5";
+import { AiFillProject } from "react-icons/ai";
+import { FaAward } from "react-icons/fa6";
+import { FaProjectDiagram } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 
 //import Images
-import Logo from '../../../public/assets/image/logo.png';
-import NextBreadcrumb from '@/components/breadcrumbs';
+import Logo from "../../../public/assets/image/logo.png";
+import NextBreadcrumb from "@/components/breadcrumbs";
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push('/login');
+    router.push("/login");
   };
   return (
     <div>
@@ -59,49 +59,49 @@ const MainLayout = ({ children }) => {
               <MenuSidebar
                 href="./dashboard"
                 icon={<BiSolidDashboard className="text-xl" />}
-                title={'Dashboard'}
+                title={"Dashboard"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./event"
                 icon={<BsCalendar2EventFill className="text-xl" />}
-                title={'Event'}
+                title={"Event"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./news"
                 icon={<IoNewspaper className="text-xl" />}
-                title={'News'}
+                title={"News"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./division"
                 icon={<FaProjectDiagram className="text-xl" />}
-                title={'Division'}
+                title={"Division"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./member"
                 icon={<BsFillPeopleFill className="text-xl" />}
-                title={'Member'}
+                title={"Member"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./project"
                 icon={<AiFillProject className="text-xl" />}
-                title={'Project'}
+                title={"Project"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./award"
                 icon={<FaAward className="text-xl" />}
-                title={'Award'}
+                title={"Award"}
               />
             </li>
           </ul>
@@ -110,23 +110,23 @@ const MainLayout = ({ children }) => {
               <MenuSidebar
                 href="./profile"
                 icon={<CgProfile className="text-xl" />}
-                title={'Profile'}
+                title={"Profile"}
               />
             </li>
             <li>
               <MenuSidebar
                 href="./setting"
                 icon={<IoSettings className="text-xl" />}
-                title={'Setting'}
+                title={"Setting"}
               />
             </li>
             <li>
               <DefaultButton
-                title={'Logout'}
-                type={'submit'}
+                title={"Logout"}
+                type={"submit"}
                 onClick={handleLogout}
-                status={'primary'}
-                size={'base'}
+                status={"primary"}
+                size={"base"}
                 full={true}
               />
             </li>
