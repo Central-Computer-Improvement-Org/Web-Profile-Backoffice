@@ -41,7 +41,6 @@ const NextBreadcrumb = ({
             let itemLink = capitalizeLinks
               ? link[0].toUpperCase() + link.slice(1, link.length)
               : link;
-            console.log(href);
             return (
               <React.Fragment key={index}>
                 {pathNames.length > 0 && separator}

@@ -68,10 +68,10 @@ const ListMember = ({
       </td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3">
         <DefaultLink
-          href={`/member/editMember?nim=${nim}`}
+          href={`/member/detailMember?nim=${nim}`}
           size={'small'}
           status={'primary'}
-          title={'Edit'}
+          title={'Detail'}
         />
         <DefaultLink
           href={`/member/delete/${nim}`}
