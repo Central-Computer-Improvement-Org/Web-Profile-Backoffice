@@ -13,7 +13,6 @@ export default function EditMemberPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const nim = searchParams.get('nim');
-  console.log(nim);
 
   // State untuk menyimpan data member
   const [roleId, setRoleId] = useState('');
