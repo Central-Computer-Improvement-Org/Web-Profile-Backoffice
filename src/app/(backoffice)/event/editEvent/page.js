@@ -6,6 +6,7 @@ import InputSelect from "@/components/form/inputSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
 import axios from "axios";
+import { host } from "@/app/utils/urlApi";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -26,33 +27,27 @@ export default function EditEventPage() {
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   useEffect(() => {
-    // Cek apakah query 'id' ada atau tidak
     if (!id) {
-      // Jika tidak ada, arahkan pengguna ke halaman 404
-      router.push("./id");
-      return; // Hentikan eksekusi useEffect
+      router.push("./event");
+      return;
     }
-
-    // Lakukan request data event berdasarkan ID dari query parameter
     axios
-      .get(`http://localhost:3000/api/eventById`)
+      .get(`${host}/api/eventById`)
       .then(function (response) {
         const data = response.data.data;
-        // Set data event ke state
         setName(data.name);
         setDescription(data.description);
         setDivisionId(data.divisionId);
         setMedia(data.media);
         setHeldOn(data.heldOn);
         setBudget(data.budget);
-        setLoading(false); // Setelah data dimuat, atur loading menjadi false
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
-        setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
+        setLoading(false);
       });
   }, [id]);
-
   return (
     <div>
       <HeadTitle title={"Edit Event"}>

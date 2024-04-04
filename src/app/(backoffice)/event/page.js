@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import React, { useEffect, useState } from "react";
-import ListEvent from "@/components/listTable/listEvent";
-import axios from "axios";
-import InputField from "@/components/form/inputField";
-
-import { IoIosSearch } from "react-icons/io";
-import { FaPlus } from "react-icons/fa6";
-
 import DefaultLink from "@/components/link/defaultLink";
 import DefaultButton from "@/components/button/defaultButton";
 import HeadTitle from "@/components/headTitle";
 import DefaultTable from "@/components/table/defaultTable";
+import InputField from "@/components/form/inputField";
+import ListEvent from "@/components/listTable/listEvent";
+import axios from "axios";
+import request from "@/app/utils/request";
+
+import { IoIosSearch } from "react-icons/io";
+import { FaPlus } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
 
 export default function EventPage() {
   // Gunakan huruf besar untuk nama fungsi komponen
@@ -30,8 +30,8 @@ export default function EventPage() {
   ];
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/event")
+    request
+      .get("/event")
       .then(function (response) {
         setDatas(response.data.data);
         setLoading(false);
