@@ -1,6 +1,6 @@
 // components/InputField.js
 
-import React from 'react';
+import React from "react";
 
 const InputField = ({
   id,
@@ -23,7 +23,7 @@ const InputField = ({
           {label}
         </label>
       ) : (
-        ''
+        ""
       )}
       <div className="relative w-full ">
         <input
