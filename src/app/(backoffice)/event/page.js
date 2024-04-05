@@ -1,4 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+<<<<<<< HEAD
+"use client";
+import DefaultLink from "@/components/link/defaultLink";
+import DefaultButton from "@/components/button/defaultButton";
+import HeadTitle from "@/components/headTitle";
+import DefaultTable from "@/components/table/defaultTable";
+import InputField from "@/components/form/inputField";
+import ListEvent from "@/components/listTable/listEvent";
+import axios from "axios";
+import request from "@/app/utils/request";
+
+import { IoIosSearch } from "react-icons/io";
+import { FaPlus } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
+=======
 'use client';
 import React, { useEffect, useState } from 'react';
 import ListEvent from '@/components/listTable/listEvent';
@@ -15,6 +30,7 @@ import DefaultTable from '@/components/table/defaultTable';
 import Link from 'next/link';
 import request from '@/app/utils/request';
 import Pagination from '@/components/pagination';
+>>>>>>> b422d24da514391254f194e6f7e200f4d2f6af7a
 
 export default function EventPage() {
   // Gunakan huruf besar untuk nama fungsi komponen
@@ -34,7 +50,11 @@ export default function EventPage() {
 
   useEffect(() => {
     request
+<<<<<<< HEAD
+      .get("/event")
+=======
       .get('/event')
+>>>>>>> b422d24da514391254f194e6f7e200f4d2f6af7a
       .then(function (response) {
         setDatas(response.data.data);
         setLoading(false);

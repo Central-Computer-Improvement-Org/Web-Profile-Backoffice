@@ -2,52 +2,50 @@
 import DefaultButton from "@/components/button/defaultButton";
 import DefaultLink from "@/components/link/defaultLink";
 import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
 import axios from "axios";
-import { host } from "@/app/utils/urlApi";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-export default function EditEventPage() {
+export default function EditNewsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
   console.log(id);
 
   // State untuk menyimpan data event
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [divisionId, setDivisionId] = useState("");
-  const [media, setMedia] = useState("");
-  const [heldOn, setHeldOn] = useState("");
-  const [budget, setBudget] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
 
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   useEffect(() => {
+    // Cek apakah query 'id' ada atau tidak
     if (!id) {
-      router.push("./event");
-      return;
+      // Jika tidak ada, arahkan pengguna ke halaman 404
+      router.push("./id");
+      return; // Hentikan eksekusi useEffect
     }
+
+    // Lakukan request data event berdasarkan ID dari query parameter
     axios
-      .get(`${host}/api/eventById`)
+      .get(`http://localhost:3000/api/newsById`)
       .then(function (response) {
         const data = response.data.data;
-        setName(data.name);
+        // Set data event ke state
+        setTitle(data.title);
         setDescription(data.description);
-        setDivisionId(data.divisionId);
-        setMedia(data.media);
-        setHeldOn(data.heldOn);
-        setBudget(data.budget);
-        setLoading(false);
+        // setMediaUrl(data.mediaUrl);
+        setLoading(false); // Setelah data dimuat, atur loading menjadi false
       })
       .catch(function (error) {
         console.log(error);
-        setLoading(false);
+        setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
       });
   }, [id]);
+
   return (
     <div>
       <HeadTitle title={"Edit Event"}>
@@ -59,74 +57,29 @@ export default function EditEventPage() {
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6 sm:col-span-4">
                   <InputField
-                    id={"name"}
-                    name={"name"}
-                    placeholder={"CCI SUMMIT"}
+                    id={"title"}
+                    name={"title"}
+                    placeholder={"Menuju Era Baru"}
                     type={"text"}
-                    value={name}
+                    value={title}
                     required
-                    label={"Name"}
+                    label={"Title"}
                     onChange={(e) => {
-                      setName(e.target.value);
+                      setTitle(e.target.value);
                     }}
                   />
-                </div>
-                <div className="col-span-6 sm:col-span-2">
-                  <InputSelect
-                    id={"divisionId"}
-                    name={"division"}
-                    placeholder={"Web Development"}
-                    type={"text"}
-                    value={divisionId}
-                    required
-                    label={"Division"}
-                    onChange={(e) => {
-                      setDivisionId(e.target.value);
-                    }}
-                  >
-                    <option>Web Development</option>
-                    <option>UI/UX Design</option>
-                    <option>Data Resarch</option>
-                    <option>Networking</option>
-                  </InputSelect>
                 </div>
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
                     id={"media"}
                     name={"media"}
                     type={"file"}
-                    value={media}
+                    value={mediaUrl}
+                    multiple={true}
                     required
                     label={"Media"}
                     onChange={(e) => {
-                      setMedia(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="col-span-6 sm:col-span-2">
-                  <InputField
-                    id={"heldOn"}
-                    name={"heldOn"}
-                    type={"month"}
-                    value={heldOn}
-                    required
-                    label={"Held On"}
-                    onChange={(e) => {
-                      setHeldOn(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="col-span-6 sm:col-span-2">
-                  <InputField
-                    id={"budget"}
-                    name={"budget"}
-                    placeholder={"0"}
-                    type={"text"}
-                    value={budget}
-                    required
-                    label={"Budget"}
-                    onChange={(e) => {
-                      setBudget(e.target.value);
+                      setMediaUrl(e.target.value);
                     }}
                   />
                 </div>
@@ -155,7 +108,7 @@ export default function EditEventPage() {
                     size={"small"}
                     status={"secondary"}
                     title={"Back"}
-                    href={"/event"}
+                    href={"/news"}
                   />
                 </div>
               </div>
