@@ -18,7 +18,7 @@ export default function DefaultLink({
         size == 'small'
           ? 'text-sm  '
           : size == 'base'
-          ? 'text-bae '
+          ? 'text-base '
           : size == 'large'
           ? 'text-lg '
           : ''
@@ -32,9 +32,10 @@ export default function DefaultLink({
           ? 'bg-red-600 hover:bg-red-700 focus:ring-red-300 '
           : ''
       }
-        inline-flex items-center justify-center px-3 py-2 font-medium text-center text-white rounded-lg focus:ring-4 `}
+      inline-flex items-center justify-center px-3 py-2 font-medium text-center text-white rounded-lg focus:ring-4 `}
     >
-      <div className="text-xl mr-2 -ml-1">{icon}</div>
+      {icon ? <div className="text-xl mr-2 -ml-1">{icon}</div> : ''}
+
       {title}
     </Link>
   );

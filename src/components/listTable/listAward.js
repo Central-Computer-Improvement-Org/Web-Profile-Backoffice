@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-import DefaultLink from "../link/defaultLink";
-import { formatDescription } from "@/app/utils/stringUtils";
+import React from 'react';
+import DefaultLink from '../link/defaultLink';
+import { formatDescription } from '@/app/utils/stringUtils';
 
 const ListAward = ({ issuer, description, id }) => {
   return (
@@ -25,16 +25,16 @@ const ListAward = ({ issuer, description, id }) => {
       </td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3">
         <DefaultLink
-          href={`/award/editAward?id=${id}`}
-          size={"small"}
-          status={"primary"}
-          title={"Edit"}
+          href={`/award/detailAward?id=${id}`}
+          size={'small'}
+          status={'primary'}
+          title={'Detail'}
         />
         <DefaultLink
           href={`/award/delete/${id}`}
-          size={"small"}
-          status={"secondary"}
-          title={"Delete"}
+          size={'small'}
+          status={'secondary'}
+          title={'Delete'}
         />
       </td>
     </tr>

@@ -7,12 +7,12 @@ import HeadTitle from '@/components/headTitle';
 import axios from 'axios';
 import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import request from '@/app/utils/request';
 
 export default function EditMemberPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const nim = searchParams.get('nim');
-  console.log(nim);
 
   // State untuk menyimpan data member
   const [roleId, setRoleId] = useState('');
@@ -34,8 +34,8 @@ export default function EditMemberPage() {
       router.push('/member');
       return;
     }
-    axios
-      .get(`http://localhost:3000/api/memberByNim`)
+    request
+      .get('/memberByNim')
       .then(function (response) {
         const data = response.data.data;
         // Set data member ke state
