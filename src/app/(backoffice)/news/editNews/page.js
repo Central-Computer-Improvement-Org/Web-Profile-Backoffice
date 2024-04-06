@@ -1,6 +1,7 @@
 "use client";
 import DefaultButton from "@/components/button/defaultButton";
 import DefaultLink from "@/components/link/defaultLink";
+import { host } from "@/app/utils/urlApi";
 import InputField from "@/components/form/inputField";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
@@ -12,43 +13,35 @@ export default function EditNewsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
-  console.log(id);
 
   // State untuk menyimpan data event
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
-
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   useEffect(() => {
-    // Cek apakah query 'id' ada atau tidak
     if (!id) {
-      // Jika tidak ada, arahkan pengguna ke halaman 404
-      router.push("./id");
-      return; // Hentikan eksekusi useEffect
+      router.push("/news");
+      return;
     }
-
-    // Lakukan request data event berdasarkan ID dari query parameter
     axios
-      .get(`http://localhost:3000/api/newsById`)
+      .get(`${host}/api/newsById`)
       .then(function (response) {
         const data = response.data.data;
-        // Set data event ke state
         setTitle(data.title);
         setDescription(data.description);
-        // setMediaUrl(data.mediaUrl);
-        setLoading(false); // Setelah data dimuat, atur loading menjadi false
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
-        setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
+        setLoading(false);
       });
   }, [id]);
 
   return (
     <div>
-      <HeadTitle title={"Edit Event"}>
+      <HeadTitle title={"Edit News"}>
         {loading ? (
           <div className="text-center">Loading...</div> // Tampilkan pesan loading jika data sedang dimuat
         ) : (
