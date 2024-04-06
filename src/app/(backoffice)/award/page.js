@@ -18,14 +18,30 @@ import Pagination from '@/components/pagination';
 
 export default function AwardPage() {
   const [search, setSearch] = useState('');
-  const [datas, setDatas] = useState([]);
+  const [awardDatas, setAwardDatas] = useState([]);
+  const [contributorAwardDatas, setContributorAwardDatas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const rowMenu = [{ menu: 'ISSUER' }, { menu: 'DESCRIPTION' }];
+  const rowMenu = [
+    { menu: 'ISSUER' },
+    { menu: 'DESCRIPTION' },
+    { menu: 'CONTRIBUTOR' },
+    { menu: '' },
+  ];
   useEffect(() => {
     request
       .get('/award')
       .then(function (response) {
-        setDatas(response.data.data);
+        setAwardDatas(response.data.data);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+    request
+      .get('/contributorAward')
+      .then(function (response) {
+        setContributorAwardDatas(response.data.data);
         setLoading(false);
       })
       .catch(function (error) {
@@ -74,15 +90,16 @@ export default function AwardPage() {
       ) : (
         <div className="">
           <DefaultTable rowMenu={rowMenu}>
-            {datas.map(
+            {awardDatas.map(
               (
                 data,
-                index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
+                index // Ubah 'awardDatas' menjadi 'data' untuk setiap iterasi
               ) => (
                 <ListAward
                   key={index}
                   issuer={data.issuer}
                   description={data.description}
+                  contributor={contributorAwardDatas}
                   id={data.id}
                 />
               )

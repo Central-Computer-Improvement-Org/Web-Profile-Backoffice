@@ -159,7 +159,7 @@ export default function EditMemberPage() {
                     placeholder={'e.g. https://www.linkedin.com/in/example/'}
                     type={'text'}
                     value={linkedinUrl}
-                    label={'Linkedin URL'}
+                    label={'LinkedIn URL'}
                     onChange={(e) => {
                       setLinkedinUrl(e.target.value);
                     }}
