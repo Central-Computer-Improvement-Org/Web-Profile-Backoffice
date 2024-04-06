@@ -1,60 +1,40 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-<<<<<<< HEAD
 "use client";
+import React, { useEffect, useState } from "react";
+import ListEvent from "@/components/listTable/listEvent";
+import axios from "axios";
+import InputField from "@/components/form/inputField";
+
+import { IoIosSearch } from "react-icons/io";
+import { FaPlus } from "react-icons/fa6";
+
 import DefaultLink from "@/components/link/defaultLink";
 import DefaultButton from "@/components/button/defaultButton";
 import HeadTitle from "@/components/headTitle";
 import DefaultTable from "@/components/table/defaultTable";
-import InputField from "@/components/form/inputField";
-import ListEvent from "@/components/listTable/listEvent";
-import axios from "axios";
+import Link from "next/link";
 import request from "@/app/utils/request";
-
-import { IoIosSearch } from "react-icons/io";
-import { FaPlus } from "react-icons/fa6";
-import React, { useEffect, useState } from "react";
-=======
-'use client';
-import React, { useEffect, useState } from 'react';
-import ListEvent from '@/components/listTable/listEvent';
-import axios from 'axios';
-import InputField from '@/components/form/inputField';
-
-import { IoIosSearch } from 'react-icons/io';
-import { FaPlus } from 'react-icons/fa6';
-
-import DefaultLink from '@/components/link/defaultLink';
-import DefaultButton from '@/components/button/defaultButton';
-import HeadTitle from '@/components/headTitle';
-import DefaultTable from '@/components/table/defaultTable';
-import Link from 'next/link';
-import request from '@/app/utils/request';
-import Pagination from '@/components/pagination';
->>>>>>> b422d24da514391254f194e6f7e200f4d2f6af7a
+import Pagination from "@/components/pagination";
 
 export default function EventPage() {
   // Gunakan huruf besar untuk nama fungsi komponen
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
     // Perbaiki penulisan rowMenu
-    { menu: 'NAME' },
-    { menu: 'DIVISION' },
-    { menu: 'DESCRIPTION' },
-    { menu: 'HELD ON' },
-    { menu: 'BUDGET' },
-    { menu: '' },
+    { menu: "NAME" },
+    { menu: "DIVISION" },
+    { menu: "DESCRIPTION" },
+    { menu: "HELD ON" },
+    { menu: "BUDGET" },
+    { menu: "" },
   ];
 
   useEffect(() => {
     request
-<<<<<<< HEAD
       .get("/event")
-=======
-      .get('/event')
->>>>>>> b422d24da514391254f194e6f7e200f4d2f6af7a
       .then(function (response) {
         setDatas(response.data.data);
         setLoading(false);
@@ -67,7 +47,7 @@ export default function EventPage() {
 
   return (
     <div>
-      <HeadTitle title={'All Event'}>
+      <HeadTitle title={"All Event"}>
         <div className="flex lg:mt-4">
           <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
             <form className="lg:pr-3" action="#" method="GET">
@@ -76,10 +56,10 @@ export default function EventPage() {
               </label>
               <div className="relative mt-1 lg:w-64 xl:w-96">
                 <InputField
-                  id={'search'}
-                  name={'search'}
-                  placeholder={'Search for event'}
-                  type={'text'}
+                  id={"search"}
+                  name={"search"}
+                  placeholder={"Search for event"}
+                  type={"text"}
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -91,10 +71,10 @@ export default function EventPage() {
           </div>
           <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
             <DefaultLink
-              size={'small'}
-              status={'primary'}
-              title={'Add event'}
-              href={'/event/addEvent'}
+              size={"small"}
+              status={"primary"}
+              title={"Add event"}
+              href={"/event/addEvent"}
               icon={<FaPlus />}
               onClick={() => {}}
             />
