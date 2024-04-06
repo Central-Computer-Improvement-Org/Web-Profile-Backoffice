@@ -15,7 +15,6 @@ import DefaultTable from "@/components/table/defaultTable";
 import Link from "next/link";
 import request from "@/app/utils/request";
 import Pagination from "@/components/pagination";
-import ListNews from "@/components/listTable/listNews";
 
 export default function NewsPage() {
   // Gunakan huruf besar untuk nama fungsi komponen
