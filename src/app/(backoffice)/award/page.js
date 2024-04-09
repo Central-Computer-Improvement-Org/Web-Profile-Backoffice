@@ -49,6 +49,7 @@ export default function AwardPage() {
         setLoading(false);
       });
   }, []);
+  console.log(contributorAwardDatas);
   return (
     <div>
       <HeadTitle title={'All Awards'}>

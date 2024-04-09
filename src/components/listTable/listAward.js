@@ -60,23 +60,23 @@ const ListAward = ({ issuer, description, contributor, id }) => {
       <td className="text-xs font-medium px-6 py-4">
         {contributor
           ? contributor.map((data, index) => {
-              console.log(data.member.length);
               if (data.awardId === id) {
                 awardIdFound = true; // Jika ada awardId yang sesuai, set variabel lokal menjadi true
                 return (
                   <div key={index} className="flex items-center gap-1 relative">
-                    {data.member.map((member, index) => {
-                      if (index < 3) {
-                        return (
-                          <HoverItem
-                            key={index}
-                            name={member.name}
-                            profileUrl={member.profileUrl}
-                          />
-                        );
-                      }
-                    })}
-                    {data.member.length > 3 ? (
+                    {data.contributor &&
+                      data.contributor.map((contributor, index) => {
+                        if (index < 3) {
+                          return (
+                            <HoverItem
+                              key={index}
+                              name={contributor.name}
+                              profileUrl={contributor.profileUrl}
+                            />
+                          );
+                        }
+                      })}
+                    {data.contributor && data.contributor.length > 3 ? (
                       <div
                         className={`w-10 h-10 rounded-full border-2 border-gray-200 bg-white flex items-center justify-center`}
                       >

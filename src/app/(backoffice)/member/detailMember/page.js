@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 import { FaLinkedin } from 'react-icons/fa';
 import { MdOutlinePhoneAndroid } from 'react-icons/md';
 import { MdEmail } from 'react-icons/md';
+import Link from 'next/link';
 
 export default function DetailMemberPage() {
   const searchParams = useSearchParams();
@@ -116,12 +117,12 @@ export default function DetailMemberPage() {
                           </p>
                         </div>
                         <div className="inline-flex items-center">
-                          <a
+                          <Link
                             href="#"
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
                           >
                             Copy
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </li>
@@ -134,21 +135,21 @@ export default function DetailMemberPage() {
                           <p className="text-base font-semibold text-gray-900 truncate ">
                             Linkedin
                           </p>
-                          <a
+                          <Link
                             href={linkedinUrl}
                             className="text-sm font-normal text-secondary-500 truncate underline "
                           >
                             {linkedinUrl.substring(0, 30)}
                             ...
-                          </a>
+                          </Link>
                         </div>
                         <div className="inline-flex items-center">
-                          <a
+                          <Link
                             href="#"
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
                           >
                             Copy
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </li>
@@ -161,20 +162,20 @@ export default function DetailMemberPage() {
                           <p className="text-base font-semibold text-gray-900 truncate ">
                             Email
                           </p>
-                          <a
+                          <Link
                             href="#"
                             className="text-sm font-normal text-gray-500 truncate "
                           >
                             {email.substring(0, 30)}
-                          </a>
+                          </Link>
                         </div>
                         <div className="inline-flex items-center">
-                          <a
+                          <Link
                             href="#"
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
                           >
                             Copy
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </li>
