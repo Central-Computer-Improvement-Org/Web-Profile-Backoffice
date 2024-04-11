@@ -124,7 +124,7 @@ export default function AddMemberPage() {
                   type={'text'}
                   value={linkedinUrl}
                   required
-                  label={'Linkedin URL'}
+                  label={'LinkedIn URL'}
                   onChange={(e) => {
                     setLinkedinUrl(e.target.value);
                   }}
