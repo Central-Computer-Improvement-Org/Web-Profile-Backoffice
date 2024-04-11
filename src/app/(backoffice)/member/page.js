@@ -96,7 +96,7 @@ export default function Page() {
                   photoUrl={data.profileUrl}
                   name={data.name}
                   email={data.email}
-                  devisi={data.divisionId.name}
+                  devisi={data.division.name}
                   major={data.major}
                   entryUniversity={data.yearUniversityEnrolled}
                   entryCommunity={data.yearCommunityEnrolled}

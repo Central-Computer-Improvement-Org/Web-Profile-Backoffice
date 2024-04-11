@@ -3,7 +3,7 @@ import React from 'react';
 export default function DefaultTable({ rowMenu, children }) {
   // Perbaiki deklarasi fungsi dan tambahkan kurung kurawal di sekitar props
   return (
-    <div className="relative overflow-x-auto shadow-md ">
+    <div className="relative overflow-x-auto shadow-md border-t-[1px] border-gray-200">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
           <tr>

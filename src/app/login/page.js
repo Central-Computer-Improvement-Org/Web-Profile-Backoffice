@@ -116,12 +116,12 @@ const Login = () => {
                     </label>
                   </div>
                 </div>
-                <a
+                <Link
                   href="#"
                   className="text-sm font-medium text-primary-600 hover:underline"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <DefaultButton
                 title={'Sign in'}
