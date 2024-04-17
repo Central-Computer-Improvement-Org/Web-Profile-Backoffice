@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function AddAwardPage() {
   const [issuer, setIssuer] = useState('');
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [contributor, setContributor] = useState([]);
   const [members, setMembers] = useState([]);
@@ -43,6 +44,20 @@ export default function AddAwardPage() {
                   label={'Issuer'}
                   onChange={(e) => {
                     setIssuer(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="sm:col-span-6">
+                <InputField
+                  id={'title'}
+                  name={'title'}
+                  placeholder={'e.g Juara 1 Gemastik'}
+                  type={'text'}
+                  value={title}
+                  required
+                  label={'Title'}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
                   }}
                 />
               </div>

@@ -6,7 +6,7 @@ import { formatDescription } from '@/app/utils/stringUtils';
 import DefaultButton from '../button/defaultButton';
 import { useRouter } from 'next/navigation';
 
-const ListAward = ({ issuer, description, id }) => {
+const ListAward = ({ issuer, title, description, id }) => {
   const router = useRouter();
   return (
     <tr
@@ -29,6 +29,7 @@ const ListAward = ({ issuer, description, id }) => {
       </td>
 
       <td className="text-xs font-medium px-6 py-4">{issuer}</td>
+      <td className="text-xs font-medium px-6 py-4">{title}</td>
       <td className="text-xs font-medium px-6 py-4">
         {formatDescription(description)}
       </td>

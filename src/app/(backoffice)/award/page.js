@@ -20,7 +20,12 @@ export default function AwardPage() {
   const [search, setSearch] = useState('');
   const [awardDatas, setAwardDatas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const rowMenu = [{ menu: 'ISSUER' }, { menu: 'DESCRIPTION' }, { menu: '' }];
+  const rowMenu = [
+    { menu: 'ISSUER' },
+    { menu: 'TITLE' },
+    { menu: 'DESCRIPTION' },
+    { menu: '' },
+  ];
   useEffect(() => {
     request
       .get('/award')
@@ -82,6 +87,7 @@ export default function AwardPage() {
                 <ListAward
                   key={index}
                   issuer={data.issuer}
+                  title={data.title}
                   description={data.description}
                   id={data.id}
                 />

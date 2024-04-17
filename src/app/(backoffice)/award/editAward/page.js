@@ -14,6 +14,7 @@ export default function EditAwardPage() {
   const id = searchParams.get('id');
 
   const [issuer, setIssuer] = useState('');
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [contributor, setContributor] = useState([]);
   const [members, setMembers] = useState([]);
@@ -29,6 +30,7 @@ export default function EditAwardPage() {
       .then(function (response) {
         const data = response.data.data;
         setIssuer(data.issuer);
+        setTitle(data.title);
         setDescription(data.description);
         setContributor(data.contributors);
         setLoading(false);
@@ -71,6 +73,20 @@ export default function EditAwardPage() {
                     label={'Issuer'}
                     onChange={(e) => {
                       setIssuer(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="sm:col-span-6">
+                  <InputField
+                    id={'title'}
+                    name={'title'}
+                    placeholder={'e.g Gemastik'}
+                    type={'text'}
+                    value={title}
+                    required
+                    label={'Title'}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
                     }}
                   />
                 </div>
