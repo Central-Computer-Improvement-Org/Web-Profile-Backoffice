@@ -19,15 +19,10 @@ function DetailAwardPage() {
 
   const [modalContributor, setModalContributor] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [memberLoading, setMemberLoading] = useState(true);
+  const [contributorsAward, setContributorsAward] = useState();
   const [search, setSearch] = useState();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [contributor, setContributor] = useState([]);
-  const [dataMember, setDataMember] = useState([]);
-  const [selectedMembers, setSelectedMembers] = useState([]);
-  const [prevSelectedMembers, setPrevSelectedMembers] = useState([]); // State untuk menyimpan nilai selectedMembers sebelum perubahan
-  const [prevDataMember, setPrevDataMember] = useState([]); // State untuk menyimpan nilai selectedMembers sebelum perubahan
 
   useEffect(() => {
     if (!id) {
@@ -37,55 +32,46 @@ function DetailAwardPage() {
 
     setLoading(true);
 
-    Promise.all([request.get('/contributorAwardById'), request.get('/member')])
-      .then(function (responses) {
-        const contributorResponse = responses[0].data.data;
-        const memberResponse = responses[1].data.data;
+    // Promise.all([request.get('/contributorAwardById'), request.get('/member')])
+    //   .then(function (responses) {
+    //     const contributorResponse = responses[0].data.data;
+    //     const memberResponse = responses[1].data.data;
 
-        setTitle(contributorResponse.award.issuer);
-        setDescription(contributorResponse.award.description);
-        setContributor(contributorResponse.contributor);
-        setSelectedMembers(contributorResponse.contributor);
-        setPrevSelectedMembers(contributorResponse.contributor); // Menyimpan nilai selectedMembers sebelum perubahan
-        setDataMember(
-          memberResponse.filter((member) => {
-            // Filter anggota yang tidak ada dalam selectedMembers
-            return !contributorResponse.contributor.some(
-              (selectedMember) => selectedMember.nim === member.nim
-            );
-          })
-        );
-        setPrevDataMember(
-          memberResponse.filter((member) => {
-            // Filter anggota yang tidak ada dalam selectedMembers
-            return !contributorResponse.contributor.some(
-              (selectedMember) => selectedMember.nim === member.nim
-            );
-          })
-        );
-        setLoading(false);
-      })
-      .catch(function (errors) {
-        console.log(errors);
-        setLoading(false);
-      });
+    //     setTitle(contributorResponse.award.issuer);
+    //     setDescription(contributorResponse.award.description);
+    //     setContributor(contributorResponse.contributor);
+    //     setSelectedMembers(contributorResponse.contributor);
+    //     setPrevSelectedMembers(contributorResponse.contributor); // Menyimpan nilai selectedMembers sebelum perubahan
+    //     setDataMember(
+    //       memberResponse.filter((member) => {
+    //         // Filter anggota yang tidak ada dalam selectedMembers
+    //         return !contributorResponse.contributor.some(
+    //           (selectedMember) => selectedMember.nim === member.nim
+    //         );
+    //       })
+    //     );
+    //     setPrevDataMember(
+    //       memberResponse.filter((member) => {
+    //         // Filter anggota yang tidak ada dalam selectedMembers
+    //         return !contributorResponse.contributor.some(
+    //           (selectedMember) => selectedMember.nim === member.nim
+    //         );
+    //       })
+    //     );
+    //     setLoading(false);
+    //   })
+    //   .catch(function (errors) {
+    //     console.log(errors);
+    //     setLoading(false);
+    //   });
+    request.get('contributorAwardById').then(function (response) {
+      setTitle(response.data.data.issuer);
+      setDescription(response.data.data.description);
+      setContributorsAward(response.data.data.contributors);
+      setLoading(false);
+    });
   }, [id, router]);
 
-  const handleCheckboxChange = (member) => {
-    const index = selectedMembers.findIndex(
-      (selectedMember) => selectedMember.nim === member.nim
-    );
-    if (index === -1) {
-      setSelectedMembers([...selectedMembers, member]);
-      setDataMember(dataMember.filter((m) => m.nim !== member.nim));
-    } else {
-      setSelectedMembers(selectedMembers.filter((m) => m.nim !== member.nim));
-      setDataMember([...dataMember, member]);
-    }
-  };
-
-  // const nimList = selectedMembers.map((member) => member.nim);
-  console.log(selectedMembers);
   return (
     <div>
       {loading ? (
@@ -108,20 +94,6 @@ function DetailAwardPage() {
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
                     {description}
                   </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <DefaultLink
-                    href={'/award/detailAward/editAward?id=AWD-1'}
-                    size={'base'}
-                    status={'primary'}
-                    title={'Update'}
-                  />
-                  <DefaultLink
-                    href={'/award'}
-                    size={'base'}
-                    status={'secondary'}
-                    title={'Back'}
-                  />
                 </div>
               </div>
             </div>
@@ -152,121 +124,10 @@ function DetailAwardPage() {
                     </div>
                   </form>
                 </div>
-                <div className="">
-                  <DefaultButton
-                    size={'small'}
-                    status={'primary'}
-                    title={'Add contributor'}
-                    icon={<FaPlus />}
-                    onClick={() => {
-                      setModalContributor(!modalContributor);
-                    }}
-                  />
-                  {modalContributor ? (
-                    <div className="w-full h-screen absolute left-0 top-0 z-50 flex items-center justify-center">
-                      <div className="w-full h-screen bg-black opacity-50 " />
-                      <div className="absolute w-1/2 h-auto bg-white rounded-lg">
-                        <div className="flex justify-between items-center p-4  border-b border-gray-200">
-                          <h1 className="font-semibold text-xl">
-                            Add Contributor
-                          </h1>
-                          <GoX
-                            className="text-2xl"
-                            onClick={() => {
-                              setModalContributor(!modalContributor);
-                              setSelectedMembers(prevSelectedMembers);
-                              setDataMember(prevDataMember);
-                            }}
-                          />
-                        </div>
-                        <div className="grid grid-cols-1 p-4 xl:grid-cols-4 gap-5">
-                          <div className="col-span-full xl:col-span-2">
-                            {/* <h1 className="mb-4 font-medium text-lg">
-                              List Members
-                            </h1> */}
-                            <InputField
-                              id={'search'}
-                              name={'search'}
-                              placeholder={'Search for contributor'}
-                              type={'text'}
-                              value={search}
-                              onChange={(e) => {
-                                setSearch(e.target.value);
-                              }}
-                              icon={<IoIosSearch />}
-                            />
-                            <div className="mb-4" />
-                            <div className="overflow-x-auto h-96 border border-gray-200 p-4 rounded-lg flex flex-col gap-3">
-                              {dataMember &&
-                                dataMember.map((member) => (
-                                  <div
-                                    className="flex items-center gap-3"
-                                    key={member.nim}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      onChange={() =>
-                                        handleCheckboxChange(member)
-                                      }
-                                    />
-                                    <h1>{member.name}</h1>
-                                  </div>
-                                ))}
-                            </div>
-                          </div>
-                          <div className="col-span-full xl:col-span-2">
-                            <h1 className="mb-4 font-medium text-lg">
-                              List Selected Members
-                            </h1>
-                            <div className="overflow-x-auto h-[400px] border border-gray-200 p-4 rounded-lg flex flex-col gap-3">
-                              {selectedMembers.length > 0
-                                ? selectedMembers.map((member) => (
-                                    <div
-                                      className="flex items-center gap-3"
-                                      key={member.nim}
-                                    >
-                                      <input
-                                        type="checkbox"
-                                        onChange={() =>
-                                          handleCheckboxChange(member)
-                                        }
-                                        checked
-                                      />
-                                      <h1>{member.name}</h1>
-                                    </div>
-                                  ))
-                                : 'There are no contributors yet'}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-end items-center gap-3 p-4  border-t border-gray-200">
-                          <DefaultButton
-                            size={'small'}
-                            status={'secondary'}
-                            title={'Cancel'}
-                            onClick={() => {
-                              setModalContributor(!modalContributor);
-                              setSelectedMembers(prevSelectedMembers);
-                              setDataMember(prevDataMember);
-                            }}
-                          />
-                          <DefaultButton
-                            size={'small'}
-                            status={'primary'}
-                            title={'Save'}
-                            onClick={() => {}}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
               </div>
               <div className="container mt-4 mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
-                  {contributor.map((data, index) => (
+                  {contributorsAward.map((data, index) => (
                     <div
                       key={index}
                       className="m-2 cursor-pointer border border-gray-200 rounded-lg hover:shadow-md hover:border-opacity-0 transform hover:-translate-y-1 transition-all duration-200"
@@ -288,7 +149,7 @@ function DetailAwardPage() {
                             {data.name}
                           </h5>
                           <span className="text-sm text-gray-500">
-                            {data.division.name}
+                            {data.division}
                           </span>
                           <div className="flex mt-4 md:mt-6">
                             <Link
@@ -297,12 +158,6 @@ function DetailAwardPage() {
                             >
                               Detail
                             </Link>
-                            <button
-                              onClick={() => {}}
-                              className="py-2 px-4 ms-2 text-sm font-medium text-secondary-600 focus:outline-none rounded-lg border-2 border-secondary-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-                            >
-                              Delete
-                            </button>
                           </div>
                         </div>
                       </div>

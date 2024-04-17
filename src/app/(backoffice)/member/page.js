@@ -1,15 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import ListMember from '@/components/listTable/listMember';
-import axios from 'axios';
 import InputField from '@/components/form/inputField';
 
 import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
 import DefaultLink from '@/components/link/defaultLink';
-import DefaultButton from '@/components/button/defaultButton';
 import HeadTitle from '@/components/headTitle';
 import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
@@ -91,18 +90,20 @@ export default function Page() {
                 data,
                 index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
               ) => (
+                // <Link href={`/member/detailMmeber?nim=${data.nim}`} key={index}>
                 <ListMember
                   key={index}
                   photoUrl={data.profileUrl}
                   name={data.name}
                   email={data.email}
-                  devisi={data.division.name}
+                  devisi={data.division}
                   major={data.major}
                   entryUniversity={data.yearUniversityEnrolled}
                   entryCommunity={data.yearCommunityEnrolled}
                   status={data.isActive}
                   nim={data.nim}
                 />
+                // </Link>
               )
             )}
           </DefaultTable>

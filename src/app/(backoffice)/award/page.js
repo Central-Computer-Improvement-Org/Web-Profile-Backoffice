@@ -19,14 +19,8 @@ import Pagination from '@/components/pagination';
 export default function AwardPage() {
   const [search, setSearch] = useState('');
   const [awardDatas, setAwardDatas] = useState([]);
-  const [contributorAwardDatas, setContributorAwardDatas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const rowMenu = [
-    { menu: 'ISSUER' },
-    { menu: 'DESCRIPTION' },
-    { menu: 'CONTRIBUTOR' },
-    { menu: '' },
-  ];
+  const rowMenu = [{ menu: 'ISSUER' }, { menu: 'DESCRIPTION' }, { menu: '' }];
   useEffect(() => {
     request
       .get('/award')
@@ -38,18 +32,7 @@ export default function AwardPage() {
         console.log(error);
         setLoading(false);
       });
-    request
-      .get('/contributorAward')
-      .then(function (response) {
-        setContributorAwardDatas(response.data.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
   }, []);
-  console.log(contributorAwardDatas);
   return (
     <div>
       <HeadTitle title={'All Awards'}>
@@ -100,7 +83,6 @@ export default function AwardPage() {
                   key={index}
                   issuer={data.issuer}
                   description={data.description}
-                  contributor={contributorAwardDatas}
                   id={data.id}
                 />
               )

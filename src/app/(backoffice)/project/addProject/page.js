@@ -7,9 +7,12 @@ import TextareaField from '@/components/form/textareaField';
 import HeadTitle from '@/components/headTitle';
 import React, { useEffect, useState } from 'react';
 
-export default function AddAwardPage() {
-  const [issuer, setIssuer] = useState('');
+export default function AddProjectPage() {
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [productionUrl, setProductionUrl] = useState();
+  const [repositoryUrl, setRepositoryUrl] = useState();
+  const [budget, setBudget] = useState();
   const [contributor, setContributor] = useState([]);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,21 +31,63 @@ export default function AddAwardPage() {
   }, []);
   return (
     <div>
-      <HeadTitle title={'Add Award'}>
+      <HeadTitle title={'Add Project'}>
         <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
           <form action="#">
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
               <div className="sm:col-span-6">
                 <InputField
-                  id={'issuer'}
-                  name={'issuer'}
+                  id={'name'}
+                  name={'name'}
                   placeholder={'e.g Gemastik'}
                   type={'text'}
-                  value={issuer}
+                  value={name}
                   required
-                  label={'Issuer'}
+                  label={'Name'}
                   onChange={(e) => {
-                    setIssuer(e.target.value);
+                    setName(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="sm:col-span-6">
+                <InputField
+                  id={'productionUrl'}
+                  name={'productionUrl'}
+                  placeholder={'e.g https://example.com/'}
+                  type={'text'}
+                  value={productionUrl}
+                  required
+                  label={'Production Url'}
+                  onChange={(e) => {
+                    setProductionUrl(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="sm:col-span-6">
+                <InputField
+                  id={'repositoryUrl'}
+                  name={'repositoryUrl'}
+                  placeholder={'e.g https://example.com/'}
+                  type={'text'}
+                  value={repositoryUrl}
+                  required
+                  label={'Repository Url'}
+                  onChange={(e) => {
+                    setRepositoryUrl(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="sm:col-span-6">
+                <InputField
+                  id={'budget'}
+                  name={'budget'}
+                  placeholder={'e.g 1000000'}
+                  type={'number'}
+                  value={budget}
+                  required
+                  label={'Budget'}
+                  onChange={(e) => {
+                    setBudget(e.target.value);
                   }}
                 />
               </div>
