@@ -12,6 +12,7 @@ export default function DefaultButton({
   return (
     <button
       type={type}
+      onClick={onClick}
       className={`
       ${full ? 'w-full ' : 'w-auto'}
       ${
@@ -34,7 +35,6 @@ export default function DefaultButton({
       }
       ${icon && title ? 'inline-flex ' : ''}
          items-center justify-center px-3 py-2 font-medium text-center text-white rounded-lg focus:ring-4 `}
-      onClick={onClick}
     >
       <div className="text-xl mr-2 -ml-1">{icon}</div>
       {title}

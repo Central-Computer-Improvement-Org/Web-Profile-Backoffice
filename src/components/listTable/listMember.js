@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
-import DefaultLink from '../link/defaultLink';
+'use client';
+import { useRouter } from 'next/navigation';
 import moment from 'moment';
+import DefaultButton from '../button/defaultButton';
+import DefaultLink from '../link/defaultLink';
 
 const ListMember = ({
   photoUrl,
@@ -14,8 +16,23 @@ const ListMember = ({
   status,
   nim,
 }) => {
+  const router = useRouter();
+
+  const handleEdit = (nim) => {
+    router.push(`/member/editMember?nim=${nim}`);
+  };
+
+  const handleDelete = (nim) => {
+    router.push(`/member/delete/${nim}`);
+  };
+
   return (
-    <tr className="bg-white border-b   hover:bg-gray-50 text-gray-700 ">
+    <tr
+      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      onClick={() => {
+        router.push(`/member/detailMember?nim=${nim}`);
+      }}
+    >
       <td className="w-4 p-4">
         <div className="flex items-center">
           <input
@@ -66,18 +83,21 @@ const ListMember = ({
           <p>{status ? 'Active' : 'Inactive'}</p>
         </div>
       </td>
-      <td className="text-xs font-medium px-6 py-4 flex gap-3">
-        <DefaultLink
-          href={`/member/detailMember?nim=${nim}`}
-          size={'small'}
-          status={'primary'}
-          title={'Detail'}
+      <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
+        <DefaultButton
+          onClick={(e) => {
+            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
+            handleEdit(nim); // Panggil fungsi untuk mengarahkan ke halaman edit
+          }}
+          size="small"
+          status="primary"
+          title="Edit"
         />
         <DefaultLink
           href={`/member/delete/${nim}`}
-          size={'small'}
-          status={'secondary'}
-          title={'Delete'}
+          size="small"
+          status="secondary"
+          title="Delete"
         />
       </td>
     </tr>

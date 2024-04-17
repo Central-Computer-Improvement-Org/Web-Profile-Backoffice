@@ -41,7 +41,7 @@ export default function DetailMemberPage() {
       return;
     }
     request
-      .get('/profileMemberByNim')
+      .get('/memberByNim')
       .then(function (response) {
         const data = response.data.data;
         setRoleId(data.role);
@@ -55,8 +55,8 @@ export default function DetailMemberPage() {
         setStatus(data.isActive);
         setYearUniversityEnrolled(data.yearUniversityEnrolled);
         setYearCommunityEnrolled(data.yearCommunityEnrolled);
-        setAward(data.contributorAward);
-        setProject(data.contributorProject);
+        setAward(data.awards);
+        setProject(data.projects);
         setLoading(false); // Setelah data dimuat, atur loading menjadi false
       })
       .catch(function (error) {
@@ -92,9 +92,7 @@ export default function DetailMemberPage() {
                         {name}
                       </h3>
                     </div>
-                    <div className="text-sm text-gray-500 ">
-                      {division.name}
-                    </div>
+                    <div className="text-sm text-gray-500 ">{division}</div>
                     <div className="mb-4 text-sm text-gray-500 ">{major}</div>
                   </div>
                 </div>
@@ -183,8 +181,8 @@ export default function DetailMemberPage() {
                 </div>
               </div>
             </div>
-            <div className="col-span-2">
-              <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
+            <div className="col-span-2 ">
+              <div className="p-4  bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <h3 className="mb-4 text-xl font-semibold ">
                   General information
                 </h3>
@@ -299,24 +297,6 @@ export default function DetailMemberPage() {
                         disabled
                       />
                     </div>
-                    <div className="flex gap-3">
-                      <div className="col-span-6 sm:col-full">
-                        <DefaultLink
-                          href={`/member/detailMember/editMember?nim=${nim}`}
-                          size={'base'}
-                          status={'primary'}
-                          title={'Update'}
-                        />
-                      </div>
-                      <div className="col-span-6 sm:col-full">
-                        <DefaultLink
-                          href={`/member`}
-                          size={'base'}
-                          status={'secondary'}
-                          title={'Back'}
-                        />
-                      </div>
-                    </div>
                   </div>
                 </form>
               </div>
@@ -333,7 +313,7 @@ export default function DetailMemberPage() {
                         key={index}
                         className="inline-block bg-gray-200 rounded-full px-3 py-3 text-sm font-semibold text-gray-700 mr-2 mb-2"
                       >
-                        {data.award.issuer}
+                        {data.issuer}
                       </span>
                     ))}
                 </div>
@@ -349,7 +329,7 @@ export default function DetailMemberPage() {
                         key={index}
                         className="inline-block bg-gray-200 rounded-full px-3 py-3 text-sm font-semibold text-gray-700 mr-2 mb-2"
                       >
-                        {data.project.name}
+                        {data.name}
                       </span>
                     ))}
                 </div>

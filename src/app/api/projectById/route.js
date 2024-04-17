@@ -4,10 +4,11 @@ export async function GET(request) {
     status: 'SUCCESS',
     recordsTotal: 0,
     data: {
-      id: 'PRJ-12345',
-      issuer: 'Penghargaan Web Development Gemastik',
+      id: 'PRJ-1',
+      name: 'Web App Ecomerce by AkuBangkrut',
       productionUrl: 'https://github.com/name/example',
       repositoryUrl: 'https://github.com/name/example',
+      contributors: [{}],
     },
     error: null,
   };

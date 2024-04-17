@@ -1,13 +1,12 @@
 'use client';
 import DefaultButton from '@/components/button/defaultButton';
-import DefaultLink from '@/components/link/defaultLink';
-import { host } from '@/app/utils/urlApi';
 import InputField from '@/components/form/inputField';
 import TextareaField from '@/components/form/textareaField';
 import HeadTitle from '@/components/headTitle';
-import axios from 'axios';
 import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import InputMultipleSelect from '@/components/form/inputMultipleSelect';
+import request from '@/app/utils/request';
 
 export default function EditAwardPage() {
   const searchParams = useSearchParams();
@@ -16,25 +15,42 @@ export default function EditAwardPage() {
 
   const [issuer, setIssuer] = useState('');
   const [description, setDescription] = useState('');
+  const [contributor, setContributor] = useState([]);
+  const [members, setMembers] = useState([]);
+
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!id) {
       router.push('/award');
       return;
     }
-    axios
-      .get(`${host}/api/awardById`)
+    request
+      .get(`/contributorAwardById`)
       .then(function (response) {
         const data = response.data.data;
         setIssuer(data.issuer);
         setDescription(data.description);
+        setContributor(data.contributors);
         setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+    request
+      .get('/member')
+      .then(function (response) {
+        setMembers(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [id, router]);
+  const dataMembers = members.map((item) => ({
+    value: item.nim,
+    label: item.name,
+  }));
+
   return (
     <div>
       <HeadTitle title={'Edit Award'}>
@@ -69,6 +85,22 @@ export default function EditAwardPage() {
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
+                  />
+                </div>
+                <div className="sm:col-span-6">
+                  <InputMultipleSelect
+                    id={'contributor'}
+                    label={'Contributor'}
+                    name={'contributorAwards'}
+                    onChange={(item) => {
+                      setContributor(item);
+                    }}
+                    value={dataMembers.find((member) =>
+                      contributor.some(
+                        (contrib) => contrib.nim === member.value
+                      )
+                    )}
+                    option={dataMembers}
                   />
                 </div>
                 <div className="sm:col-span-6">

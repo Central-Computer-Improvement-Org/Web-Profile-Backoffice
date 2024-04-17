@@ -4,74 +4,17 @@ export async function GET(request) {
     status: 'SUCCESS',
     recordsTotal: 0,
     data: {
-      id: 'C-AWRD-1',
-      awardId: 'AWD-12345',
-      award: {
-        id: 'AWD-12345',
-        issuer: 'Penghargaan Web Development Gemastik',
-        description:
-          'Pemenang Web Development Acara Gemastik. Penghargaan ini diberikan kepada individu atau tim yang berhasil merancang dan mengembangkan situs web yang inovatif, fungsional, dan memiliki dampak positif dalam konteks kompetisi Gemastik. Pemenangnya menonjol dalam kreativitas desain, kemampuan teknis, dan kecakapan dalam membangun pengalaman pengguna yang memikat. Dengan pencapaian ini, pemenang berperan penting dalam menginspirasi dan memajukan industri pengembangan web di Indonesia.',
-      },
-      contributor: [
+      id: 'C-AWD-1',
+      issuer: 'Penghargaan Web Development Gemastik',
+      description:
+        'Pemenang Web Development Acara Gemastik. Penghargaan ini diberikan kepada individu atau tim yang berhasil merancang dan mengembangkan situs web yang inovatif, fungsional, dan memiliki dampak positif dalam konteks kompetisi Gemastik. Pemenangnya menonjol dalam kreativitas desain, kemampuan teknis, dan kecakapan dalam membangun pengalaman pengguna yang memikat. Dengan pencapaian ini, pemenang berperan penting dalam menginspirasi dan memajukan industri pengembangan web di Indonesia.',
+      contributors: [
         {
           nim: '123456789101',
-          roleId: 1,
-          role: {
-            id: 1,
-            name: 'member',
-          },
-          divisionId: 1,
-          division: {
-            id: 1,
-            name: 'Web Developmentt',
-            description:
-              'Divisi Web Development di UKM kampus bertugas membuat dan menjaga situs web atau aplikasi web organisasi. Mereka merancang, mengembangkan, dan memastikan keamanan serta kinerja situs web tersebut. Kerja sama dengan divisi lain untuk memahami kebutuhan mereka juga menjadi bagian dari tugas mereka. Dengan divisi ini, UKM kampus dapat meningkatkan kehadiran online mereka dan memberikan layanan yang lebih efektif kepada anggota.',
-            logoUrl:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ66_0v2Yd76CD8eYVBnHGxtMh-tQgO0EX49cVRut8udQ&s',
-          },
           name: 'Tasya Syifaunnisa',
-          email: 'tsaya.siifa@gmail.com',
-          major: 'S1 Informatika',
-          linkedinUrl:
-            'https://www.linkedin.com/in/tasya-syifaunnisa-4b489927a/',
-          phoneNumber: '083167889342',
           profileUrl:
             'https://web-images.pixpa.com/rdMS2x9jy_NhIrbG0o7QZSX-TF707z98CMMQ5e97XgM/rs:fit:1200:0/q:80/aHR0cHM6Ly9waXhwYWNvbS1pbWcucGl4cGEuY29tL2NvbS9hcnRpY2xlcy8xNjg1NzAxMTk0LTExODkwNC1wcm9tb3Rpb25hbC1tb2RlbGpwZy5wbmc=',
-          isActive: true,
-          yearUniversityEnrolled: '2013-02-26 21:28:37.261134+01:00',
-          yearCommunityEnrolled: '2013-02-26 21:28:37.261134+01:00',
-          createdAt: '2013-02-26 21:28:37.261134+01:00',
-          updatedAt: '2013-02-26 21:28:37.261134+01:00',
-        },
-        {
-          nim: '123456789102',
-          roleId: 1,
-          role: {
-            id: 1,
-            name: 'member',
-          },
-          divisionId: 1,
-          division: {
-            id: 1,
-            name: 'Web Developmentt',
-            description:
-              'Divisi Web Development di UKM kampus bertugas membuat dan menjaga situs web atau aplikasi web organisasi. Mereka merancang, mengembangkan, dan memastikan keamanan serta kinerja situs web tersebut. Kerja sama dengan divisi lain untuk memahami kebutuhan mereka juga menjadi bagian dari tugas mereka. Dengan divisi ini, UKM kampus dapat meningkatkan kehadiran online mereka dan memberikan layanan yang lebih efektif kepada anggota.',
-            logoUrl:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ66_0v2Yd76CD8eYVBnHGxtMh-tQgO0EX49cVRut8udQ&s',
-          },
-          name: 'Ahmad Asroni',
-          email: 'tsaya.siifa@gmail.com',
-          major: 'S1 Informatika',
-          linkedinUrl:
-            'https://www.linkedin.com/in/tasya-syifaunnisa-4b489927a/',
-          phoneNumber: '083167889342',
-          profileUrl:
-            'https://web-images.pixpa.com/rdMS2x9jy_NhIrbG0o7QZSX-TF707z98CMMQ5e97XgM/rs:fit:1200:0/q:80/aHR0cHM6Ly9waXhwYWNvbS1pbWcucGl4cGEuY29tL2NvbS9hcnRpY2xlcy8xNjg1NzAxMTk0LTExODkwNC1wcm9tb3Rpb25hbC1tb2RlbGpwZy5wbmc=',
-          isActive: true,
-          yearUniversityEnrolled: '2013-02-26 21:28:37.261134+01:00',
-          yearCommunityEnrolled: '2013-02-26 21:28:37.261134+01:00',
-          createdAt: '2013-02-26 21:28:37.261134+01:00',
-          updatedAt: '2013-02-26 21:28:37.261134+01:00',
+          division: 'Web Developmentt',
         },
       ],
     },
