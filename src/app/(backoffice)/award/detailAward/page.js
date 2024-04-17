@@ -22,6 +22,8 @@ function DetailAwardPage() {
   const [contributorsAward, setContributorsAward] = useState();
   const [search, setSearch] = useState();
   const [title, setTitle] = useState('');
+  const [issuer, setIssuer] = useState('');
+
   const [description, setDescription] = useState('');
 
   useEffect(() => {
@@ -65,7 +67,8 @@ function DetailAwardPage() {
     //     setLoading(false);
     //   });
     request.get('contributorAwardById').then(function (response) {
-      setTitle(response.data.data.issuer);
+      setIssuer(response.data.data.issuer);
+      setTitle(response.data.data.title);
       setDescription(response.data.data.description);
       setContributorsAward(response.data.data.contributors);
       setLoading(false);
@@ -83,6 +86,12 @@ function DetailAwardPage() {
           <div className="col-span-full xl:col-auto">
             <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
               <div className="flow-root ">
+                <div className=" flex flex-col gap-4 mb-4">
+                  <h3 className="text-xl font-semibold ">Issuer Award</h3>
+                  <p className="mb-3 text-lg text-gray-500 md:text-lg ">
+                    {issuer}
+                  </p>
+                </div>
                 <div className=" flex flex-col gap-4 mb-4">
                   <h3 className="text-xl font-semibold ">Title Award</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
