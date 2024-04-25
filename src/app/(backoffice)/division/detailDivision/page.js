@@ -1,30 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import request from '@/app/utils/request';
-import DefaultLink from '@/components/link/defaultLink';
-import ListMember from '@/components/listTable/listMember';
-import Pagination from '@/components/pagination';
-import DefaultTable from '@/components/table/defaultTable';
-import React, { useEffect, useState } from 'react';
-import { MdDescription } from 'react-icons/md';
+"use client";
+import request from "@/app/utils/request";
+import DefaultLink from "@/components/link/defaultLink";
+import ListDivision from "@/components/listTable/listDivision";
+import Pagination from "@/components/pagination";
+import DefaultTable from "@/components/table/defaultTable";
+import React, { useEffect, useState } from "react";
+import { MdDescription } from "react-icons/md";
 
-function DetailDevisionPage() {
+function DetailDivisionPage() {
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
     // Perbaiki penulisan rowMenu
-    { menu: 'NAME' },
-    { menu: 'DIVISION' },
-    { menu: 'MAJOR' },
-    { menu: 'ENTRY UNIVERSITY' },
-    { menu: 'ENTRY COMMUNITY' },
-    { menu: 'STATUS' },
-    { menu: '' },
+    { menu: "NAME" },
+    { menu: "DIVISION" },
+    { menu: "MAJOR" },
+    { menu: "ENTRY UNIVERSITY" },
+    { menu: "ENTRY COMMUNITY" },
+    { menu: "STATUS" },
+    { menu: "" },
   ];
   useEffect(() => {
     request
-      .get('/member')
+      .get("/member")
       .then(function (response) {
         setDatas(response.data.data);
         setLoading(false);
@@ -76,16 +76,16 @@ function DetailDevisionPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <DefaultLink
-                    href={'/award/detailAward/editAward?id=AWD-1'}
-                    size={'base'}
-                    status={'primary'}
-                    title={'Update'}
+                    href={"/award/detailAward/editAward?id=AWD-1"}
+                    size={"base"}
+                    status={"primary"}
+                    title={"Update"}
                   />
                   <DefaultLink
-                    href={'/award'}
-                    size={'base'}
-                    status={'secondary'}
-                    title={'Back'}
+                    href={"/award"}
+                    size={"base"}
+                    status={"secondary"}
+                    title={"Back"}
                   />
                 </div>
               </div>
@@ -128,4 +128,4 @@ function DetailDevisionPage() {
   );
 }
 
-export default DetailDevisionPage;
+export default DetailDivisionPage;
