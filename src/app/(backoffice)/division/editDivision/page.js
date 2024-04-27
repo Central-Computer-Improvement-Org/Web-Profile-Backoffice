@@ -1,35 +1,34 @@
 "use client";
 import DefaultButton from "@/components/button/defaultButton";
-import DefaultLink from "@/components/link/defaultLink";
-import { host } from "@/app/utils/urlApi";
 import InputField from "@/components/form/inputField";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
-import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import InputMultipleSelect from "@/components/form/inputMultipleSelect";
+import request from "@/app/utils/request";
 
 export default function EditDivisionPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
 
-  // State untuk menyimpan data event
   const [name, setName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!id) {
       router.push("/division");
       return;
     }
-    axios
-      .get(`${host}/api/divisionById`)
+    request
+      .get(`/divisionById`)
       .then(function (response) {
         const data = response.data.data;
-        setTitle(data.title);
+        setName(data.name);
+        // setLogoUrl(data.logoUrl);
         setDescription(data.description);
         setLoading(false);
       })
@@ -37,17 +36,17 @@ export default function EditDivisionPage() {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, router]);
 
   return (
     <div>
       <HeadTitle title={"Edit Division"}>
         {loading ? (
-          <div className="text-center">Loading...</div> // Tampilkan pesan loading jika data sedang dimuat
+          <div className="text-center">Loading...</div>
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form action="#">
-              <div className="grid grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
                 <div className="col-span-6 sm:col-span-4">
                   <InputField
                     id={"name"}
@@ -76,7 +75,7 @@ export default function EditDivisionPage() {
                     }}
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-6">
+                <div className="sm:col-span-6">
                   <TextareaField
                     id={"description"}
                     name={"description"}
@@ -89,19 +88,13 @@ export default function EditDivisionPage() {
                     }}
                   />
                 </div>
-                <div className="col-span-6 sm:col-full flex gap-3">
+                <div className="sm:col-span-6">
                   <DefaultButton
                     size={"small"}
                     status={"primary"}
-                    title={"Update"}
+                    title={"Save all"}
                     type={"submit"}
                     onClick={() => {}}
-                  />
-                  <DefaultLink
-                    size={"small"}
-                    status={"secondary"}
-                    title={"Back"}
-                    href={"/news"}
                   />
                 </div>
               </div>

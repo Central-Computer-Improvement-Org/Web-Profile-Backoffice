@@ -2,15 +2,30 @@
 import request from "@/app/utils/request";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
+import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
 import React, { useEffect, useState } from "react";
 
-export default function AddDivisionPage() {
+export default function AddDevisionPage() {
   const [name, setName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    request
+      .get("/member")
+      .then(function (response) {
+        setMembers(response.data.data);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
   return (
     <div>
       <HeadTitle title={"Add Division"}>
@@ -45,7 +60,7 @@ export default function AddDivisionPage() {
                   }}
                 />
               </div>
-              <div className="col-span-6 sm:col-span-6">
+              <div className="sm:col-span-6">
                 <TextareaField
                   id={"description"}
                   name={"description"}

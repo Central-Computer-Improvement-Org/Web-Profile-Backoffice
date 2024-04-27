@@ -1,21 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useRouter } from "next/navigation";
-import moment from "moment";
-import DefaultButton from "../button/defaultButton";
+import React, { useState } from "react";
 import DefaultLink from "../link/defaultLink";
+import { formatDescription } from "@/app/utils/stringUtils";
+import DefaultButton from "../button/defaultButton";
+import { useRouter } from "next/navigation";
 
-const ListDivision = ({ logoUrl, name, description, id }) => {
+const ListDivision = ({ name, logoUrl, description, id }) => {
   const router = useRouter();
-
-  const handleEdit = (id) => {
-    router.push(`/division/editDivision?id=${id}`);
-  };
-
-  const handleDelete = (id) => {
-    router.push(`/division/delete/${id}`);
-  };
-
   return (
     <tr
       className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
@@ -35,6 +27,7 @@ const ListDivision = ({ logoUrl, name, description, id }) => {
           </label>
         </div>
       </td>
+
       <td className="text-xs font-medium px-6 py-4">{name}</td>
       <th
         scope="row"
@@ -50,23 +43,25 @@ const ListDivision = ({ logoUrl, name, description, id }) => {
           />
         </div>
       </th>
-      <td className="text-xs font-medium px-6 py-4">{description}</td>
-
-      <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
+      <td className="text-xs font-medium px-6 py-4">
+        {formatDescription(description)}
+      </td>
+      <td className="text-xs font-medium px-6 py-4 flex gap-3">
         <DefaultButton
           onClick={(e) => {
-            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
-            handleEdit(id); // Panggil fungsi untuk mengarahkan ke halaman edit
+            e.stopPropagation();
+            router.push(`/division/editDivision?id=${id}`);
           }}
-          size="small"
-          status="primary"
-          title="Edit"
+          href={`/division/detailDivision?id=${id}`}
+          size={"small"}
+          status={"primary"}
+          title={"Edit"}
         />
         <DefaultLink
           href={`/division/delete/${id}`}
-          size="small"
-          status="secondary"
-          title="Delete"
+          size={"small"}
+          status={"secondary"}
+          title={"Delete"}
         />
       </td>
     </tr>

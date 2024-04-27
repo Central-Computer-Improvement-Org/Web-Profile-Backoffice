@@ -3,6 +3,7 @@
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
 import ListDivision from "@/components/listTable/listDivision";
+import ListMember from "@/components/listTable/listMember";
 import Pagination from "@/components/pagination";
 import DefaultTable from "@/components/table/defaultTable";
 import React, { useEffect, useState } from "react";
@@ -76,13 +77,13 @@ function DetailDivisionPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <DefaultLink
-                    href={"/award/detailAward/editAward?id=AWD-1"}
+                    href={"/division/detailDivision/editDivision?id=AWD-1"}
                     size={"base"}
                     status={"primary"}
-                    title={"Update"}
+                    title={"Edit"}
                   />
                   <DefaultLink
-                    href={"/award"}
+                    href={"/division"}
                     size={"base"}
                     status={"secondary"}
                     title={"Back"}
@@ -96,7 +97,7 @@ function DetailDivisionPage() {
       <div className="">
         <div className="p-4 ">
           <h3 className=" text-xl font-semibold ">
-            Member Devision Web Development
+            Member Division Web Development
           </h3>
         </div>
         <div className="">
@@ -111,7 +112,7 @@ function DetailDivisionPage() {
                   photoUrl={data.profileUrl}
                   name={data.name}
                   email={data.email}
-                  devisi={data.divisionId.name}
+                  divisi={data.division}
                   major={data.major}
                   entryUniversity={data.yearUniversityEnrolled}
                   entryCommunity={data.yearCommunityEnrolled}

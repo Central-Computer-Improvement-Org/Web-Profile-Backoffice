@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import { useRouter } from 'next/navigation';
-import moment from 'moment';
-import DefaultButton from '../button/defaultButton';
-import DefaultLink from '../link/defaultLink';
+"use client";
+import { useRouter } from "next/navigation";
+import moment from "moment";
+import DefaultButton from "../button/defaultButton";
+import DefaultLink from "../link/defaultLink";
 
 const ListMember = ({
   photoUrl,
   name,
   email,
-  devisi,
+  divisi,
   major,
   entryUniversity,
   entryCommunity,
@@ -65,22 +65,22 @@ const ListMember = ({
           </div>
         </div>
       </th>
-      <td className="text-xs font-medium px-6 py-4">{devisi}</td>
+      <td className="text-xs font-medium px-6 py-4">{divisi}</td>
       <td className="text-xs font-medium px-6 py-4">{major}</td>
       <td className="text-xs font-medium px-6 py-4">
-        {moment(entryUniversity).format(' D MMM YYYY')}
+        {moment(entryUniversity).format(" D MMM YYYY")}
       </td>
       <td className="text-xs font-medium px-6 py-4">
-        {moment(entryCommunity).format(' DD MMM YYYY')}
+        {moment(entryCommunity).format(" DD MMM YYYY")}
       </td>
       <td className="text-xs font-normal px-6 py-4">
         <div className="flex gap-2 items-center">
           <span
             className={`w-2 h-2 rounded-full ${
-              status ? 'bg-green-500' : 'bg-red-500'
+              status ? "bg-green-500" : "bg-red-500"
             }`}
           />
-          <p>{status ? 'Active' : 'Inactive'}</p>
+          <p>{status ? "Active" : "Inactive"}</p>
         </div>
       </td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
