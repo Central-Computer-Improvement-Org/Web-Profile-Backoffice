@@ -1,37 +1,36 @@
-'use client';
-import DefaultButton from '@/components/button/defaultButton';
-import DefaultLink from '@/components/link/defaultLink';
-import InputField from '@/components/form/inputField';
-import InputSelect from '@/components/form/inputSelect';
-import TextareaField from '@/components/form/textareaField';
-import HeadTitle from '@/components/headTitle';
-import axios from 'axios';
-import { host } from '@/app/utils/urlApi';
-import { useSearchParams, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+"use client";
+import DefaultButton from "@/components/button/defaultButton";
+import DefaultLink from "@/components/link/defaultLink";
+import InputField from "@/components/form/inputField";
+import InputSelect from "@/components/form/inputSelect";
+import TextareaField from "@/components/form/textareaField";
+import HeadTitle from "@/components/headTitle";
+import { useSearchParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import request from "@/app/utils/request";
 
 export default function EditEventPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
 
   // State untuk menyimpan data event
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [divisionId, setDivisionId] = useState('');
-  const [media, setMedia] = useState('');
-  const [heldOn, setHeldOn] = useState('');
-  const [budget, setBudget] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [divisionId, setDivisionId] = useState("");
+  const [media, setMedia] = useState("");
+  const [heldOn, setHeldOn] = useState("");
+  const [budget, setBudget] = useState("");
 
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   useEffect(() => {
     if (!id) {
-      router.push('./event');
+      router.push("/event");
       return;
     }
-    axios
-      .get(`${host}/api/eventById`)
+    request
+      .get(`/eventById`)
       .then(function (response) {
         const data = response.data.data;
         setName(data.name);
@@ -49,7 +48,7 @@ export default function EditEventPage() {
   }, [id]);
   return (
     <div>
-      <HeadTitle title={'Edit Event'}>
+      <HeadTitle title={"Edit Event"}>
         {loading ? (
           <div className="text-center">Loading...</div> // Tampilkan pesan loading jika data sedang dimuat
         ) : (
@@ -58,13 +57,13 @@ export default function EditEventPage() {
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6 sm:col-span-4">
                   <InputField
-                    id={'name'}
-                    name={'name'}
-                    placeholder={'CCI SUMMIT'}
-                    type={'text'}
+                    id={"name"}
+                    name={"name"}
+                    placeholder={"CCI SUMMIT"}
+                    type={"text"}
                     value={name}
                     required
-                    label={'Name'}
+                    label={"Name"}
                     onChange={(e) => {
                       setName(e.target.value);
                     }}
@@ -72,13 +71,13 @@ export default function EditEventPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-2">
                   <InputSelect
-                    id={'divisionId'}
-                    name={'division'}
-                    placeholder={'Web Development'}
-                    type={'text'}
+                    id={"divisionId"}
+                    name={"division"}
+                    placeholder={"Web Development"}
+                    type={"text"}
                     value={divisionId}
                     required
-                    label={'Division'}
+                    label={"Division"}
                     onChange={(e) => {
                       setDivisionId(e.target.value);
                     }}
@@ -91,12 +90,12 @@ export default function EditEventPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
-                    id={'media'}
-                    name={'media'}
-                    type={'file'}
+                    id={"media"}
+                    name={"media"}
+                    type={"file"}
                     value={media}
                     required
-                    label={'Media'}
+                    label={"Media"}
                     onChange={(e) => {
                       setMedia(e.target.value);
                     }}
@@ -104,12 +103,12 @@ export default function EditEventPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
-                    id={'heldOn'}
-                    name={'heldOn'}
-                    type={'month'}
+                    id={"heldOn"}
+                    name={"heldOn"}
+                    type={"month"}
                     value={heldOn}
                     required
-                    label={'Held On'}
+                    label={"Held On"}
                     onChange={(e) => {
                       setHeldOn(e.target.value);
                     }}
@@ -117,13 +116,13 @@ export default function EditEventPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
-                    id={'budget'}
-                    name={'budget'}
-                    placeholder={'0'}
-                    type={'text'}
+                    id={"budget"}
+                    name={"budget"}
+                    placeholder={"0"}
+                    type={"text"}
                     value={budget}
                     required
-                    label={'Budget'}
+                    label={"Budget"}
                     onChange={(e) => {
                       setBudget(e.target.value);
                     }}
@@ -131,12 +130,12 @@ export default function EditEventPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-6">
                   <TextareaField
-                    id={'description'}
-                    name={'description'}
-                    placeholder={'e.g Description ...'}
+                    id={"description"}
+                    name={"description"}
+                    placeholder={"e.g Description ..."}
                     value={description}
                     required
-                    label={'Description'}
+                    label={"Description"}
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
@@ -144,17 +143,17 @@ export default function EditEventPage() {
                 </div>
                 <div className="col-span-6 sm:col-full flex gap-3">
                   <DefaultButton
-                    size={'small'}
-                    status={'primary'}
-                    title={'Update'}
-                    type={'submit'}
+                    size={"small"}
+                    status={"primary"}
+                    title={"Update"}
+                    type={"submit"}
                     onClick={() => {}}
                   />
                   <DefaultLink
-                    size={'small'}
-                    status={'secondary'}
-                    title={'Back'}
-                    href={'/event'}
+                    size={"small"}
+                    status={"secondary"}
+                    title={"Back"}
+                    href={"/event"}
                   />
                 </div>
               </div>

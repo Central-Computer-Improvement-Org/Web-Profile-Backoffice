@@ -1,12 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
-import DefaultLink from '../link/defaultLink';
-import moment from 'moment';
-import { formatDescription } from '@/app/utils/stringUtils';
+import React from "react";
+import DefaultLink from "../link/defaultLink";
+import moment from "moment";
+import { formatDescription } from "@/app/utils/stringUtils";
+import DefaultButton from "../button/defaultButton";
+import { useRouter } from "next/navigation";
 
 const ListEvent = ({ name, division, description, heldOn, budget, id }) => {
+  const router = useRouter();
   return (
-    <tr className="bg-white border-b   hover:bg-gray-50 text-gray-700 ">
+    <tr
+      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      onClick={() => {
+        router.push(`/event/detailEvent?id=${id}`);
+      }}
+    >
       <td className="w-4 p-4">
         <div className="flex items-center">
           <input
@@ -25,21 +33,25 @@ const ListEvent = ({ name, division, description, heldOn, budget, id }) => {
         {formatDescription(description)}
       </td>
       <td className="text-xs font-medium px-6 py-4">
-        {moment(heldOn).format('MMM YYYY')}
+        {moment(heldOn).format("MMM YYYY")}
       </td>
       <td className="text-xs font-medium px-6 py-4">{budget}</td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3">
-        <DefaultLink
-          href={`/event/detailEvent?id=${id}`}
-          size={'small'}
-          status={'primary'}
-          title={'Detail'}
+        <DefaultButton
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/event/editEvent?id=${id}`);
+          }}
+          href={`/event/editEvent?id=${id}`}
+          size={"small"}
+          status={"primary"}
+          title={"Edit"}
         />
         <DefaultLink
           href={`/event/delete/${id}`}
-          size={'small'}
-          status={'secondary'}
-          title={'Delete'}
+          size={"small"}
+          status={"secondary"}
+          title={"Delete"}
         />
       </td>
     </tr>
