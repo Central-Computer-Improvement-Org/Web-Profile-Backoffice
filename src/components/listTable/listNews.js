@@ -2,10 +2,27 @@
 import React from "react";
 import DefaultLink from "../link/defaultLink";
 import { formatDescription } from "@/app/utils/stringUtils";
+import DefaultButton from "../button/defaultButton";
+import { useRouter } from "next/navigation";
 
 const ListNews = ({ title, description, id }) => {
+  const router = useRouter();
+
+  const handleEdit = (id) => {
+    router.push(`/news/editNews?id=${id}`);
+  };
+
+  const handleDelete = (id) => {
+    router.push(`/news/delete/${id}`);
+  };
+
   return (
-    <tr className="bg-white border-b   hover:bg-gray-50 text-gray-700 ">
+    <tr
+      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      onClick={() => {
+        router.push(`/news/detailNews?id=${id}`);
+      }}
+    >
       <td className="w-4 p-4">
         <div className="flex items-center">
           <input
@@ -22,18 +39,21 @@ const ListNews = ({ title, description, id }) => {
       <td className="text-xs font-medium px-6 py-4">
         {formatDescription(description)}
       </td>
-      <td className="text-xs font-medium px-6 py-4 flex gap-3">
-        <DefaultLink
-          href={`/news/editNews?id=${id}`}
-          size={"small"}
-          status={"primary"}
-          title={"Edit"}
+      <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
+        <DefaultButton
+          onClick={(e) => {
+            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
+            handleEdit(id); // Panggil fungsi untuk mengarahkan ke halaman edit
+          }}
+          size="small"
+          status="primary"
+          title="Edit"
         />
         <DefaultLink
           href={`/news/delete/${id}`}
-          size={"small"}
-          status={"secondary"}
-          title={"Delete"}
+          size="small"
+          status="secondary"
+          title="Delete"
         />
       </td>
     </tr>

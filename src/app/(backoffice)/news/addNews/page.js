@@ -1,7 +1,7 @@
 "use client";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
-import TextareaField from "@/components/form/textareaField";
+import InputSelect from "@/components/form/inputSelect";
 import HeadTitle from "@/components/headTitle";
 import React, { useState } from "react";
 
