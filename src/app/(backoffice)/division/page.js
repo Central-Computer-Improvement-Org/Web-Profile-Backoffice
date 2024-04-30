@@ -19,7 +19,9 @@ import Pagination from "@/components/pagination";
 export default function DivisionPage() {
   const [search, setSearch] = useState("");
   const [divisionDatas, setDivisionDatas] = useState([]);
+
   const [loading, setLoading] = useState(true);
+
   const rowMenu = [
     { menu: "NAME" },
     { menu: "LOGO" },

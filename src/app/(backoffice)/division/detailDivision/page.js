@@ -49,7 +49,7 @@ function DetailDivisionPage() {
       .then(function (response) {
         const data = response.data.data;
         setName(data.name);
-        setLogoUrl(data.logoUrl);
+        // setLogoUrl(data.logoUrl);
         setDescription(data.description);
         setLoading(false);
       })
@@ -95,7 +95,7 @@ function DetailDivisionPage() {
                   </div>
                   <div className="flex items-center gap-4">
                     <DefaultLink
-                      href={"/division/editDivision?id=AWD-1"}
+                      href={"/division/detailDivision/editDivision?id=AWD-1"}
                       size={"base"}
                       status={"primary"}
                       title={"Edit"}
