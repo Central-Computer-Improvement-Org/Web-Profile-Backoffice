@@ -8,7 +8,8 @@ export async function GET(request) {
       name: "CCI SUMMIT",
       description:
         "Sebuah acara dari rangkaian kegiatan workshop, seminar, tournament yang mencakup seluruh divisi pembelajaran CCI dan menjadikan CCI SUMMIT sebagai puncak dari acara CCI.",
-      divisionId: {
+      divisionId: "CCI-WB",
+      division: {
         id: 1,
         name: "Web Development",
         description:
@@ -17,7 +18,7 @@ export async function GET(request) {
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ66_0v2Yd76CD8eYVBnHGxtMh-tQgO0EX49cVRut8udQ&s",
       },
       mediaUrl:
-        "https://web-images.pixpa.com/rdMS2x9jy_NhIrbG0o7QZSX-TF707z98CMMQ5e97XgM/rs:fit:1200:0/q:80/aHR0cHM6Ly9waXhwYWNvbS1pbWcucGl4cGEuY29tL2NvbS9hcnRpY2xlcy8xNjg1NzAxMTk0LTExODkwNC1wcm9tb3Rpb25hbC1tb2RlbGpwZy5wbmc=",
+        "https://img.freepik.com/free-photo/modern-office-space-with-desktops-with-modern-computers-created-with-generative-ai-technology_185193-110089.jpg?w=2000&t=st=1714246987~exp=1714247587~hmac=d01bd1798aa29ad437dc27390de665e6bee9c2b412f1c8660c6700732d0c81e7",
       heldOn: "2022-03",
       budget: "0",
       createdAt: "2013-02-26 21:28:37.261134+01:00",
