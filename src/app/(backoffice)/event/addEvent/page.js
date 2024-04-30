@@ -34,6 +34,19 @@ export default function AddEventPage() {
                 />
               </div>
               <div className="col-span-6 sm:col-span-2">
+                <InputField
+                  id={"media"}
+                  name={"media"}
+                  type={"file"}
+                  value={media}
+                  required
+                  label={"Media"}
+                  onChange={(e) => {
+                    setMedia(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="col-span-6 sm:col-span-2">
                 <InputSelect
                   id={"divisionId"}
                   name={"division"}
@@ -51,19 +64,6 @@ export default function AddEventPage() {
                   <option>Data Resarch</option>
                   <option>Networking</option>
                 </InputSelect>
-              </div>
-              <div className="col-span-6 sm:col-span-2">
-                <InputField
-                  id={"media"}
-                  name={"media"}
-                  type={"file"}
-                  value={media}
-                  required
-                  label={"Media"}
-                  onChange={(e) => {
-                    setMedia(e.target.value);
-                  }}
-                />
               </div>
               <div className="col-span-6 sm:col-span-2">
                 <InputField

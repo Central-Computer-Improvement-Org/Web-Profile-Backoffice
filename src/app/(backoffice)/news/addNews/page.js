@@ -1,6 +1,7 @@
 "use client";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
+import RichTextEditor from "@/components/form/inputRichText";
 import InputSelect from "@/components/form/inputSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
@@ -45,16 +46,16 @@ export default function AddNewsPage() {
                 />
               </div>
               <div className="col-span-6 sm:col-span-6">
-                <TextareaField
+                <RichTextEditor
                   id={"description"}
                   name={"description"}
                   placeholder={"e.g Description ..."}
                   value={description}
                   required
                   label={"Description"}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
+                  // onChange={(e) => {
+                  //   setDescription(e.target.value);
+                  // }}
                 />
               </div>
               <div className="sm:col-span-6">
