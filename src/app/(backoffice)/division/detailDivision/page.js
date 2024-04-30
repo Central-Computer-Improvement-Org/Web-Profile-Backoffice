@@ -2,6 +2,7 @@
 "use client";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
+import ListDivision from "@/components/listTable/listDivision";
 import ListMember from "@/components/listTable/listMember";
 import Pagination from "@/components/pagination";
 import DefaultTable from "@/components/table/defaultTable";
