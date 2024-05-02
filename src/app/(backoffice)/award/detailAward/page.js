@@ -1,34 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import request from '@/app/utils/request';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import DefaultLink from '@/components/link/defaultLink';
-import Pagination from '@/components/pagination';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa6';
-import { IoIosSearch } from 'react-icons/io';
-import { GoX } from 'react-icons/go';
-import Link from 'next/link';
+"use client";
+import request from "@/app/utils/request";
+import DefaultButton from "@/components/button/defaultButton";
+import InputField from "@/components/form/inputField";
+import DefaultLink from "@/components/link/defaultLink";
+import Pagination from "@/components/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
+import { IoIosSearch } from "react-icons/io";
+import { GoX } from "react-icons/go";
+import Link from "next/link";
 
 function DetailAwardPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
 
   const [modalContributor, setModalContributor] = useState(false);
   const [loading, setLoading] = useState(true);
   const [contributorsAward, setContributorsAward] = useState();
   const [search, setSearch] = useState();
-  const [title, setTitle] = useState('');
-  const [issuer, setIssuer] = useState('');
+  const [title, setTitle] = useState("");
+  const [issuer, setIssuer] = useState("");
 
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     if (!id) {
-      router.push('/award');
+      router.push("/award");
       return;
     }
 
@@ -66,7 +66,7 @@ function DetailAwardPage() {
     //     console.log(errors);
     //     setLoading(false);
     //   });
-    request.get('contributorAwardById').then(function (response) {
+    request.get("contributorAwardById").then(function (response) {
       setIssuer(response.data.data.issuer);
       setTitle(response.data.data.title);
       setDescription(response.data.data.description);
@@ -104,6 +104,20 @@ function DetailAwardPage() {
                     {description}
                   </p>
                 </div>
+                <div className="flex justify-end items-center gap-4">
+                  <DefaultLink
+                    href={"/member/editMember?nim=123456789101"}
+                    size={"base"}
+                    status={"primary"}
+                    title={"Edit"}
+                  />
+                  <DefaultLink
+                    href={"/member"}
+                    size={"base"}
+                    status={"secondary"}
+                    title={"Back"}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -120,10 +134,10 @@ function DetailAwardPage() {
                     </label>
                     <div className="relative mt-1 lg:w-64 xl:w-96">
                       <InputField
-                        id={'search'}
-                        name={'search'}
-                        placeholder={'Search for contributor'}
-                        type={'text'}
+                        id={"search"}
+                        name={"search"}
+                        placeholder={"Search for contributor"}
+                        type={"text"}
                         value={search}
                         onChange={(e) => {
                           setSearch(e.target.value);
