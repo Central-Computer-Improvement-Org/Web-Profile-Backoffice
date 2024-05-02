@@ -1,47 +1,61 @@
-'use client';
-import request from '@/app/utils/request';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import InputSelect from '@/components/form/inputSelect';
-import DefaultLink from '@/components/link/defaultLink';
-import moment from 'moment';
-import Image from 'next/image';
-import { useSearchParams, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { FaLinkedin } from 'react-icons/fa';
-import { MdOutlinePhoneAndroid } from 'react-icons/md';
-import { MdEmail } from 'react-icons/md';
-import Link from 'next/link';
+/* eslint-disable @next/next/no-img-element */
+"use client";
+import request from "@/app/utils/request";
+import DefaultButton from "@/components/button/defaultButton";
+import InputField from "@/components/form/inputField";
+import InputSelect from "@/components/form/inputSelect";
+import DefaultLink from "@/components/link/defaultLink";
+import moment from "moment";
+import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { FaLinkedin } from "react-icons/fa";
+import { MdOutlinePhoneAndroid } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
+import Link from "next/link";
 
 export default function DetailMemberPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const nim = searchParams.get('nim');
+  const nim = searchParams.get("nim");
 
   // State untuk menyimpan data member
-  const [roleId, setRoleId] = useState('');
-  const [division, setDivision] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [major, setMajor] = useState('');
-  const [linkedinUrl, setLinkedinUrl] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [profilePicture, setProfilePicture] = useState('');
+  const [roleId, setRoleId] = useState("");
+  const [division, setDivision] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [major, setMajor] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [status, setStatus] = useState();
   const [award, setAward] = useState();
   const [project, setProject] = useState();
-  const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState('');
-  const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState('');
+  const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState("");
+  const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState("");
 
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log("Text copied to clipboard:", text);
+        // Optionally, you can show a toast or notification to indicate successful copy
+      })
+      .catch((error) => {
+        console.error("Error copying text to clipboard:", error);
+        // Optionally, you can show a toast or notification to indicate copy failure
+      });
+  };
+
   useEffect(() => {
     if (!nim) {
-      router.push('/member');
+      router.push("/member");
       return;
     }
     request
-      .get('/memberByNim')
+      .get("/memberByNim")
       .then(function (response) {
         const data = response.data.data;
         setRoleId(data.role);
@@ -115,12 +129,20 @@ export default function DetailMemberPage() {
                           </p>
                         </div>
                         <div className="inline-flex items-center">
-                          <Link
+                          {/* <Link
                             href="#"
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
                           >
                             Copy
-                          </Link>
+                          </Link> */}
+                          <button
+                            className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
+                            onClick={() =>
+                              copyToClipboard(`+62 ${phoneNumber}`)
+                            }
+                          >
+                            Copy
+                          </button>
                         </div>
                       </div>
                     </li>
@@ -142,12 +164,18 @@ export default function DetailMemberPage() {
                           </Link>
                         </div>
                         <div className="inline-flex items-center">
-                          <Link
+                          {/* <Link
                             href="#"
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
                           >
                             Copy
-                          </Link>
+                          </Link> */}
+                          <button
+                            className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
+                            onClick={() => copyToClipboard(`${linkedinUrl}`)}
+                          >
+                            Copy
+                          </button>
                         </div>
                       </div>
                     </li>
@@ -168,12 +196,18 @@ export default function DetailMemberPage() {
                           </Link>
                         </div>
                         <div className="inline-flex items-center">
-                          <Link
+                          {/* <Link
                             href="#"
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
                           >
                             Copy
-                          </Link>
+                          </Link> */}
+                          <button
+                            className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
+                            onClick={() => copyToClipboard(`${email}`)}
+                          >
+                            Copy
+                          </button>
                         </div>
                       </div>
                     </li>
@@ -190,24 +224,24 @@ export default function DetailMemberPage() {
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={'nim'}
-                        name={'nim'}
-                        placeholder={'123456789102'}
-                        type={'text'}
+                        id={"nim"}
+                        name={"nim"}
+                        placeholder={"123456789102"}
+                        type={"text"}
                         value={nim}
                         required
-                        label={'NIM'}
+                        label={"NIM"}
                         disabled
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputSelect
-                        id={'roleId'}
-                        name={'role'}
-                        type={'text'}
+                        id={"roleId"}
+                        name={"role"}
+                        type={"text"}
                         value={roleId}
                         required
-                        label={'Role'}
+                        label={"Role"}
                         disabled
                       >
                         <option>Ketua</option>
@@ -218,12 +252,12 @@ export default function DetailMemberPage() {
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputSelect
-                        id={'division'}
-                        name={'division'}
-                        type={'text'}
+                        id={"division"}
+                        name={"division"}
+                        type={"text"}
                         value={division}
                         required
-                        label={'Division'}
+                        label={"Division"}
                         disabled
                       >
                         <option>Web Development</option>
@@ -234,67 +268,81 @@ export default function DetailMemberPage() {
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={'name'}
-                        name={'name'}
-                        placeholder={'e.g. Agis Huda'}
-                        type={'text'}
+                        id={"name"}
+                        name={"name"}
+                        placeholder={"e.g. Agis Huda"}
+                        type={"text"}
                         value={name}
                         required
-                        label={'Name'}
+                        label={"Name"}
                         disabled
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={'major'}
-                        name={'major'}
-                        placeholder={'e.g. S1 Informatika'}
-                        type={'text'}
+                        id={"major"}
+                        name={"major"}
+                        placeholder={"e.g. S1 Informatika"}
+                        type={"text"}
                         value={major}
                         required
-                        label={'Major'}
+                        label={"Major"}
                         disabled
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={'phoneNumber'}
-                        name={'phoneNumber'}
-                        placeholder={'e.g. 083211234567'}
-                        type={'text'}
+                        id={"phoneNumber"}
+                        name={"phoneNumber"}
+                        placeholder={"e.g. 083211234567"}
+                        type={"text"}
                         value={phoneNumber}
                         required
                         // label={'Phone Number'}
-                        label={'Phone number'}
+                        label={"Phone number"}
                         disabled
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={'entryUniversity'}
-                        name={'entryUniversity'}
-                        type={'text'}
+                        id={"entryUniversity"}
+                        name={"entryUniversity"}
+                        type={"text"}
                         value={moment(yearUniversityEnrolled).format(
-                          ' D MMM YYYY'
+                          " D MMM YYYY"
                         )}
                         required
                         // label={'Entry University'}
-                        label={'Entry university'}
+                        label={"Entry university"}
                         disabled
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={'entryCommunity'}
-                        name={'entryCommunity'}
-                        type={'text'}
+                        id={"entryCommunity"}
+                        name={"entryCommunity"}
+                        type={"text"}
                         value={moment(yearCommunityEnrolled).format(
-                          ' D MMM YYYY'
+                          " D MMM YYYY"
                         )}
                         required
                         // label={'Entry Community'}
-                        label={'Entry community'}
+                        label={"Entry community"}
                         disabled
+                      />
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <DefaultLink
+                        href={"/member/editMember?nim=123456789101"}
+                        size={"base"}
+                        status={"primary"}
+                        title={"Edit"}
+                      />
+                      <DefaultLink
+                        href={"/member"}
+                        size={"base"}
+                        status={"secondary"}
+                        title={"Back"}
                       />
                     </div>
                   </div>
