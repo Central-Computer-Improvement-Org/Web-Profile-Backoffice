@@ -45,7 +45,7 @@ export default function EditEventPage() {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, router]);
   return (
     <div>
       <HeadTitle title={"Edit Event"}>
