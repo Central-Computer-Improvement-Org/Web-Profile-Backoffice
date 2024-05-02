@@ -95,7 +95,7 @@ function DetailDivisionPage() {
                   </div>
                   <div className="flex items-center gap-4">
                     <DefaultLink
-                      href={"/division/detailDivision/editDivision?id=AWD-1"}
+                      href={"/division/editDivision?id=AWD-1"}
                       size={"base"}
                       status={"primary"}
                       title={"Edit"}
