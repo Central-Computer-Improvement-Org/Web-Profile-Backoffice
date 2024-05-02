@@ -1,42 +1,42 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import request from '@/app/utils/request';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import DefaultLink from '@/components/link/defaultLink';
-import Pagination from '@/components/pagination';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa6';
-import { IoIosSearch } from 'react-icons/io';
-import { GoX } from 'react-icons/go';
-import Link from 'next/link';
-import { IoLinkSharp } from 'react-icons/io5';
-import { currency } from '@/app/utils/numberFormat';
+"use client";
+import request from "@/app/utils/request";
+import DefaultButton from "@/components/button/defaultButton";
+import InputField from "@/components/form/inputField";
+import DefaultLink from "@/components/link/defaultLink";
+import Pagination from "@/components/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
+import { IoIosSearch } from "react-icons/io";
+import { GoX } from "react-icons/go";
+import Link from "next/link";
+import { IoLinkSharp } from "react-icons/io5";
+import { currency } from "@/app/utils/numberFormat";
 
 function DetailProjectPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
 
   const [modalContributor, setModalContributor] = useState(false);
   const [loading, setLoading] = useState(true);
   const [contributorsProject, setContributorsProject] = useState();
   const [search, setSearch] = useState();
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [budget, setBudget] = useState();
-  const [description, setDescription] = useState('');
-  const [productionUrl, setProductionUrl] = useState('');
-  const [repositoryUrl, setRepositoryUrl] = useState('');
+  const [description, setDescription] = useState("");
+  const [productionUrl, setProductionUrl] = useState("");
+  const [repositoryUrl, setRepositoryUrl] = useState("");
 
   useEffect(() => {
     if (!id) {
-      router.push('/project');
+      router.push("/project");
       return;
     }
     setLoading(true);
     request
-      .get('contributorProjectById')
+      .get("contributorProjectById")
       .then(function (response) {
         setName(response.data.data.name);
         setDescription(response.data.data.description);
@@ -65,9 +65,25 @@ function DetailProjectPage() {
               <div className="flow-root ">
                 <div className=" flex flex-col gap-4 mb-4">
                   <h3 className="text-xl font-semibold ">Title Project</h3>
-                  <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {name}
-                  </p>
+                  <p className=" text-lg text-gray-500 md:text-lg ">{name}</p>
+                </div>
+                <div className=" flex  flex-col gap-4 mb-4">
+                  <div className="flex gap-2">
+                    <DefaultLink
+                      href={productionUrl}
+                      size={"small"}
+                      status={"primary"}
+                      title={"Visit Production"}
+                      icon={<IoLinkSharp />}
+                    />
+                    <DefaultLink
+                      href={repositoryUrl}
+                      size={"small"}
+                      status={"secondary"}
+                      title={" Visit Repository"}
+                      icon={<IoLinkSharp />}
+                    />
+                  </div>
                 </div>
                 <div className=" flex flex-col gap-4 mb-4">
                   <h3 className="text-xl font-semibold ">Budget</h3>
@@ -81,23 +97,19 @@ function DetailProjectPage() {
                     {description}
                   </p>
                 </div>
-                <div className=" flex flex-col gap-4 mb-4">
-                  <div className="flex gap-2">
-                    <DefaultLink
-                      href={productionUrl}
-                      size={'small'}
-                      status={'primary'}
-                      title={'Visit Production'}
-                      icon={<IoLinkSharp />}
-                    />
-                    <DefaultLink
-                      href={repositoryUrl}
-                      size={'small'}
-                      status={'secondary'}
-                      title={' Visit Repository'}
-                      icon={<IoLinkSharp />}
-                    />
-                  </div>
+                <div className="flex justify-end items-center gap-4">
+                  <DefaultLink
+                    href={"/member/editMember?nim=123456789101"}
+                    size={"base"}
+                    status={"primary"}
+                    title={"Edit"}
+                  />
+                  <DefaultLink
+                    href={"/member"}
+                    size={"base"}
+                    status={"secondary"}
+                    title={"Back"}
+                  />
                 </div>
               </div>
             </div>
@@ -115,10 +127,10 @@ function DetailProjectPage() {
                     </label>
                     <div className="relative mt-1 lg:w-64 xl:w-96">
                       <InputField
-                        id={'search'}
-                        name={'search'}
-                        placeholder={'Search for contributor'}
-                        type={'text'}
+                        id={"search"}
+                        name={"search"}
+                        placeholder={"Search for contributor"}
+                        type={"text"}
                         value={search}
                         onChange={(e) => {
                           setSearch(e.target.value);
@@ -169,6 +181,7 @@ function DetailProjectPage() {
                       </div>
                     ))}
                 </div>
+
                 <Pagination />
               </div>
             </div>
