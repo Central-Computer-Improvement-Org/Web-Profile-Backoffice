@@ -4,7 +4,6 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import { Fragment } from "react";
-import { render } from "react-dom";
 
 const RichTextEditor = ({
   id,

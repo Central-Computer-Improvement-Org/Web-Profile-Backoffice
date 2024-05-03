@@ -63,12 +63,20 @@ function DetailEventPage() {
             <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
               <div className="flow-root">
                 <div className="flow-root">
-                  <div className="mb-8">
-                    <h3 className="text-xl font-semibold mb-4 ">{name}</h3>
-                    <img src={mediaUrl} alt="" className="w-1/2 rounded-2xl " />
+                  <div className="mb-8 ">
+                    <h3 className="text-xl font-semibold mb-4 flex justify-center">
+                      {name}
+                    </h3>
+                    <div className="flex justify-center">
+                      <img
+                        src={mediaUrl}
+                        alt=""
+                        className="w-1/2 rounded-2xl "
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex ">
                   <div className="flex-auto">
                     <h3 className="text-xl font-semibold mb-4">Division</h3>
                     <div className="mb-8">

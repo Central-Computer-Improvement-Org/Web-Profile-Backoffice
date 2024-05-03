@@ -38,7 +38,7 @@ export default function EditNewsPage() {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, router]);
 
   return (
     <div>
