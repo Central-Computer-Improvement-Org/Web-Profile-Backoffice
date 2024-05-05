@@ -26,7 +26,7 @@ export default function ProjectPage() {
   ];
   useEffect(() => {
     request
-      .get('/project')
+      .get('/cms/projects/')
       .then(function (response) {
         setProjectDatas(response.data.data);
         setLoading(false);
