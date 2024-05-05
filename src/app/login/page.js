@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import InputField from '@/components/form/inputField';
 import DefaultButton from '@/components/button/defaultButton';
 import Link from 'next/link';
+import request from '../utils/request';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const router = useRouter();
@@ -44,16 +46,33 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    request
+      .post('/auth/login/', {
+        nim: email,
+        password: password,
+      })
+      .then(function (response) {
+        if (response.data.code === 200 || response.data.code === 201) {
+          Cookies.set('token', response.data.data.access);
+          // localStorage.setItem('nim', response.data.data.nim)
+          router.push('/dashboard');
+        } else {
+          window.alert('gagal login');
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
 
-    if (rememberMe && email !== '' && password !== '') {
-      localStorage.setItem('username', email);
-      localStorage.setItem('checkbox', rememberMe);
-      router.push('/dashboard');
-    } else {
-      localStorage.removeItem('username');
-      localStorage.removeItem('checkboxxxxxx');
-      router.push('/dashboard');
-    }
+    // if (rememberMe && email !== '' && password !== '') {
+    //   localStorage.setItem('username', email);
+    //   localStorage.setItem('checkbox', rememberMe);
+    //   router.push('/dashboard');
+    // } else {
+    //   localStorage.removeItem('username');
+    //   localStorage.removeItem('checkboxxxxxx');
+    //   router.push('/dashboard');
+    // }
   };
 
   return (
@@ -76,7 +95,7 @@ const Login = () => {
                 name={'email'}
                 onChange={handleChangeEmail}
                 placeholder={'user@gmail.com'}
-                type={'email'}
+                type={'text'}
                 value={email}
                 required
                 label={'Your email'}

@@ -2,17 +2,16 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const request = axios.create({
-  baseURL: `https://central-computer-improvement-org.github.io/Web-Profile-Backoffice/api`,
-  // baseURL: `http://localhost:3000/api/`,
+  baseURL: `http://103.31.38.146:8000/api/v1/`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': '*',
     'Access-Control-Allow-Credentials': 'true',
   },
 });
-
 const requestHandler = (request) => {
   let token = Cookies.get('token');
 
@@ -31,7 +30,7 @@ const expiredTokenHandler = () => {
   // store.dispatch(getLoginData({}))
   localStorage.clear();
   Cookies.remove('token');
-  //   window.location.href = './login'; //di uncomment saat sudah integrasi api login
+  window.location.href = './login'; //di uncomment saat sudah integrasi api login
   // return error;
 };
 
@@ -39,12 +38,12 @@ const errorHandler = (error) => {
   // TODO: Remove this code after you got the response information
   // error.code === 'ERR_NETWORK' should not exist
   if (error.response && error.response.status === 401) {
-    //  expiredTokenHandler(); //di uncomment saat sudah integrasi api login
+    expiredTokenHandler(); //di uncomment saat sudah integrasi api login
   } else if (error.code === 'ERR_NETWORK') {
-    // window.history.pushState({}, 'Redirect Network Error', '/login');
+    window.history.pushState({}, 'Redirect Network Error', '/login');
     console.log(error);
     if (error.response?.status === 401) {
-      // expiredTokenHandler(); //di uncomment saat sudah integrasi api login
+      expiredTokenHandler(); //di uncomment saat sudah integrasi api login
     }
   }
   return error;
