@@ -2,10 +2,8 @@
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
 import RichTextEditor from "@/components/form/inputRichText";
-import InputSelect from "@/components/form/inputSelect";
-import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export default function AddNewsPage() {
   const [title, setTitle] = useState("");
