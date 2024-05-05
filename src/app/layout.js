@@ -13,7 +13,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Suspense>{children}</Suspense>
+        <Suspense
+          fallback={
+            <div className="text-center text-[32px] text-bluePallete-800">
+              Loading...
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
       </body>
     </html>
   );
