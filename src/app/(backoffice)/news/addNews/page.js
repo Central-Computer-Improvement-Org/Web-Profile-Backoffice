@@ -1,9 +1,18 @@
 "use client";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
-import RichTextEditor from "@/components/form/inputRichText";
+// import RichTextEditor from "@/components/form/inputRichText";
 import HeadTitle from "@/components/headTitle";
 import React, { useState } from "react";
+
+import dynamic from "next/dynamic";
+
+const RichTextEditor = dynamic(
+  () => import("@/components/form/inputRichText"),
+  {
+    ssr: false,
+  }
+);
 
 export default function AddNewsPage() {
   const [title, setTitle] = useState("");
