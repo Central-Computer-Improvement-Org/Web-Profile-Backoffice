@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const request = axios.create({
    baseURL: `
-   https://103-31-38-146.sslip.io`,
+   https://103-31-38-146.sslip.io/api/v1`,
    timeout: 10000,
    headers: {
       // 'Content-Type': 'application/json',
