@@ -14,83 +14,83 @@ import Pagination from '@/components/pagination';
 import ListProject from '@/components/listTable/listProject';
 
 export default function ProjectPage() {
-  const [search, setSearch] = useState('');
-  const [projectDatas, setProjectDatas] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const rowMenu = [
-    { menu: 'NAME' },
-    { menu: 'DESCRIPTION' },
-    { menu: 'BUDGET' },
-    { menu: 'PRODUCTION URL' },
-    { menu: '' },
-  ];
-  useEffect(() => {
-    request
-      .get('/cms/projects/')
-      .then(function (response) {
-        setProjectDatas(response.data.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-  }, []);
-  return (
-    <div>
-      <HeadTitle title={'All Projects'}>
-        <div className="flex lg:mt-4">
-          <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
-            <form className="lg:pr-3" action="#" method="GET">
-              <label htmlFor="users-search" className="sr-only">
-                Search
-              </label>
-              <div className="relative mt-1 lg:w-64 xl:w-96">
-                <InputField
-                  id={'search'}
-                  name={'search'}
-                  placeholder={'Search for project'}
-                  type={'text'}
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                  icon={<IoIosSearch />}
-                />
-              </div>
-            </form>
-          </div>
-          <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
-            <DefaultLink
-              size={'small'}
-              status={'primary'}
-              title={'Add Project'}
-              href={'/project/addProject'}
-              icon={<FaPlus />}
-              onClick={() => {}}
-            />
-          </div>
-        </div>
-      </HeadTitle>
-      {loading ? (
-        <div className="text-center">Loading...</div>
-      ) : (
-        <div className="">
-          <DefaultTable rowMenu={rowMenu}>
-            {projectDatas.map((data, index) => (
-              <ListProject
-                key={index}
-                name={data.name}
-                description={data.description}
-                productionUrl={data.productionUrl}
-                budget={data.budget}
-                id={data.id}
-              />
-            ))}
-          </DefaultTable>
-          <Pagination />
-        </div>
-      )}
-    </div>
-  );
+   const [search, setSearch] = useState('');
+   const [projectDatas, setProjectDatas] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const rowMenu = [
+      { menu: 'NAME' },
+      { menu: 'DESCRIPTION' },
+      { menu: 'BUDGET' },
+      { menu: 'PRODUCTION URL' },
+      { menu: '' },
+   ];
+   useEffect(() => {
+      request
+         .get('/cms/projects')
+         .then(function (response) {
+            setProjectDatas(response.data.data);
+            setLoading(false);
+         })
+         .catch(function (error) {
+            console.log(error);
+            setLoading(false);
+         });
+   }, []);
+   return (
+      <div>
+         <HeadTitle title={'All Projects'}>
+            <div className="flex lg:mt-4">
+               <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
+                  <form className="lg:pr-3" action="#" method="GET">
+                     <label htmlFor="users-search" className="sr-only">
+                        Search
+                     </label>
+                     <div className="relative mt-1 lg:w-64 xl:w-96">
+                        <InputField
+                           id={'search'}
+                           name={'search'}
+                           placeholder={'Search for project'}
+                           type={'text'}
+                           value={search}
+                           onChange={(e) => {
+                              setSearch(e.target.value);
+                           }}
+                           icon={<IoIosSearch />}
+                        />
+                     </div>
+                  </form>
+               </div>
+               <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
+                  <DefaultLink
+                     size={'small'}
+                     status={'primary'}
+                     title={'Add Project'}
+                     href={'/project/addProject'}
+                     icon={<FaPlus />}
+                     onClick={() => { }}
+                  />
+               </div>
+            </div>
+         </HeadTitle>
+         {loading ? (
+            <div className="text-center">Loading...</div>
+         ) : (
+            <div className="">
+               <DefaultTable rowMenu={rowMenu}>
+                  {projectDatas.map((data, index) => (
+                     <ListProject
+                        key={index}
+                        name={data.name}
+                        description={data.description}
+                        productionUrl={data.productionUri}
+                        budget={data.budget}
+                        id={data.id}
+                     />
+                  ))}
+               </DefaultTable>
+               <Pagination />
+            </div>
+         )}
+      </div>
+   );
 }
