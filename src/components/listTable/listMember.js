@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
-import { useRouter } from "next/navigation";
-import moment from "moment";
-import DefaultButton from "../button/defaultButton";
-import DefaultLink from "../link/defaultLink";
+'use client';
+import { useRouter } from 'next/navigation';
+import moment from 'moment';
+import DefaultButton from '../button/defaultButton';
+import DefaultLink from '../link/defaultLink';
 
 const ListMember = ({
   photoUrl,
@@ -15,6 +15,7 @@ const ListMember = ({
   entryCommunity,
   status,
   nim,
+  onclick,
 }) => {
   const router = useRouter();
 
@@ -68,19 +69,21 @@ const ListMember = ({
       <td className="text-xs font-medium px-6 py-4">{divisi}</td>
       <td className="text-xs font-medium px-6 py-4">{major}</td>
       <td className="text-xs font-medium px-6 py-4">
-        {moment(entryUniversity).format(" D MMM YYYY")}
+        {/* {moment(entryUniversity).format(" D MMM YYYY")} */}
+        {entryUniversity}
       </td>
       <td className="text-xs font-medium px-6 py-4">
-        {moment(entryCommunity).format(" DD MMM YYYY")}
+        {/* {moment(entryCommunity).format(" DD MMM YYYY")} */}
+        {entryCommunity}
       </td>
       <td className="text-xs font-normal px-6 py-4">
         <div className="flex gap-2 items-center">
           <span
             className={`w-2 h-2 rounded-full ${
-              status ? "bg-green-500" : "bg-red-500"
+              status ? 'bg-green-500' : 'bg-red-500'
             }`}
           />
-          <p>{status ? "Active" : "Inactive"}</p>
+          <p>{status ? 'Active' : 'Inactive'}</p>
         </div>
       </td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
@@ -93,11 +96,12 @@ const ListMember = ({
           status="primary"
           title="Edit"
         />
-        <DefaultLink
-          href={`/member/delete/${nim}`}
+        <DefaultButton
+          type={'submit'}
           size="small"
           status="secondary"
           title="Delete"
+          onClick={onclick}
         />
       </td>
     </tr>
