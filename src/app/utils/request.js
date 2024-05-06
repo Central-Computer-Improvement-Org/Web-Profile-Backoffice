@@ -5,10 +5,11 @@ const request = axios.create({
   baseURL: `http://103.31.38.146:8000/api/v1/`,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
+    'Content-Type': 'application/json, multipart/form-data',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Methods': '*',
+    // 'Access-Control-Allow-Methods': '*',
     'Access-Control-Allow-Credentials': 'true',
   },
 });
@@ -30,7 +31,7 @@ const expiredTokenHandler = () => {
   // store.dispatch(getLoginData({}))
   localStorage.clear();
   Cookies.remove('token');
-  window.location.href = './login'; //di uncomment saat sudah integrasi api login
+  window.location.href = '/login'; //di uncomment saat sudah integrasi api login
   // return error;
 };
 

@@ -20,11 +20,13 @@ import { CgProfile } from 'react-icons/cg';
 import Logo from '../../../public/assets/image/logo.png';
 import NextBreadcrumb from '@/components/breadcrumbs';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
 
   const handleLogout = () => {
+    Cookies.remove('token');
     router.push('/login');
   };
   return (
