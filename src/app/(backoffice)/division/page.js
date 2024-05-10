@@ -16,9 +16,21 @@ import request from '@/app/utils/request';
 import Link from 'next/link';
 import Pagination from '@/components/pagination';
 
+import { useDebounce } from 'use-debounce';
+
+// Sorting Constants
+const ORDERING = 'updatedAt';
+const SORT = 'desc';
+
+// Pagination Constants
+// const LIMIT = 10;
+// const PAGE = 1;
+
 export default function DivisionPage() {
-  const [search, setSearch] = useState('');
   const [divisionDatas, setDivisionDatas] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [debounceValue] = useDebounce(searchQuery, 500);
 
   const [loading, setLoading] = useState(true);
 
@@ -28,9 +40,10 @@ export default function DivisionPage() {
     { menu: 'DESCRIPTION' },
     { menu: '' },
   ];
-  useEffect(() => {
+
+  const fetchDivisions = async () => {
     request
-      .get('/cms/users/divisions/')
+      .get(`/cms/users/divisions?name=${debounceValue}&ordering=${ORDERING}&sort=${SORT}`)
       .then(function (response) {
         setDivisionDatas(response.data.data);
         setLoading(false);
@@ -38,8 +51,13 @@ export default function DivisionPage() {
       .catch(function (error) {
         console.log(error);
         setLoading(false);
-      });
-  }, []);
+    });
+  }
+
+  useEffect(() => {
+    fetchDivisions();
+  }, [debounceValue]);
+
   return (
     <div>
       <HeadTitle title={'All Divisions'}>
@@ -55,9 +73,10 @@ export default function DivisionPage() {
                   name={'search'}
                   placeholder={'Search for Division'}
                   type={'text'}
-                  value={search}
+                  value={searchQuery}
                   onChange={(e) => {
-                    setSearch(e.target.value);
+                    setSearchQuery(e.target.value);
+                    console.log(searchQuery);
                   }}
                   icon={<IoIosSearch />}
                 />
@@ -89,9 +108,10 @@ export default function DivisionPage() {
                 <ListDivision
                   key={index}
                   name={data.name}
-                  logoUrl={data.logoUrl}
+                  logoUri={data.logoUri}
                   description={data.description}
                   id={data.id}
+                  fetchData={fetchDivisions} 
                 />
               )
             )}

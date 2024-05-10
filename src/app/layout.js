@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
             {/* <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /> */}
          </head>
          <body className={inter.className}>
+            <Toaster position="top-center" />
             <Suspense
                fallback={
                   <div className="text-center text-[32px] text-bluePallete-800">

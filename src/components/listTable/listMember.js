@@ -6,7 +6,7 @@ import DefaultButton from '../button/defaultButton';
 import DefaultLink from '../link/defaultLink';
 
 const ListMember = ({
-  photoUrl,
+  photoUri,
   name,
   email,
   divisi,
@@ -53,7 +53,7 @@ const ListMember = ({
         <div className="flex gap-2 items-center">
           <div className="w-10 h-10 rounded-full">
             <img
-              src={photoUrl}
+              src={"https://103-31-38-146.sslip.io" + photoUri}
               width={0}
               height={0}
               className="w-full h-full object-cover rounded-full"
@@ -66,7 +66,7 @@ const ListMember = ({
           </div>
         </div>
       </th>
-      <td className="text-xs font-medium px-6 py-4">{divisi}</td>
+      <td className="text-xs font-medium px-6 py-4">{divisi.name}</td>
       <td className="text-xs font-medium px-6 py-4">{major}</td>
       <td className="text-xs font-medium px-6 py-4">
         {/* {moment(entryUniversity).format(" D MMM YYYY")} */}
