@@ -8,7 +8,13 @@ import { useRouter } from "next/navigation";
 import request from "@/app/utils/request";
 import toast from "react-hot-toast";
 
-const ListDivision = ({ name, logoUri, description, id, fetchData }) => {
+const ListDivision = ({ 
+  name, 
+  logoUri, 
+  description, 
+  id, 
+  fetchData 
+}) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +32,7 @@ const ListDivision = ({ name, logoUri, description, id, fetchData }) => {
           fetchData();
         } else if (response.response.data.code === 404 && response.response.data.status == "NOT_FOUND") {
           toast.dismiss();
-          toast.error("Data not found.");
+          toast.error("Division not found.");
         } else if (response.response.data.code === 500) {
           toast.dismiss();
           toast.error(response.response.data.error.message);

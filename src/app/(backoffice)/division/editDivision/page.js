@@ -93,19 +93,16 @@ export default function EditDivisionPage() {
       )
       .then(function (response) {
         if (response.data?.code === 200 || response.data?.code === 201) {
-          console.log("SUCCESS")
           toast.dismiss();
           toast.success(response.data.data.message);
           router.push("/division");
         } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          console.error("VALIDATION_ERROR")
           setValidations(response.response.data.error.validation);
           setLogoUri("");
           toast.dismiss();
           toast.error(response.response.data.error.message);
 
         } else if (response.response.data.code === 500 ) {
-          console.error("INTERNAL_SERVER_ERROR")
           toast.dismiss();
           toast.error(response.response.data.error.message);
         }

@@ -71,8 +71,8 @@ function DetailNewsPage() {
                   </div>
                 </div>
                 <div className="mb-8">
-                  <p class="mb-3 text-gray-500 ">{description}</p>
-                  <p class="mb-3 text-gray-500 ">
+                  <p className="mb-3 text-gray-500 ">{description}</p>
+                  <p className="mb-3 text-gray-500 ">
                     We are on the brink of a new era driven by technological
                     advancements that fundamentally change the way we live and
                     work. Breakthroughs in information and communication
@@ -82,7 +82,7 @@ function DetailNewsPage() {
                     has opened doors to various services and information,
                     enabling us to lead more efficient and informed lifestyles.
                   </p>
-                  <p class="mb-3 text-gray-500 ">
+                  <p className="mb-3 text-gray-500 ">
                     Furthermore, the industrial revolution propelled by
                     automation and artificial intelligence has reshaped the
                     landscape of work. Many routine and repetitive tasks can now
@@ -93,7 +93,7 @@ function DetailNewsPage() {
                     collaboration technologies to enable teams to work together
                     from different locations.
                   </p>
-                  <p class="text-gray-500 ">
+                  <p className="text-gray-500 ">
                     However, technological advancements also bring challenges
                     that cannot be ignored. There is still a significant digital
                     divide worldwide, where some people lack adequate access to

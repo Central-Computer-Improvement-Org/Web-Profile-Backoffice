@@ -2,13 +2,11 @@
 "use client";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
-import ListDivision from "@/components/listTable/listDivision";
-import ListMember from "@/components/listTable/listMember";
+import ListDivisionMember from "@/components/listTable/listDivisionMember";
 import Pagination from "@/components/pagination";
 import DefaultTable from "@/components/table/defaultTable";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdDescription } from "react-icons/md";
 
 function DetailDivisionPage() {
   const searchParams = useSearchParams();
@@ -22,9 +20,6 @@ function DetailDivisionPage() {
   const [members, setMembers] = useState([]);
 
   const [loading, setLoading] = useState(true);
-
-
-  console.log(members);
 
   const rowMenu = [
     // Perbaiki penulisan rowMenu
@@ -70,6 +65,7 @@ function DetailDivisionPage() {
     fetchDivision(id);
     fetchMembers(id);
   }, [id, router]);
+  
 
   return (
     <div>
@@ -93,12 +89,12 @@ function DetailDivisionPage() {
                 <div className="flow-root ">
                   <h3 className="text-xl font-semibold mb-4">Division</h3>
                   <div className="mb-8">
-                    <p class="mb-3 text-gray-500 ">{name}</p>
+                    <p className="mb-3 text-gray-500 ">{name}</p>
                   </div>
                   <h3 className="text-xl font-semibold mb-4">Description</h3>
                   <div className="mb-8">
-                    <p class="mb-3 text-gray-500 ">{description}</p>
-                    <p class="text-gray-500 ">
+                    <p className="mb-3 text-gray-500 ">{description}</p>
+                    <p className="text-gray-500 ">
                       Deliver great service experiences fast - without the
                       complexity of traditional ITSM solutions.Accelerate
                       critical development work, eliminate toil, and deploy
@@ -139,7 +135,7 @@ function DetailDivisionPage() {
                 data,
                 index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
               ) => (
-                <ListMember
+                <ListDivisionMember
                   key={index}
                   photoUri={data.profileUri}
                   name={data.name}
@@ -150,6 +146,7 @@ function DetailDivisionPage() {
                   entryCommunity={data.yearCommunityEnrolled}
                   status={data.isActive}
                   nim={data.nim}
+                  fetchData={fetchMembers} 
                 />
               )
             )}

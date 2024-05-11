@@ -26,13 +26,13 @@ const nextConfig = {
       },
    ],
    // TODO : komen config dibawah jika running lokal, aktifkan kembali ketika push
-   output: "export",
-   assetPrefix:
-      "https://central-computer-improvement-org.github.io/Web-Profile-Backoffice",
-   basePath: "/Web-Profile-Backoffice",
-   experimental: {
-      missingSuspenseWithCSRBailout: false,
-   },
+   // output: "export",
+   // assetPrefix:
+   //    "https://central-computer-improvement-org.github.io/Web-Profile-Backoffice",
+   // basePath: "/Web-Profile-Backoffice",
+   // experimental: {
+   //    missingSuspenseWithCSRBailout: false,
+   // },
 };
 
 export default nextConfig;
