@@ -80,13 +80,13 @@ function DetailEventPage() {
                   <div className="flex-auto">
                     <h3 className="text-xl font-semibold mb-4">Division</h3>
                     <div className="mb-8">
-                      <p class="mb-3 text-gray-500 ">{division}</p>
+                      <p className="mb-3 text-gray-500 ">{division}</p>
                     </div>
                   </div>
                   <div className="flex-auto">
                     <h3 className="text-xl font-semibold mb-4">Held On</h3>
                     <div className="mb-8">
-                      <p class="mb-3 text-gray-500 ">
+                      <p className="mb-3 text-gray-500 ">
                         {moment(heldOn).format("MMM YYYY")}
                       </p>
                     </div>
@@ -94,14 +94,14 @@ function DetailEventPage() {
                   <div className="flex-auto">
                     <h3 className="text-xl font-semibold mb-4">Budget</h3>
                     <div className="mb-8">
-                      <p class="mb-3 text-gray-500 ">{budget}</p>
+                      <p className="mb-3 text-gray-500 ">{budget}</p>
                     </div>
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Description</h3>
                 <div className="mb-8">
-                  <p class="mb-3 text-gray-500 ">{description}</p>
-                  <p class="mb-3 text-gray-500 ">
+                  <p className="mb-3 text-gray-500 ">{description}</p>
+                  <p className="mb-3 text-gray-500 ">
                     Track work across the enterprise through an open,
                     collaborative platform. Link issues across Jira and ingest
                     data from other software development tools, so your IT
@@ -109,7 +109,7 @@ function DetailEventPage() {
                     information to rapidly respond to requests, incidents, and
                     changes.
                   </p>
-                  <p class="text-gray-500 ">
+                  <p className="text-gray-500 ">
                     Deliver great service experiences fast - without the
                     complexity of traditional ITSM solutions.Accelerate critical
                     development work, eliminate toil, and deploy changes with

@@ -2,13 +2,11 @@
 "use client";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
-import ListDivision from "@/components/listTable/listDivision";
-import ListMember from "@/components/listTable/listMember";
+import ListDivisionMember from "@/components/listTable/listDivisionMember";
 import Pagination from "@/components/pagination";
 import DefaultTable from "@/components/table/defaultTable";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdDescription } from "react-icons/md";
 
 function DetailDivisionPage() {
   const searchParams = useSearchParams();
@@ -16,10 +14,10 @@ function DetailDivisionPage() {
   const id = searchParams.get("id");
 
   const [name, setName] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
+  const [logoUri, setLogoUri] = useState("");
   const [description, setDescription] = useState("");
 
-  const [datas, setDatas] = useState([]);
+  const [members, setMembers] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -33,23 +31,14 @@ function DetailDivisionPage() {
     { menu: "STATUS" },
     { menu: "" },
   ];
-  useEffect(() => {
+
+  const fetchDivision = async (id) => {
     request
-      .get("/member")
-      .then(function (response) {
-        setDatas(response.data.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-    request
-      .get(`/divisionById`)
+      .get(`/cms/users/divisions?id=${id}`)
       .then(function (response) {
         const data = response.data.data;
         setName(data.name);
-        // setLogoUrl(data.logoUrl);
+        setLogoUri(data.logoUri);
         setDescription(data.description);
         setLoading(false);
       })
@@ -57,7 +46,27 @@ function DetailDivisionPage() {
         console.log(error);
         setLoading(false);
       });
+  }
+
+  const fetchMembers = async (id) => {
+    request
+      .get(`/cms/users?division=${id}`)
+      .then(function (response) {
+        setMembers(response.data.data);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }
+
+  useEffect(() => {
+    fetchDivision(id);
+    fetchMembers(id);
   }, [id, router]);
+  
+
   return (
     <div>
       {loading ? (
@@ -71,7 +80,7 @@ function DetailDivisionPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root ">
                   <h3 className="text-xl font-semibold mb-4">Logo Division</h3>
-                  <img src={logoUrl} alt="" className="w-full rounded-2xl" />
+                  <img src={"https://103-31-38-146.sslip.io" + logoUri} alt="" className="w-full rounded-2xl" />
                 </div>
               </div>
             </div>
@@ -80,12 +89,12 @@ function DetailDivisionPage() {
                 <div className="flow-root ">
                   <h3 className="text-xl font-semibold mb-4">Division</h3>
                   <div className="mb-8">
-                    <p class="mb-3 text-gray-500 ">{name}</p>
+                    <p className="mb-3 text-gray-500 ">{name}</p>
                   </div>
                   <h3 className="text-xl font-semibold mb-4">Description</h3>
                   <div className="mb-8">
-                    <p class="mb-3 text-gray-500 ">{description}</p>
-                    <p class="text-gray-500 ">
+                    <p className="mb-3 text-gray-500 ">{description}</p>
+                    <p className="text-gray-500 ">
                       Deliver great service experiences fast - without the
                       complexity of traditional ITSM solutions.Accelerate
                       critical development work, eliminate toil, and deploy
@@ -95,7 +104,7 @@ function DetailDivisionPage() {
                   </div>
                   <div className="flex items-center gap-4">
                     <DefaultLink
-                      href={"/division/editDivision?id=AWD-1"}
+                      href={`/division/editDivision?id=${id}`}
                       size={"base"}
                       status={"primary"}
                       title={"Edit"}
@@ -121,14 +130,14 @@ function DetailDivisionPage() {
         </div>
         <div className="">
           <DefaultTable rowMenu={rowMenu}>
-            {datas.map(
+            {members.map(
               (
                 data,
                 index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
               ) => (
-                <ListMember
+                <ListDivisionMember
                   key={index}
-                  photoUrl={data.profileUrl}
+                  photoUri={data.profileUri}
                   name={data.name}
                   email={data.email}
                   divisi={data.division}
@@ -137,6 +146,7 @@ function DetailDivisionPage() {
                   entryCommunity={data.yearCommunityEnrolled}
                   status={data.isActive}
                   nim={data.nim}
+                  fetchData={fetchMembers} 
                 />
               )
             )}
