@@ -14,20 +14,22 @@ import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 import Link from "next/link";
 
+import toast from "react-hot-toast";
+
 export default function DetailMemberPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const nim = searchParams.get("nim");
 
   // State untuk menyimpan data member
-  const [roleId, setRoleId] = useState("");
+  const [role, setRole] = useState("");
   const [division, setDivision] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [major, setMajor] = useState("");
-  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [linkedinUri, setLinkedinUri] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
+  const [profileUri, setProfileUri] = useState("");
   const [status, setStatus] = useState();
   const [award, setAward] = useState();
   const [project, setProject] = useState();
@@ -40,43 +42,48 @@ export default function DetailMemberPage() {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        console.log("Text copied to clipboard:", text);
+        toast.success("Text copied to clipboard:", text);
         // Optionally, you can show a toast or notification to indicate successful copy
       })
       .catch((error) => {
-        console.error("Error copying text to clipboard:", error);
+        toast.error("Error copying text to clipboard:", error);
         // Optionally, you can show a toast or notification to indicate copy failure
       });
   };
 
-  useEffect(() => {
-    if (!nim) {
-      router.push("/member");
-      return;
-    }
+  const fetchMember = async (nim) => {
     request
-      .get("/memberByNim")
+      .get(`/cms/users?nim=${nim}`)
       .then(function (response) {
         const data = response.data.data;
-        setRoleId(data.role);
+        setRole(data.role);
         setDivision(data.division);
         setName(data.name);
         setEmail(data.email);
         setMajor(data.major);
-        setLinkedinUrl(data.linkedinUrl);
+        setLinkedinUri(data.linkedinUri);
         setPhoneNumber(data.phoneNumber);
-        setProfilePicture(data.profileUrl);
+        setProfileUri(data.profileUri);
         setStatus(data.isActive);
         setYearUniversityEnrolled(data.yearUniversityEnrolled);
         setYearCommunityEnrolled(data.yearCommunityEnrolled);
-        setAward(data.awards);
-        setProject(data.projects);
+        // setAward(data.awards);
+        // setProject(data.projects);
         setLoading(false); // Setelah data dimuat, atur loading menjadi false
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
       });
+  }
+
+
+  useEffect(() => {
+    fetchMember(nim);
+    if (!nim) {
+      router.push("/member");
+      return;
+    }
   }, [nim, router]);
   return (
     <div>
@@ -92,7 +99,7 @@ export default function DetailMemberPage() {
                 <div className="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
                   <div className="w-28 h-28 rounded-lg">
                     <img
-                      src={profilePicture}
+                      src={"https://103-31-38-146.sslip.io" + profileUri}
                       width={0}
                       height={0}
                       className="mb-4 rounded-lg w-full h-full object-cover sm:mb-0 xl:mb-4 2xl:mb-0"
@@ -106,7 +113,7 @@ export default function DetailMemberPage() {
                         {name}
                       </h3>
                     </div>
-                    <div className="text-sm text-gray-500 ">{division}</div>
+                    <div className="text-sm text-gray-500 "></div>
                     <div className="mb-4 text-sm text-gray-500 ">{major}</div>
                   </div>
                 </div>
@@ -156,10 +163,10 @@ export default function DetailMemberPage() {
                             Linkedin
                           </p>
                           <Link
-                            href={linkedinUrl}
+                            href={linkedinUri}
                             className="text-sm font-normal text-secondary-500 truncate underline "
                           >
-                            {linkedinUrl.substring(0, 30)}
+                            {linkedinUri.substring(0, 30)}
                             ...
                           </Link>
                         </div>
@@ -172,7 +179,7 @@ export default function DetailMemberPage() {
                           </Link> */}
                           <button
                             className="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 "
-                            onClick={() => copyToClipboard(`${linkedinUrl}`)}
+                            onClick={() => copyToClipboard(`${linkedinUri}`)}
                           >
                             Copy
                           </button>
@@ -226,56 +233,45 @@ export default function DetailMemberPage() {
                       <InputField
                         id={"nim"}
                         name={"nim"}
-                        placeholder={"123456789102"}
                         type={"text"}
                         value={nim}
-                        required
                         label={"NIM"}
-                        disabled
+                        disabled={true}
+                        readOnly={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <InputSelect
-                        id={"roleId"}
+                      <InputField
+                        id={"role"}
                         name={"role"}
                         type={"text"}
-                        value={roleId}
-                        required
+                        value={(role) ? role.name : "None"}
                         label={"Role"}
-                        disabled
-                      >
-                        <option>Ketua</option>
-                        <option>Sekertaris</option>
-                        <option>Bendahara</option>
-                        <option>Anggota</option>
-                      </InputSelect>
-                    </div>
-                    <div className="col-span-6 sm:col-span-3">
-                      <InputSelect
-                        id={"division"}
-                        name={"division"}
-                        type={"text"}
-                        value={division}
-                        required
-                        label={"Division"}
-                        disabled
-                      >
-                        <option>Web Development</option>
-                        <option>UI/UX Design</option>
-                        <option>Data Resarch</option>
-                        <option>Networking</option>
-                      </InputSelect>
+                        disabled={true}
+                        readOnly={true}
+                      />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                        id={"name"}
-                        name={"name"}
-                        placeholder={"e.g. Agis Huda"}
-                        type={"text"}
-                        value={name}
-                        required
-                        label={"Name"}
-                        disabled
+                          id={"name"}
+                          name={"name"}
+                          type={"text"}
+                          value={(name) ? name : "None"}
+                          required 
+                          label={"Name"}
+                          disabled={true}
+                          readOnly={true}
+                        />
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <InputField
+                          id={"division"}
+                          name={"division"}
+                          type={"text"}
+                          value={(division) ? division.name : "None"}
+                          label={"Division"}
+                          disabled={true}
+                          readOnly={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -284,23 +280,23 @@ export default function DetailMemberPage() {
                         name={"major"}
                         placeholder={"e.g. S1 Informatika"}
                         type={"text"}
-                        value={major}
+                        value={(major) ? major : "None"}
                         required
                         label={"Major"}
-                        disabled
+                        disabled={true}
+                        readOnly={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
                         id={"phoneNumber"}
                         name={"phoneNumber"}
-                        placeholder={"e.g. 083211234567"}
                         type={"text"}
-                        value={phoneNumber}
+                        value={(phoneNumber) ? phoneNumber : "None"}
                         required
-                        // label={'Phone Number'}
                         label={"Phone number"}
-                        disabled
+                        disabled={true}
+                        readOnly={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -309,12 +305,12 @@ export default function DetailMemberPage() {
                         name={"entryUniversity"}
                         type={"text"}
                         value={moment(yearUniversityEnrolled).format(
-                          " D MMM YYYY"
+                          "D MMM YYYY"
                         )}
                         required
-                        // label={'Entry University'}
                         label={"Entry university"}
-                        disabled
+                        disabled={true}
+                        readOnly={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -323,12 +319,12 @@ export default function DetailMemberPage() {
                         name={"entryCommunity"}
                         type={"text"}
                         value={moment(yearCommunityEnrolled).format(
-                          " D MMM YYYY"
+                          "D MMM YYYY"
                         )}
                         required
-                        // label={'Entry Community'}
                         label={"Entry community"}
-                        disabled
+                        disabled={true}
+                        readOnly={true}
                       />
                     </div>
                     <div className="flex items-center gap-4">
@@ -355,7 +351,7 @@ export default function DetailMemberPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <h3 className="mb-4 text-xl font-semibold ">Awards</h3>
                 <div className="flex flex-wrap mt-4">
-                  {award &&
+                  {/* {award &&
                     award.map((data, index) => (
                       <span
                         key={index}
@@ -363,7 +359,7 @@ export default function DetailMemberPage() {
                       >
                         {data.issuer}
                       </span>
-                    ))}
+                    ))} */}
                 </div>
               </div>
             </div>
@@ -371,7 +367,7 @@ export default function DetailMemberPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <h3 className="mb-4 text-xl font-semibold ">Projects</h3>
                 <div className="flex flex-wrap mt-4">
-                  {project &&
+                  {/* {project &&
                     project.map((data, index) => (
                       <span
                         key={index}
@@ -379,7 +375,7 @@ export default function DetailMemberPage() {
                       >
                         {data.name}
                       </span>
-                    ))}
+                    ))} */}
                 </div>
               </div>
             </div>

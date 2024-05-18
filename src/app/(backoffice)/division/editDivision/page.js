@@ -75,6 +75,9 @@ export default function EditDivisionPage() {
         return;
       }
     } catch (error) {
+      setLoading(false);
+      toast.dismiss();
+      toast.error("Something went wrong!");
       console.error(error);
     }
 
@@ -101,7 +104,6 @@ export default function EditDivisionPage() {
           setLogoUri("");
           toast.dismiss();
           toast.error(response.response.data.error.message);
-
         } else if (response.response.data.code === 500 ) {
           toast.dismiss();
           toast.error(response.response.data.error.message);
@@ -159,7 +161,7 @@ export default function EditDivisionPage() {
                     id={"logoUri"}
                     name={"logoUri"}
                     type={"image"}
-                    multiple={true}
+                    multiple={false}
                     previewImage={oldData.logoUri}
                     imageOnly={true}
                     label={"Logo"}
