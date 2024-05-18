@@ -67,6 +67,8 @@ export default {
   post: (url, data, headers = {}) =>
     request({ method: 'post', url, data, headers }),
   put: (url, data, headers) => request({ method: 'put', url, data, headers }),
+  patch: (url, data, headers) =>
+    request({ method: 'patch', url, data, headers }),
   delete: (url, data) => request({ method: 'delete', url, data }),
   setToken: (token) => {
     if (token) {

@@ -47,15 +47,16 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     request
-      .post('/auth/login/', {
+      .post('/auth/login', {
         nim: email,
         password: password,
       })
       .then(function (response) {
+        console.info(response.data);
         if (response.data.code === 200 || response.data.code === 201) {
           Cookies.set('token', response.data.data.access);
           // localStorage.setItem('nim', response.data.data.nim)
-          // console.log(response);
+          console.log(response);
           router.push('/dashboard');
         } else {
           window.alert('gagal login');

@@ -1,12 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import DefaultButton from '../button/defaultButton';
 import DefaultLink from '../link/defaultLink';
-import request from '@/app/utils/request';
+import request from "@/app/utils/request";
+import toast from 'react-hot-toast';
 
-const ListMember = ({
+const ListDivisionMember = ({
   photoUri,
   name,
   email,
@@ -16,31 +18,44 @@ const ListMember = ({
   entryCommunity,
   status,
   nim,
+  fetchData,
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = (nim) => {
     router.push(`/member/editMember?nim=${nim}`);
   };
 
-  const handleDelete = (idMember) => {
+  const onDelete = async (e) => {
+    setLoading(true);
+    toast.loading("Deleting user...");
+    e.preventDefault();
+
     request
-      .delete(`/cms/users/?nim=${idMember}`)
-      .then(function (response) {
-        if (response.data.code === 204 || response.data.code === 200) {
-          window.alert('berhasil delete');
-          location.reload();
-        } else {
-        }
+      .patch(`/cms/users?nim=${nim}`, {
+        divisionId : ""
       })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
+      .then(function (response) {
+        if (response.data?.code === 200 || response.data?.code === 201) {
+          toast.dismiss();
+          toast.success("User removed successfully.");
+          fetchData(divisi.id);
+        } else if (response.response.data.code === 404 && response.response.data.status == "NOT_FOUND") {
+          toast.dismiss();
+          toast.error("User not found.");
+        } else if (response.response.data.code === 500) {
+          toast.dismiss();
+          toast.error(response.response.data.error.message);
+        }
+        setLoading(false);
+      }
+    );
+  }
 
   return (
     <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      className="bg-white border-b hover:bg-gray-50 text-gray-700 cursor-pointer"
       onClick={() => {
         router.push(`/member/detailMember?nim=${nim}`);
       }}
@@ -108,18 +123,20 @@ const ListMember = ({
           title="Edit"
         />
         <DefaultButton
-          type={'submit'}
-          size="small"
-          status="secondary"
-          title="Delete"
-          onClick={(e) => {
-            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
-            handleDelete(nim); // Panggil fungsi untuk mengarahkan ke halaman edit
-          }}
+          onClick={
+            (e) => {
+              e.stopPropagation();
+              onDelete(e);
+            }
+          }
+          type={"button"}
+          size={"small"}
+          status={"secondary"}
+          title={"Delete"}
         />
       </td>
     </tr>
   );
 };
 
-export default ListMember;
+export default ListDivisionMember;
