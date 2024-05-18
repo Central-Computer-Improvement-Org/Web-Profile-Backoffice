@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import DefaultButton from '../button/defaultButton';
 import DefaultLink from '../link/defaultLink';
+import request from '@/app/utils/request';
 
 const ListMember = ({
   photoUrl,
@@ -15,7 +16,6 @@ const ListMember = ({
   entryCommunity,
   status,
   nim,
-  onclick,
 }) => {
   const router = useRouter();
 
@@ -23,8 +23,19 @@ const ListMember = ({
     router.push(`/member/editMember?nim=${nim}`);
   };
 
-  const handleDelete = (nim) => {
-    router.push(`/member/delete/${nim}`);
+  const handleDelete = (idMember) => {
+    request
+      .delete(`/cms/users/?nim=${idMember}`)
+      .then(function (response) {
+        if (response.data.code === 204 || response.data.code === 200) {
+          window.alert('berhasil delete');
+          location.reload();
+        } else {
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   };
 
   return (
@@ -101,7 +112,10 @@ const ListMember = ({
           size="small"
           status="secondary"
           title="Delete"
-          onClick={onclick}
+          onClick={(e) => {
+            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
+            handleDelete(nim); // Panggil fungsi untuk mengarahkan ke halaman edit
+          }}
         />
       </td>
     </tr>

@@ -44,20 +44,6 @@ export default function Page() {
       });
   }, []);
 
-  const handleDelete = ({ idMember }) => {
-    request
-      .delete(`/cms/users/?nim=${idMember}`)
-      .then(function (response) {
-        if (response.data.code === 204) {
-          window.alert('berhasil delete');
-          location.reload();
-        } else {
-        }
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
   console.log(datas);
   return (
     <div>
@@ -108,16 +94,15 @@ export default function Page() {
                 // <Link href={`/member/detailMmeber?nim=${data.nim}`} key={index}>
                 <ListMember
                   key={index}
-                  photoUrl={data.profileUrl}
-                  name={data.name}
-                  email={data.email}
-                  divisi={data.division}
-                  major={data.major}
-                  entryUniversity={data.yearUniversityEnrolled}
-                  entryCommunity={data.yearCommunityEnrolled}
-                  status={data.isActive}
-                  nim={data.nim}
-                  onclick={handleDelete(data.nim)}
+                  photoUrl={data.profileUrl ?? ''}
+                  name={data.name ?? ''}
+                  email={data.email ?? ''}
+                  divisi={data.division ? data.division.name : ''}
+                  major={data.major ?? ''}
+                  entryUniversity={data.yearUniversityEnrolled ?? ''}
+                  entryCommunity={data.yearCommunityEnrolled ?? ''}
+                  status={data.isActive ?? ''}
+                  nim={data.nim ?? ''}
                 />
                 // </Link>
               )

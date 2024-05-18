@@ -55,8 +55,8 @@ const Login = () => {
         if (response.data.code === 200 || response.data.code === 201) {
           Cookies.set('token', response.data.data.access);
           // localStorage.setItem('nim', response.data.data.nim)
-          console.log(response);
-          // router.push('/dashboard');
+          // console.log(response);
+          router.push('/dashboard');
         } else {
           window.alert('gagal login');
         }
