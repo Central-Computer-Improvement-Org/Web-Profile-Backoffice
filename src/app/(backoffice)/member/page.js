@@ -29,10 +29,10 @@ export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const page = (searchParams.get("page")) ?? "1";
+  const page = searchParams.get('page') ?? '1';
 
   const [memberDatas, setMemberDatas] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [recordsTotal, setRecordsTotal] = useState(0);
 
@@ -53,12 +53,12 @@ export default function Page() {
 
   const fetchMembers = useCallback(async () => {
     const payload = {
-      search : debounceValue,
-      page : page,
-      limit : LIMIT,
-      ordering : ORDERING,
-      sort : SORT,
-    }
+      search: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
     request
       .get(`/cms/users`, payload)
       .then(function (response) {
@@ -69,7 +69,7 @@ export default function Page() {
       .catch(function (error) {
         console.log(error);
         setLoading(false);
-    });
+      });
   }, [debounceValue, page]);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function Page() {
       fetchMembers();
     }
   }, [debounceValue, fetchMembers, router]);
-  
+
   return (
     <div>
       <HeadTitle title={'All Members'}>

@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import DefaultButton from '../button/defaultButton';
-import request from "@/app/utils/request";
-import toast from "react-hot-toast";
+import request from '@/app/utils/request';
+import toast from 'react-hot-toast';
 
 const ListMember = ({
   photoUri,
@@ -17,7 +17,7 @@ const ListMember = ({
   entryCommunity,
   status,
   nim,
-  fetchData 
+  fetchData,
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -28,26 +28,27 @@ const ListMember = ({
 
   const onDelete = async (e) => {
     setLoading(true);
-    toast.loading("Deleting data...");
+    toast.loading('Deleting data...');
     e.preventDefault();
 
-    request
-      .delete(`/cms/users?nim=${nim}`)
-      .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          fetchData();
-        } else if (response.response.data.code === 404 && response.response.data.status == "NOT_FOUND") {
-          toast.dismiss();
-          toast.error("Division not found.");
-        } else if (response.response.data.code === 500) {
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        }
-        setLoading(false);
-      });
-  }
+    request.delete(`/cms/users?nim=${nim}`).then(function (response) {
+      if (response.data?.code === 200 || response.data?.code === 201) {
+        toast.dismiss();
+        toast.success(response.data.data.message);
+        fetchData();
+      } else if (
+        response.response.data.code === 404 &&
+        response.response.data.status == 'NOT_FOUND'
+      ) {
+        toast.dismiss();
+        toast.error('Division not found.');
+      } else if (response.response.data.code === 500) {
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      }
+      setLoading(false);
+    });
+  };
 
   return (
     <tr
@@ -88,7 +89,9 @@ const ListMember = ({
           </div>
         </div>
       </th>
-      <td className="text-xs font-medium px-6 py-4">{(divisi) ? divisi.name : "None"}</td>
+      <td className="text-xs font-medium px-6 py-4">
+        {divisi ? divisi.name : 'None'}
+      </td>
       <td className="text-xs font-medium px-6 py-4">{major}</td>
       <td className="text-xs font-medium px-6 py-4">
         {/* {moment(entryUniversity).format(" D MMM YYYY")} */}
@@ -120,12 +123,10 @@ const ListMember = ({
           title="Edit"
         />
         <DefaultButton
-        onClick={
-          (e) => {
+          onClick={(e) => {
             e.stopPropagation();
             onDelete(e);
-          }
-        }
+          }}
           type={'submit'}
           size="small"
           status="secondary"
