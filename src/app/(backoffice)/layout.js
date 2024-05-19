@@ -26,6 +26,7 @@ const MainLayout = ({ children }) => {
   const router = useRouter();
 
   const handleLogout = () => {
+    localStorage.removeItem('nim');
     Cookies.remove('token');
     router.push('/login');
   };

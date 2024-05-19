@@ -9,6 +9,7 @@ import DefaultButton from '@/components/button/defaultButton';
 import Link from 'next/link';
 import request from '../utils/request';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const router = useRouter();
@@ -55,8 +56,9 @@ const Login = () => {
         console.info(response.data);
         if (response.data.code === 200 || response.data.code === 201) {
           Cookies.set('token', response.data.data.access);
-          // localStorage.setItem('nim', response.data.data.nim)
-          console.log(response);
+          localStorage.setItem('nim', response.data.data.nim);
+          toast.dismiss();
+          toast.success('Success Login');
           router.push('/dashboard');
         } else {
           window.alert('gagal login');
