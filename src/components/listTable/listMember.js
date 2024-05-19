@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import DefaultButton from '../button/defaultButton';
-import DefaultLink from '../link/defaultLink';
+import request from "@/app/utils/request";
+import toast from "react-hot-toast";
 
 const ListMember = ({
   photoUri,
@@ -15,17 +17,37 @@ const ListMember = ({
   entryCommunity,
   status,
   nim,
-  onclick,
+  fetchData 
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = (nim) => {
     router.push(`/member/editMember?nim=${nim}`);
   };
 
-  const handleDelete = (nim) => {
-    router.push(`/member/delete/${nim}`);
-  };
+  const onDelete = async (e) => {
+    setLoading(true);
+    toast.loading("Deleting data...");
+    e.preventDefault();
+
+    request
+      .delete(`/cms/users?nim=${nim}`)
+      .then(function (response) {
+        if (response.data?.code === 200 || response.data?.code === 201) {
+          toast.dismiss();
+          toast.success(response.data.data.message);
+          fetchData();
+        } else if (response.response.data.code === 404 && response.response.data.status == "NOT_FOUND") {
+          toast.dismiss();
+          toast.error("Division not found.");
+        } else if (response.response.data.code === 500) {
+          toast.dismiss();
+          toast.error(response.response.data.error.message);
+        }
+        setLoading(false);
+      });
+  }
 
   return (
     <tr
@@ -53,7 +75,7 @@ const ListMember = ({
         <div className="flex gap-2 items-center">
           <div className="w-10 h-10 rounded-full">
             <img
-              src={"https://103-31-38-146.sslip.io" + photoUri}
+              src={`https://103-31-38-146.sslip.io${photoUri}`}
               width={0}
               height={0}
               className="w-full h-full object-cover rounded-full"
@@ -66,7 +88,7 @@ const ListMember = ({
           </div>
         </div>
       </th>
-      <td className="text-xs font-medium px-6 py-4">{divisi.name}</td>
+      <td className="text-xs font-medium px-6 py-4">{(divisi) ? divisi.name : "None"}</td>
       <td className="text-xs font-medium px-6 py-4">{major}</td>
       <td className="text-xs font-medium px-6 py-4">
         {/* {moment(entryUniversity).format(" D MMM YYYY")} */}
@@ -89,19 +111,25 @@ const ListMember = ({
       <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
         <DefaultButton
           onClick={(e) => {
-            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
-            handleEdit(nim); // Panggil fungsi untuk mengarahkan ke halaman edit
+            e.stopPropagation();
+            router.push(`/member/editMember?nim=${nim}`);
           }}
+          href={`/member/editMember?nim=${nim}`}
           size="small"
           status="primary"
           title="Edit"
         />
         <DefaultButton
+        onClick={
+          (e) => {
+            e.stopPropagation();
+            onDelete(e);
+          }
+        }
           type={'submit'}
           size="small"
           status="secondary"
           title="Delete"
-          onClick={onclick}
         />
       </td>
     </tr>

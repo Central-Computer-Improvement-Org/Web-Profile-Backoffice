@@ -131,8 +131,7 @@ export default function AddDevisionPage() {
                   id={"logoUri"}
                   name={"logoUri"}
                   type={"image"}
-                  multiple={true}
-                  imageOnly={true}
+                  multiple={false}
                   label={"Logo"}
                   required
                   validations={validations}

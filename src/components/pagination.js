@@ -1,12 +1,25 @@
 import Link from 'next/link';
 import React from 'react';
 
-export default function Pagination() {
+export default function Pagination({
+  recordsTotal,
+  page,
+  link
+}) {
+  const recordsPerPage = 10;
+  page = Number(page); 
+  const first = (recordsTotal === 0) ? 0 : (page - 1) * recordsPerPage + 1;
+  const last = page * recordsPerPage;
+
+  const totalPages = Math.ceil(recordsTotal / recordsPerPage);
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < totalPages;
+
   return (
     <div className="flex items-center mb-4 sm:mb-0 py-5">
-      <Link
-        href="#"
-        className="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 "
+       <Link
+        href={hasPrevPage ? `/${link}?page=${page - 1}` : '#'}
+        className={`inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 ${!hasPrevPage && 'opacity-50 cursor-not-allowed'}`}
       >
         <svg
           className="w-7 h-7"
@@ -22,8 +35,8 @@ export default function Pagination() {
         </svg>
       </Link>
       <Link
-        href="#"
-        className="inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
+        href={hasNextPage ? `/${link}?page=${page + 1}` : '#'}
+        className={`inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 ${!hasNextPage && 'opacity-50 cursor-not-allowed'}`}
       >
         <svg
           className="w-7 h-7"
@@ -38,9 +51,9 @@ export default function Pagination() {
           ></path>
         </svg>
       </Link>
-      <span className="text-sm font-normal text-gray-500 ">
-        Showing <span className="font-semibold text-gray-900 ">1-20</span> of{' '}
-        <span className="font-semibold text-gray-900 ">2290</span>
+      <span className="text-sm font-normal text-gray-500">
+        Showing <span className="font-semibold text-gray-900 ">{first}-{((last) < recordsTotal) ? (last) : recordsTotal }</span> of{' '}
+        <span className="font-semibold text-gray-900 ">{recordsTotal}</span>
       </span>
     </div>
   );
