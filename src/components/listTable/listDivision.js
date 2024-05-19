@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState } from "react";
-import DefaultLink from "../link/defaultLink";
 import { formatDescription } from "@/app/utils/stringUtils";
 import DefaultButton from "../button/defaultButton";
 import { useRouter } from "next/navigation";

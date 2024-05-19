@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import ListMember from '@/components/listTable/listMember';
 import InputField from '@/components/form/inputField';
@@ -14,10 +14,30 @@ import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
 import Pagination from '@/components/pagination';
 
+import { useDebounce } from 'use-debounce';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+// Sorting Constants
+const ORDERING = 'updatedAt';
+const SORT = 'desc';
+
+// Pagination Constants
+const LIMIT = 10;
+
 export default function Page() {
   // Gunakan huruf besar untuk nama fungsi komponen
-  const [search, setSearch] = useState('');
-  const [datas, setDatas] = useState([]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const page = searchParams.get('page') ?? '1';
+
+  const [memberDatas, setMemberDatas] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const [recordsTotal, setRecordsTotal] = useState(0);
+
+  const [debounceValue] = useDebounce(searchQuery, 500);
+
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
@@ -31,20 +51,43 @@ export default function Page() {
     { menu: '' },
   ];
 
-  useEffect(() => {
+  const fetchMembers = useCallback(async () => {
+    const payload = {
+      search: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
     request
-      .get('/cms/users/')
+      .get(`/cms/users`, payload)
       .then(function (response) {
-        setDatas(response.data.data);
+        setMemberDatas(response.data.data);
+        setRecordsTotal(response.data.recordsTotal);
         setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [debounceValue, page]);
 
-  console.log(datas);
+  useEffect(() => {
+    if (page < 1) {
+      router.push('/member?page=1');
+    } else {
+      fetchMembers();
+    }
+  }, [page, fetchMembers, router]);
+
+  useEffect(() => {
+    if (debounceValue !== '') {
+      router.push('/member?page=1');
+    } else {
+      fetchMembers();
+    }
+  }, [debounceValue, fetchMembers, router]);
+
   return (
     <div>
       <HeadTitle title={'All Members'}>
@@ -60,9 +103,9 @@ export default function Page() {
                   name={'search'}
                   placeholder={'Search for member'}
                   type={'text'}
-                  value={search}
+                  value={searchQuery}
                   onChange={(e) => {
-                    setSearch(e.target.value);
+                    setSearchQuery(e.target.value);
                   }}
                   icon={<IoIosSearch />}
                 />
@@ -86,29 +129,28 @@ export default function Page() {
       ) : (
         <div className="">
           <DefaultTable rowMenu={rowMenu}>
-            {datas.map(
+            {memberDatas.map(
               (
                 data,
                 index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
               ) => (
-                // <Link href={`/member/detailMmeber?nim=${data.nim}`} key={index}>
                 <ListMember
                   key={index}
-                  photoUrl={data.profileUrl ?? ''}
-                  name={data.name ?? ''}
-                  email={data.email ?? ''}
-                  divisi={data.division ? data.division.name : ''}
-                  major={data.major ?? ''}
-                  entryUniversity={data.yearUniversityEnrolled ?? ''}
-                  entryCommunity={data.yearCommunityEnrolled ?? ''}
-                  status={data.isActive ?? ''}
-                  nim={data.nim ?? ''}
+                  photoUri={data.profileUri}
+                  name={data.name}
+                  email={data.email}
+                  divisi={data.division}
+                  major={data.major}
+                  entryUniversity={data.yearUniversityEnrolled}
+                  entryCommunity={data.yearCommunityEnrolled}
+                  status={data.isActive}
+                  nim={data.nim}
+                  fetchData={fetchMembers}
                 />
-                // </Link>
               )
             )}
           </DefaultTable>
-          <Pagination />
+          <Pagination recordsTotal={recordsTotal} page={page} link="member" />
         </div>
       )}
     </div>
