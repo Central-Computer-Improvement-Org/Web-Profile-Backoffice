@@ -49,7 +49,7 @@ const Login = () => {
     e.preventDefault();
     request
       .post('/auth/login', {
-        nim: email,
+        email: email,
         password: password,
       })
       .then(function (response) {
@@ -99,7 +99,7 @@ const Login = () => {
                 name={'email'}
                 onChange={handleChangeEmail}
                 placeholder={'user@gmail.com'}
-                type={'text'}
+                type={'email'}
                 value={email}
                 required
                 label={'Your email'}
