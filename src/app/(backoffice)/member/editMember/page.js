@@ -9,7 +9,7 @@ import React, { useEffect, useState, useCallback  } from "react";
 import request from "@/app/utils/request";
 import { toast } from "react-hot-toast";
 
-import { set, z } from "zod";
+import { z } from "zod";
 
 // Pagination Constants
 const LIMIT = 100;
@@ -46,8 +46,8 @@ const formSchema = z.object({
     .min(3, { message: "Major must be at least 3 characters long."})
     .max(30, { message: "Major must be at most 30 characters long."}),
   linkedinUri : z
-    .string(),
-    // .url({ message: "Invalid URL."}),
+    .string()
+    .url({ message: "Invalid URL."}),
   phoneNumber : z
     .string()
     .min(3, { message: "Phone number must be at least 3 characters long."})
