@@ -15,6 +15,8 @@ import { AiFillProject } from 'react-icons/ai';
 import { FaAward } from 'react-icons/fa6';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
+import { PiAddressBookTabsLight } from 'react-icons/pi';
+import { LiaAddressBook } from 'react-icons/lia';
 
 //import Images
 import Logo from '../../../public/assets/image/logo.png';
@@ -112,9 +114,9 @@ const MainLayout = ({ children }) => {
           <ul className="space-y-2 font-medium">
             <li>
               <MenuSidebar
-                href="./profile"
-                icon={<CgProfile className="text-xl" />}
-                title={'Profile'}
+                href="/contact"
+                icon={<LiaAddressBook className="text-xl" />}
+                title={'Contact'}
               />
             </li>
             <li>
