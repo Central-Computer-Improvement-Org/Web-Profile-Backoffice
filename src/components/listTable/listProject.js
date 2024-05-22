@@ -9,7 +9,7 @@ import request from '@/app/utils/request';
 
 import {toast} from 'react-hot-toast';
 
-const ListProject = ({ name, imageUri, iconUri, description, productionUrl, budget, id, fetchData }) => {
+const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fetchData }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -56,23 +56,6 @@ const ListProject = ({ name, imageUri, iconUri, description, productionUrl, budg
           </label>
         </div>
       </td>
-
-      <td className="text-xs font-medium px-6 py-4">
-       <div className="flex gap-2 items-center">
-        {name}
-        </div>
-      </td>
-      <td className="text-xs font-medium px-6 py-4">
-        <div className="w-10 h-10 rounded-full">
-          <img
-            src={`https://103-31-38-146.sslip.io${imageUri}`}
-            width={0}
-            height={0}
-            className="w-full h-full object-cover rounded-full"
-            alt="profile"
-          />
-        </div>
-      </td>
       <td className="text-xs font-medium px-6 py-4">
         <div className="w-10 h-10 rounded-full">
           <img
@@ -82,6 +65,11 @@ const ListProject = ({ name, imageUri, iconUri, description, productionUrl, budg
             className="w-full h-full object-cover rounded-full"
             alt="profile"
           />
+        </div>
+      </td>
+      <td className="text-xs font-medium px-6 py-4">
+       <div className="flex gap-2 items-center">
+        {name}
         </div>
       </td>
       <td className="text-xs font-medium px-6 py-4">

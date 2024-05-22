@@ -327,20 +327,6 @@ export default function DetailMemberPage() {
                         readOnly={true}
                       />
                     </div>
-                    <div className="flex items-center gap-4">
-                      <DefaultLink
-                        href={"/member/editMember?nim=123456789101"}
-                        size={"base"}
-                        status={"primary"}
-                        title={"Edit"}
-                      />
-                      <DefaultLink
-                        href={"/member"}
-                        size={"base"}
-                        status={"secondary"}
-                        title={"Back"}
-                      />
-                    </div>
                   </div>
                 </form>
               </div>

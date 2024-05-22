@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { host } from '@/app/utils/urlApi';
+import React, { useEffect, useState, useCallback } from 'react';
 import ListAward from '@/components/listTable/listAward';
-import axios from 'axios';
 import InputField from '@/components/form/inputField';
 
 import { IoIosSearch } from 'react-icons/io';
@@ -13,31 +11,80 @@ import DefaultLink from '@/components/link/defaultLink';
 import HeadTitle from '@/components/headTitle';
 import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
-import Link from 'next/link';
 import Pagination from '@/components/pagination';
 
+import { useDebounce } from 'use-debounce';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+// Sorting Constants
+const ORDERING = 'updatedAt';
+const SORT = 'desc';
+
+// Pagination Constants
+const LIMIT = 10;
+
 export default function AwardPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const page = searchParams.get('page') ?? '1';
+
+  const [searchQuery, setSearchQuery] = useState('');
+
   const [search, setSearch] = useState('');
   const [awardDatas, setAwardDatas] = useState([]);
+
+  const [recordsTotal, setRecordsTotal] = useState(0);
+
+  const [debounceValue] = useDebounce(searchQuery, 500);
+
   const [loading, setLoading] = useState(true);
+
   const rowMenu = [
     { menu: 'ISSUER' },
     { menu: 'TITLE' },
     { menu: 'DESCRIPTION' },
     { menu: '' },
   ];
+
+  const fetchAwards = useCallback(async () => {
+    const payload = {
+       search: debounceValue,
+       page: page,
+       limit: LIMIT,
+       ordering: ORDERING,
+       sort: SORT,
+     };
+     request
+       .get(`/cms/awards`, payload)
+       .then(function (response) {
+         setAwardDatas(response.data.data);
+         setRecordsTotal(response.data.recordsTotal);
+         setLoading(false);
+       })
+       .catch(function (error) {
+         console.log(error);
+         setLoading(false);
+       });
+ }, [debounceValue, page]);
+
   useEffect(() => {
-    request
-      .get('/award')
-      .then(function (response) {
-        setAwardDatas(response.data.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-  }, []);
+    if (page < 1) {
+      router.push('/project?page=1');
+    } else {
+      fetchAwards();
+    }
+  }, [page, fetchAwards, router]);
+
+  useEffect(() => {
+    if (debounceValue !== '') {
+      router.push('/project?page=1');
+    } else {
+      fetchAwards();
+    }
+  }, [debounceValue, fetchAwards, router]);
+
+
   return (
     <div>
       <HeadTitle title={'All Awards'}>
@@ -53,9 +100,9 @@ export default function AwardPage() {
                   name={'search'}
                   placeholder={'Search for Award'}
                   type={'text'}
-                  value={search}
+                  value={searchQuery}
                   onChange={(e) => {
-                    setSearch(e.target.value);
+                    setSearchQuery(e.target.value);
                   }}
                   icon={<IoIosSearch />}
                 />
@@ -69,7 +116,6 @@ export default function AwardPage() {
               title={'Add Award'}
               href={'/award/addAward'}
               icon={<FaPlus />}
-              onClick={() => {}}
             />
           </div>
         </div>
@@ -90,11 +136,12 @@ export default function AwardPage() {
                   title={data.title}
                   description={data.description}
                   id={data.id}
+                  fetchData={fetchAwards}
                 />
               )
             )}
           </DefaultTable>
-          <Pagination />
+          <Pagination recordsTotal={recordsTotal} page={page} link="award" />
         </div>
       )}
     </div>
