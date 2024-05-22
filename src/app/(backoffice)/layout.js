@@ -121,7 +121,7 @@ const MainLayout = ({ children }) => {
             </li>
             <li>
               <MenuSidebar
-                href="./setting"
+                href="/setting"
                 icon={<IoSettings className="text-xl" />}
                 title={'Setting'}
               />
