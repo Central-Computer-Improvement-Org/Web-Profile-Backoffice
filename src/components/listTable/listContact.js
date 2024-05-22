@@ -5,9 +5,44 @@ import DefaultLink from '../link/defaultLink';
 import { formatDescription } from '@/app/utils/stringUtils';
 import DefaultButton from '../button/defaultButton';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import request from '@/app/utils/request';
 
-const ListContact = ({ iconUri, platform, name, status, accountUri, id }) => {
+const ListContact = ({
+  iconUri,
+  platform,
+  name,
+  status,
+  accountUri,
+  id,
+  fetchData,
+}) => {
   const router = useRouter();
+
+  const onDelete = async (e) => {
+    // setLoading(true);
+    toast.loading('Deleting data...');
+    e.preventDefault();
+
+    request.delete(`/cms/contact?id=${id}`).then(function (response) {
+      if (response.data?.code === 200 || response.data?.code === 201) {
+        toast.dismiss();
+        toast.success(response.data.data.message);
+        fetchData();
+      } else if (
+        response.response.data.code === 404 &&
+        response.response.data.status == 'NOT_FOUND'
+      ) {
+        toast.dismiss();
+        toast.error('Division not found.');
+      } else if (response.response.data.code === 500) {
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      }
+      // setLoading(false);
+    });
+  };
+
   return (
     <tr className="bg-white border-b hover:bg-gray-50 text-gray-700 cursor-pointer">
       <td className="w-4 p-4">
@@ -59,8 +94,12 @@ const ListContact = ({ iconUri, platform, name, status, accountUri, id }) => {
           status={'primary'}
           title={'Edit'}
         />
-        <DefaultLink
-          href={`/award/delete/${id}`}
+        <DefaultButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(e);
+          }}
+          type={'button'}
           size={'small'}
           status={'secondary'}
           title={'Delete'}

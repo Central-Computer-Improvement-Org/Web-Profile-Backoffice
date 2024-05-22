@@ -6,14 +6,32 @@ import DefaultLink from '@/components/link/defaultLink';
 import ListContact from '@/components/listTable/listContact';
 import Pagination from '@/components/pagination';
 import DefaultTable from '@/components/table/defaultTable';
-import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { IoIosSearch } from 'react-icons/io';
+import { useDebounce } from 'use-debounce';
+
+// Sorting Constants
+const ORDERING = 'updatedAt';
+const SORT = 'desc';
+
+// Pagination Constants
+const LIMIT = 10;
 
 export default function ContactPage() {
   const [datasContact, setDatasContact] = useState();
-  const [recordsTotal, setRecordsTotal] = useState();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const page = searchParams.get('page') ?? '1';
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const [recordsTotal, setRecordsTotal] = useState(0);
+
+  const [debounceValue] = useDebounce(searchQuery, 500);
+
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
@@ -24,14 +42,19 @@ export default function ContactPage() {
     { menu: '' },
   ];
 
-  const searchParams = useSearchParams();
   // const router = useRouter();
 
-  const page = searchParams.get('page') ?? '1';
+  const fetchDataContact = useCallback(async () => {
+    const payload = {
+      name: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
 
-  useEffect(() => {
     request
-      .get('/cms/contact')
+      .get(`/cms/contact`, payload)
       .then(function (response) {
         setDatasContact(response.data.data);
         setRecordsTotal(response.data.recordsTotal);
@@ -41,7 +64,15 @@ export default function ContactPage() {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [debounceValue, page]);
+
+  useEffect(() => {
+    if (page < 1) {
+      router.push('/division?page=1');
+    } else {
+      fetchDataContact();
+    }
+  }, [debounceValue, page, fetchDataContact, router]);
   return (
     <>
       <HeadTitle title={'Contact'}>
@@ -84,6 +115,7 @@ export default function ContactPage() {
                   status={data.isActive}
                   accountUri={data.accountUri}
                   id={data.id}
+                  fetchData={fetchDataContact}
                 />
               )
             )}

@@ -30,13 +30,12 @@ const formSchema = z.object({
     .max(30, { message: 'Platform must be at most 30 characters long.' }),
   iconUri: z
     .any()
-    .optional()
     .refine(
-      (file) => !file || file.size <= MAX_FILE_SIZE,
+      (file) => !file || file?.size <= MAX_FILE_SIZE,
       `The maximum file size that can be uploaded is 2MB`
     )
     .refine(
-      (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
+      (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type),
       'Only .jpg, .jpeg, .png and .webp formats are supported.'
     ),
   accountUri: z
@@ -67,21 +66,30 @@ export default function EditContactPage() {
     toast.loading('Saving data...');
     e.preventDefault();
 
-    try {
-      const validation = formSchema.safeParse({
-        value: name,
-        iconUri: iconUri,
-        platform: platform,
-        accountUri: accountUri,
-        isActive: status,
-      });
+    const requestBody = {
+      value: name,
+      platform: platform,
+      accountUri: accountUri,
+      isActive: status,
+    };
 
+    if (iconUri !== null && iconUri !== '') {
+      requestBody.iconUri = iconUri;
+    }
+
+    console.log(requestBody);
+
+    try {
+      const validation = formSchema.safeParse(requestBody);
       if (!validation.success) {
-        validation.error.errors.forEach((error) => {
-          setValidations((prev) => [
-            ...prev,
-            { name: error.path[0], message: error.message },
-          ]);
+        validation.error.errors.map((validation) => {
+          const key = [
+            {
+              name: validation.path[0],
+              message: validation.message,
+            },
+          ];
+          setValidations((validations) => [...validations, ...key]);
         });
         setLoading(false);
         toast.dismiss();
@@ -93,53 +101,30 @@ export default function EditContactPage() {
       toast.dismiss();
       toast.error('Something went wrong!');
       console.error(error);
-      return;
     }
-
-    const requestBody = {
-      value: name,
-      platform: platform,
-      accountUri: accountUri,
-      isActive: status,
-      iconUri: iconUri,
-    };
-
-    // if (iconUri) {
-    //   requestBody.iconUri = iconUri;
-    // }
-
     request
       .patch(`/cms/contact?id=${id}`, requestBody)
-      .then((response) => {
+      .then(function (response) {
+        console.log(response);
         if (response.data?.code === 200 || response.data?.code === 201) {
           toast.dismiss();
           toast.success(response.data.data.message);
           router.push('/contact');
-        } else {
-          handleErrors(response);
+        } else if (
+          response.response.data.code === 400 &&
+          response.response.data.status == 'VALIDATION_ERROR'
+        ) {
+          setValidations(response.response.data.error.validation);
+          setIconUri('');
+          toast.dismiss();
+          toast.error(response.response.data.error.message);
+        } else if (response.response.data.code === 500) {
+          console.error('INTERNAL_SERVER_ERROR');
+          toast.dismiss();
+          toast.error(response.response.data.error.message);
         }
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-        toast.dismiss();
-        toast.error('Failed to save data.');
       });
-  };
-
-  const handleErrors = (response) => {
-    if (
-      response.response.data.code === 400 &&
-      response.response.data.status === 'VALIDATION_ERROR'
-    ) {
-      setValidations(response.response.data.error.validation);
-      toast.dismiss();
-      toast.error(response.response.data.error.message);
-    } else if (response.response.data.code === 500) {
-      toast.dismiss();
-      toast.error(response.response.data.error.message);
-    }
   };
 
   useEffect(() => {
@@ -151,7 +136,7 @@ export default function EditContactPage() {
       .get(`/cms/contact?id=${id}`)
       .then((response) => {
         const data = response.data.data;
-        setIconUri(data.iconUri || null);
+        // setIconUri(data.iconUri || null);
         setPlatform(data.platform);
         setName(data.value);
         setStatus(data.isActive);
@@ -186,9 +171,8 @@ export default function EditContactPage() {
                     validations={validations}
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
-                        setIconUri(e.target.files[0]);
-                      } else {
-                        setIconUri(null);
+                        const img = e.target.files[0];
+                        setIconUri(img);
                       }
                     }}
                   />

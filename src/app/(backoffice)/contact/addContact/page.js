@@ -68,6 +68,7 @@ export default function AddContactPage() {
         iconUri: iconUri,
         platform: platform,
         accountUri: accountUri,
+        isActive: status,
       });
 
       if (!validation.success) {
@@ -89,35 +90,34 @@ export default function AddContactPage() {
       console.error(error);
     }
 
-    request
-      .post(`/cms/contact`, {
-        value: name,
-        iconUri: iconUri,
-        accountUri: accountUri,
-        platform: platform,
-        accountUri: accountUri,
-        isActive: status,
-      })
-      .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          router.push('/contact');
-        } else if (
-          response.response.data.code === 400 &&
-          response.response.data.status == 'VALIDATION_ERROR'
-        ) {
-          setValidations(response.response.data.error.validation);
-          setLogoUri('');
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500) {
-          console.error('INTERNAL_SERVER_ERROR');
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        }
-        setLoading(false);
-      });
+    const requestBody = {
+      value: name,
+      platform: platform,
+      accountUri: accountUri,
+      iconUri: iconUri,
+      isActive: status,
+    };
+
+    request.post(`/cms/contact`, requestBody).then(function (response) {
+      if (response.data?.code === 200 || response.data?.code === 201) {
+        toast.dismiss();
+        toast.success(response.data.data.message);
+        router.push('/contact');
+      } else if (
+        response.response.data.code === 400 &&
+        response.response.data.status == 'VALIDATION_ERROR'
+      ) {
+        setValidations(response.response.data.error.validation);
+        setIconUri('');
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      } else if (response.response.data.code === 500) {
+        console.error('INTERNAL_SERVER_ERROR');
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      }
+      setLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -197,17 +197,19 @@ export default function AddContactPage() {
                 </div>
                 <div className="sm:col-span-6">
                   <InputSelect
-                    id={'status'}
-                    name={'status'}
+                    id={'isActive'}
+                    name={'isActive'}
                     placeholder={'e.g Active'}
                     type={'text'}
                     value={status}
                     required
                     label={'Division'}
+                    validations={validations}
                     onChange={(e) => {
                       setStatus(e.target.value);
                     }}
                   >
+                    <option selected></option>
                     <option value={true}>Active</option>
                     <option value={false}>InActive</option>
                   </InputSelect>
