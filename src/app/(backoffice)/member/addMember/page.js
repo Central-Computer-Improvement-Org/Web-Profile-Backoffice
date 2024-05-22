@@ -153,7 +153,6 @@ export default function AddMemberPage() {
         toast.error("Invalid Input.");
         console.log(validations);
         return;
-        
       }
     } catch (error) {
       console.error(error);

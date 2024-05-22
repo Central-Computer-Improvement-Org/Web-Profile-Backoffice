@@ -1,15 +1,42 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useState } from 'react';
-import DefaultLink from '../link/defaultLink';
 import { formatDescription } from '@/app/utils/stringUtils';
 import DefaultButton from '../button/defaultButton';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { currency } from '@/app/utils/numberFormat';
+import request from '@/app/utils/request';
 
-const ListProject = ({ name, description, productionUrl, budget, id }) => {
+import {toast} from 'react-hot-toast';
+
+const ListProject = ({ name, imageUri, iconUri, description, productionUrl, budget, id, fetchData }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const onDelete = async (e) => {
+    setLoading(true);
+    toast.loading('Deleting data...');
+    e.preventDefault();
+
+    request.delete(`/cms/projects?id=${id}`).then(function (response) {
+      if (response.data?.code === 200 || response.data?.code === 201) {
+        toast.dismiss();
+        toast.success(response.data.data.message);
+        fetchData();
+      } else if (
+        response.response.data.code === 404 &&
+        response.response.data.status == 'NOT_FOUND'
+      ) {
+        toast.dismiss();
+        toast.error('Project not found.');
+      } else if (response.response.data.code === 500) {
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      }
+      setLoading(false);
+    });
+  };
+
   return (
     <tr
       className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
@@ -30,7 +57,33 @@ const ListProject = ({ name, description, productionUrl, budget, id }) => {
         </div>
       </td>
 
-      <td className="text-xs font-medium px-6 py-4">{name}</td>
+      <td className="text-xs font-medium px-6 py-4">
+       <div className="flex gap-2 items-center">
+        {name}
+        </div>
+      </td>
+      <td className="text-xs font-medium px-6 py-4">
+        <div className="w-10 h-10 rounded-full">
+          <img
+            src={`https://103-31-38-146.sslip.io${imageUri}`}
+            width={0}
+            height={0}
+            className="w-full h-full object-cover rounded-full"
+            alt="profile"
+          />
+        </div>
+      </td>
+      <td className="text-xs font-medium px-6 py-4">
+        <div className="w-10 h-10 rounded-full">
+          <img
+            src={`https://103-31-38-146.sslip.io${iconUri}`}
+            width={0}
+            height={0}
+            className="w-full h-full object-cover rounded-full"
+            alt="profile"
+          />
+        </div>
+      </td>
       <td className="text-xs font-medium px-6 py-4">
         {formatDescription(description)}
       </td>
@@ -56,8 +109,12 @@ const ListProject = ({ name, description, productionUrl, budget, id }) => {
           status={'primary'}
           title={'Edit'}
         />
-        <DefaultLink
-          href={`/project/delete/${id}`}
+        <DefaultButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(e);
+          }}
+          type={'button'}
           size={'small'}
           status={'secondary'}
           title={'Delete'}

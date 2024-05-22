@@ -15,10 +15,14 @@ export default function Pagination({
   const hasPrevPage = page > 1;
   const hasNextPage = page < totalPages;
 
+  const createPageLink = (pageNum) => {
+    return link.includes('?') ? `/${link}&page=${pageNum}` : `/${link}?page=${pageNum}`;
+  };
+
   return (
     <div className="flex items-center mb-4 sm:mb-0 py-5">
-       <Link
-        href={hasPrevPage ? `/${link}?page=${page - 1}` : '#'}
+      <Link
+        href={hasPrevPage ? createPageLink(page - 1) : '#'}
         className={`inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 ${!hasPrevPage && 'opacity-50 cursor-not-allowed'}`}
       >
         <svg
@@ -35,7 +39,7 @@ export default function Pagination({
         </svg>
       </Link>
       <Link
-        href={hasNextPage ? `/${link}?page=${page + 1}` : '#'}
+        href={hasNextPage ? createPageLink(page + 1) : '#'}
         className={`inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 ${!hasNextPage && 'opacity-50 cursor-not-allowed'}`}
       >
         <svg

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import InputField from '@/components/form/inputField';
 
 import { IoIosSearch } from 'react-icons/io';
@@ -13,29 +13,78 @@ import request from '@/app/utils/request';
 import Pagination from '@/components/pagination';
 import ListProject from '@/components/listTable/listProject';
 
+import { useDebounce } from 'use-debounce';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+// Sorting Constants
+const ORDERING = 'updatedAt';
+const SORT = 'desc';
+
+// Pagination Constants
+const LIMIT = 10;
+
 export default function ProjectPage() {
-   const [search, setSearch] = useState('');
+   const searchParams = useSearchParams();
+   const router = useRouter();
+
+   const page = searchParams.get('page') ?? '1';
+
+   const [searchQuery, setSearchQuery] = useState('');
    const [projectDatas, setProjectDatas] = useState([]);
+
+   const [recordsTotal, setRecordsTotal] = useState(0);
+
+   const [debounceValue] = useDebounce(searchQuery, 500);
+
    const [loading, setLoading] = useState(true);
+
+   
    const rowMenu = [
-      { menu: 'NAME' },
+      { menu: 'TITLE' },
+      { menu: 'IMAGE' },
+      { menu: 'ICON' },
       { menu: 'DESCRIPTION' },
       { menu: 'BUDGET' },
       { menu: 'PRODUCTION URL' },
       { menu: '' },
    ];
-   useEffect(() => {
-      request
-         .get('/cms/projects')
+
+   const fetchProjects = useCallback(async () => {
+      const payload = {
+         search: debounceValue,
+         page: page,
+         limit: LIMIT,
+         ordering: ORDERING,
+         sort: SORT,
+       };
+       request
+         .get(`/cms/projects`, payload)
          .then(function (response) {
-            setProjectDatas(response.data.data);
-            setLoading(false);
+           setProjectDatas(response.data.data);
+           setRecordsTotal(response.data.recordsTotal);
+           setLoading(false);
          })
          .catch(function (error) {
-            console.log(error);
-            setLoading(false);
+           console.log(error);
+           setLoading(false);
          });
-   }, []);
+   }, [debounceValue, page]);
+
+   useEffect(() => {
+    if (page < 1) {
+      router.push('/project?page=1');
+    } else {
+      fetchProjects();
+    }
+  }, [page, fetchProjects, router]);
+
+  useEffect(() => {
+    if (debounceValue !== '') {
+      router.push('/project?page=1');
+    } else {
+      fetchProjects();
+    }
+  }, [debounceValue, fetchProjects, router]);
    return (
       <div>
          <HeadTitle title={'All Projects'}>
@@ -51,9 +100,9 @@ export default function ProjectPage() {
                            name={'search'}
                            placeholder={'Search for project'}
                            type={'text'}
-                           value={search}
+                           value={searchQuery}
                            onChange={(e) => {
-                              setSearch(e.target.value);
+                              setSearchQuery(e.target.value);
                            }}
                            icon={<IoIosSearch />}
                         />
@@ -80,15 +129,18 @@ export default function ProjectPage() {
                   {projectDatas.map((data, index) => (
                      <ListProject
                         key={index}
+                        imageUri={data.imageUri}
+                        iconUri={data.iconUri}
                         name={data.name}
                         description={data.description}
                         productionUrl={data.productionUri}
                         budget={data.budget}
                         id={data.id}
+                        fetchData={fetchProjects}
                      />
                   ))}
                </DefaultTable>
-               <Pagination />
+               <Pagination recordsTotal={recordsTotal} page={page} link="project" />
             </div>
          )}
       </div>
