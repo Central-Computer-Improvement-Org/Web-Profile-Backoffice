@@ -8,6 +8,7 @@ export default function InputMultipleSelect({
   value,
   label,
   onChange,
+  validations
 }) {
   return (
     <div className="w-full ">
@@ -30,7 +31,7 @@ export default function InputMultipleSelect({
             }),
           }}
           isMulti
-          id={id}
+          instanceId={id}
           name={name}
           value={value}
           options={option}
@@ -38,6 +39,14 @@ export default function InputMultipleSelect({
           classNamePrefix="select"
           onChange={onChange}
         />
+        {/* Handle Validation */}
+        {validations && (
+          validations.map((validation, index) => (
+            (validation.name === name || (validation.name === "media_uri" && type === "image")) && (
+              <p key={index} className="text-sm text-red-500 mt-2">{validation.message}</p>
+            )
+          ))
+        )}
       </div>
     </div>
   );

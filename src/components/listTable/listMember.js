@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import moment from 'moment';
 import DefaultButton from '../button/defaultButton';
 import request from '@/app/utils/request';
 import toast from 'react-hot-toast';
@@ -21,11 +20,7 @@ const ListMember = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  const handleEdit = (nim) => {
-    router.push(`/member/editMember?nim=${nim}`);
-  };
-
+  
   const onDelete = async (e) => {
     setLoading(true);
     toast.loading('Deleting data...');
@@ -127,7 +122,7 @@ const ListMember = ({
             e.stopPropagation();
             onDelete(e);
           }}
-          type={'submit'}
+          type={'button'}
           size="small"
           status="secondary"
           title="Delete"
