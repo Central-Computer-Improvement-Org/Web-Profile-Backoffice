@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -23,15 +23,34 @@ import Logo from '../../../public/assets/image/logo.png';
 import NextBreadcrumb from '@/components/breadcrumbs';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import request from '../utils/request';
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
+  const [defaultLogoUri, setDefaultLogoUri] = useState();
+  const [titleWebsite, setTitleWebsite] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
     localStorage.removeItem('nim');
     Cookies.remove('token');
     router.push('/login');
   };
+
+  useEffect(() => {
+    request
+      .get(`/cms/setting`)
+      .then(function (response) {
+        const data = response.data.data;
+        setTitleWebsite(data.titleWebsite);
+        setDefaultLogoUri(data.logoUri);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
   return (
     <div>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
@@ -42,12 +61,16 @@ const MainLayout = ({ children }) => {
                 <Image
                   width={0}
                   height={0}
-                  src={Logo}
-                  className="w-16"
+                  src={
+                    defaultLogoUri
+                      ? 'https://103-31-38-146.sslip.io' + defaultLogoUri
+                      : Logo
+                  }
+                  className="w-full h-12 object-cover"
                   alt="FlowBite Logo"
                 />
                 <span className="self-center text-gray-500 text-3xl font-semibold whitespace-nowrap ">
-                  CCI
+                  {titleWebsite ?? CCI}
                 </span>
               </Link>
             </div>
