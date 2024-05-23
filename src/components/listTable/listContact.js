@@ -1,25 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useState } from 'react';
+import DefaultLink from '../link/defaultLink';
 import { formatDescription } from '@/app/utils/stringUtils';
 import DefaultButton from '../button/defaultButton';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import request from '@/app/utils/request';
 
-import {toast} from 'react-hot-toast';
-
-const ListAward = ({ issuer, title, description, id, fetchData }) => {
+const ListContact = ({
+  iconUri,
+  platform,
+  name,
+  status,
+  accountUri,
+  id,
+  fetchData,
+}) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const onDelete = async (e) => {
-    setLoading(true);
+    // setLoading(true);
     toast.loading('Deleting data...');
     e.preventDefault();
 
-    request
-      .delete(`/cms/awards?id=${id}`)
-      .then(function (response) {
+    request.delete(`/cms/contact?id=${id}`).then(function (response) {
       if (response.data?.code === 200 || response.data?.code === 201) {
         toast.dismiss();
         toast.success(response.data.data.message);
@@ -29,22 +34,17 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
         response.response.data.status == 'NOT_FOUND'
       ) {
         toast.dismiss();
-        toast.error('Award not found.');
+        toast.error('Division not found.');
       } else if (response.response.data.code === 500) {
         toast.dismiss();
         toast.error(response.response.data.error.message);
       }
-      setLoading(false);
+      // setLoading(false);
     });
   };
-  
+
   return (
-    <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
-      onClick={() => {
-        router.push(`/award/detailAward?id=${id}`);
-      }}
-    >
+    <tr className="bg-white border-b hover:bg-gray-50 text-gray-700 cursor-pointer">
       <td className="w-4 p-4">
         <div className="flex items-center">
           <input
@@ -57,17 +57,37 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
           </label>
         </div>
       </td>
-
-      <td className="text-xs font-medium px-6 py-4">{issuer}</td>
-      <td className="text-xs font-medium px-6 py-4">{title}</td>
+      <th
+        scope="row"
+        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+      >
+        <div className="w-10 h-10 ">
+          <img
+            src={'https://103-31-38-146.sslip.io' + iconUri}
+            width={0}
+            height={0}
+            className="w-full h-full object-fill "
+            alt="profile"
+          />
+        </div>
+      </th>
+      <td className="text-xs font-medium px-6 py-4">{platform}</td>
+      <td className="text-xs font-medium px-6 py-4">{name}</td>
       <td className="text-xs font-medium px-6 py-4">
-        {formatDescription(description)}
+        {status ? 'Active' : 'InActive'}
       </td>
       <td className="text-xs font-medium px-6 py-4 flex gap-3">
+        <DefaultLink
+          href={accountUri}
+          size={'small'}
+          status={'secondary'}
+          title={'Visit Platform'}
+          target={'_blank'}
+        />
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();
-            router.push(`/award/editAward?id=${id}`);
+            router.push(`/contact/editContact?id=${id}`);
           }}
           href={`/award/detailAward?id=${id}`}
           size={'small'}
@@ -89,4 +109,4 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
   );
 };
 
-export default ListAward;
+export default ListContact;

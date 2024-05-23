@@ -10,6 +10,7 @@ export default function InputSelect({
   placeholder,
   required,
   disabled,
+  validations,
 }) {
   return (
     <div className="w-full ">
@@ -35,6 +36,16 @@ export default function InputSelect({
       >
         {children}
       </select>
+      {validations &&
+        validations.map(
+          (validation, index) =>
+            (validation.name === name ||
+              (validation.name === 'media_uri' && type === 'image')) && (
+              <p key={index} className="text-sm text-red-500 mt-2">
+                {validation.message}
+              </p>
+            )
+        )}
     </div>
   );
 }

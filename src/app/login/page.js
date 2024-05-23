@@ -47,9 +47,17 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (rememberMe && email !== '' && password !== '') {
+      localStorage.setItem('username', email);
+      localStorage.setItem('checkbox', rememberMe);
+    } else {
+      localStorage.removeItem('username');
+      localStorage.removeItem('checkboxxxxxx');
+      router.push('/dashboard');
+    }
     request
       .post('/auth/login', {
-        nim: email,
+        email: email,
         password: password,
       })
       .then(function (response) {
@@ -67,16 +75,6 @@ const Login = () => {
       .catch(function (err) {
         console.log(err);
       });
-
-    // if (rememberMe && email !== '' && password !== '') {
-    //   localStorage.setItem('username', email);
-    //   localStorage.setItem('checkbox', rememberMe);
-    //   router.push('/dashboard');
-    // } else {
-    //   localStorage.removeItem('username');
-    //   localStorage.removeItem('checkboxxxxxx');
-    //   router.push('/dashboard');
-    // }
   };
 
   return (
@@ -99,7 +97,7 @@ const Login = () => {
                 name={'email'}
                 onChange={handleChangeEmail}
                 placeholder={'user@gmail.com'}
-                type={'text'}
+                type={'email'}
                 value={email}
                 required
                 label={'Your email'}

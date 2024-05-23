@@ -37,12 +37,10 @@ export default function ProjectPage() {
    const [debounceValue] = useDebounce(searchQuery, 500);
 
    const [loading, setLoading] = useState(true);
-
    
    const rowMenu = [
-      { menu: 'TITLE' },
-      { menu: 'IMAGE' },
       { menu: 'ICON' },
+      { menu: 'TITLE' },
       { menu: 'DESCRIPTION' },
       { menu: 'BUDGET' },
       { menu: 'PRODUCTION URL' },
@@ -116,7 +114,6 @@ export default function ProjectPage() {
                      title={'Add Project'}
                      href={'/project/addProject'}
                      icon={<FaPlus />}
-                     onClick={() => { }}
                   />
                </div>
             </div>
@@ -129,7 +126,6 @@ export default function ProjectPage() {
                   {projectDatas.map((data, index) => (
                      <ListProject
                         key={index}
-                        imageUri={data.imageUri}
                         iconUri={data.iconUri}
                         name={data.name}
                         description={data.description}

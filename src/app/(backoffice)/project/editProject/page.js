@@ -133,36 +133,36 @@ export default function EditProjectPage() {
       });
   }, []);
 
-  const fetchData = useCallback(async () => {
-    const payload = {
-      id: id,
-    };
-    request
-      .get('/cms/projects', payload)
-      .then(function (response) {
-        const data = response.data.data;
+    const fetchData = useCallback(async () => {
+      const payload = {
+        id: id,
+      };
+      request
+        .get('/cms/projects', payload)
+        .then(function (response) {
+          const data = response.data.data;
 
-        setName(data.name);
-        setDescription(data.description);
-        setProductionUri(data.productionUri);
-        setRepositoryUri(data.repositoryUri);
-        setBudget(data.budget);
-        setContributor(data.contributors.map((data) => ({
-          value: data.nim,
-          label: `${data.nim} - ${data.name}`
-        })));
-        setDivisions(data.divisions.map((data) => ({
-          value: data.id,
-          label: data.name
-        })));
-        setOldData(data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-  }, [id]);
+          setName(data.name);
+          setDescription(data.description);
+          setProductionUri(data.productionUri);
+          setRepositoryUri(data.repositoryUri);
+          setBudget(data.budget);
+          setContributor(data.contributors.map((data) => ({
+            value: data.nim,
+            label: `${data.nim} - ${data.name}`
+          })));
+          setDivisions(data.divisions.map((data) => ({
+            value: data.id,
+            label: data.name
+          })));
+          setOldData(data);
+          setLoading(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+          setLoading(false);
+        });
+    }, [id]);
 
   useEffect(() => {
     if (!id) {
@@ -250,7 +250,6 @@ export default function EditProjectPage() {
       })
   }
 
-  console.log(validations)
 
   return (
     <div>

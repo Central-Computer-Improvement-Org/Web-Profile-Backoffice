@@ -8,9 +8,11 @@ export default function DefaultLink({
   status,
   icon = null,
   title,
+  target = '',
 }) {
   return (
     <Link
+      target={target}
       href={href}
       className={`
       ${full ? 'w-full ' : 'w-auto'}
