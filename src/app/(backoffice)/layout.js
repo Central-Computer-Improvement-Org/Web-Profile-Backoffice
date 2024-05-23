@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter} from 'next/navigation';
 
 //import Components
 import DefaultButton from '@/components/button/defaultButton';
@@ -27,6 +27,7 @@ import request from '../utils/request';
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
+  const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,10 @@ const MainLayout = ({ children }) => {
     Cookies.remove('token');
     router.push('/login');
   };
+
+  const toggleDropdown = () => {
+    setIsDropdown(!isDropdown);
+  }
 
   useEffect(() => {
     request
@@ -51,6 +56,7 @@ const MainLayout = ({ children }) => {
         setLoading(false);
       });
   }, []);
+
   return (
     <div>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
@@ -73,6 +79,44 @@ const MainLayout = ({ children }) => {
                   {titleWebsite ?? CCI}
                 </span>
               </Link>
+            </div>
+            <div className="relative w-auto h-auto">
+              <button onClick={toggleDropdown}>
+                <Image
+                  src="/assets/avatar/profile.jpg"
+                  alt="Profile User Image"
+                  width={131}
+                  height={72}
+                  responsive="true"
+                  className="w-[50px] h-[50px] sm:w-[70px] sm:h-[35px] md:w-[40px] md:h-[40px] rounded-[100px] cursor-pointer object-contain"
+                />
+                {
+                  isDropdown && (
+                    <div className="absolute top-[45px] right-0 w-48 py-[10px] px-[10px] bg-white border border-gray-200 rounded-md shadow-md">
+                      <ul className="space-y-2">
+                        <li className="w-full flex items-center justify-start px-4 py-2 rounded-[5px] text-gray-700 hover:bg-gray-100">
+                          {<LiaAddressBook className="text-xl" />}
+                          <Link href="./contact" className="text-center w-full block">Contact</Link>
+                        </li>
+                        <li className="w-full flex items-center justify-start px-4 py-2 rounded-[5px] text-gray-700 hover:bg-gray-100">
+                          {<IoSettings className="text-xl" />}
+                          <Link href="./settings" className="text-center w-full block">Settings</Link>
+                        </li>
+                        <li>
+                          <DefaultButton
+                            title={'Logout'}
+                            type={'submit'}
+                            onClick={handleLogout}
+                            status={'primary'}
+                            size={'base'}
+                            full={true}
+                          />
+                        </li>
+                      </ul>
+                    </div>  
+                  )
+                }
+              </button>
             </div>
           </div>
         </div>
@@ -134,7 +178,8 @@ const MainLayout = ({ children }) => {
               />
             </li>
           </ul>
-          <ul className="space-y-2 font-medium">
+          {/* Untuk sementara dipindahkan dulu  */}
+          {/* <ul className="space-y-2 font-medium">
             <li>
               <MenuSidebar
                 href="/contact"
@@ -159,7 +204,7 @@ const MainLayout = ({ children }) => {
                 full={true}
               />
             </li>
-          </ul>
+          </ul> */}
         </div>
       </aside>
 
