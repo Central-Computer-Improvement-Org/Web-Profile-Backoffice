@@ -27,8 +27,6 @@ function DetailProjectPage() {
 
   const page = searchParams.get('page') ?? '1';
 
-  const [contributorsProject, setContributorsProject] = useState([]);
-  const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [budget, setBudget] = useState("");
   const [imageUri, setImageUri] = useState("");
@@ -57,7 +55,6 @@ function DetailProjectPage() {
         setProductionUri(data.productionUri);
         setRepositoryUri(data.repositoryUri);
         setBudget(data.budget);
-        setContributorsProject(data.contributors);
         setLoading(false);
       })
       .catch(function (error) {
@@ -91,31 +88,30 @@ function DetailProjectPage() {
 
   useEffect(() => {
     if (!id) {
-      router.push("/projects");
+      router.push("/project");
       return;
     }
-    fetchProject();
   }, [id, fetchProject, router]);
 
   useEffect(() => {
     if (page < 1) {
-      router.push('/projects?page=1');
+      router.push(`/project/detailProject?id=${id}&page=1`);
     } else {
       fetchProject();
       fetchContributor();
       setLoading(false)
     }
-  }, [page, fetchProject, fetchContributor, router]);
+  }, [id, page, fetchProject, fetchContributor, router]);
 
   useEffect(() => {
     if (debounceValue !== '') {
-      router.push('/projects?page=1');
+      router.push(`/project/detailProject?id=${id}&page=1`);
     } else {
       fetchProject();
       fetchContributor();
       setLoading(false)
     }
-  }, [debounceValue, fetchProject, fetchContributor, router]);
+  }, [id, debounceValue, fetchProject, fetchContributor, router]);
 
   return (
     <div>
@@ -172,20 +168,6 @@ function DetailProjectPage() {
                     {description}
                   </p>
                 </div>
-                <div className="flex justify-end items-center gap-4">
-                  <DefaultLink
-                    href={`/project/editProject?id=${id}`}
-                    size={"base"}
-                    status={"primary"}
-                    title={"Edit"}
-                  />
-                  <DefaultLink
-                    href={"/project"}
-                    size={"base"}
-                    status={"secondary"}
-                    title={"Back"}
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -206,9 +188,9 @@ function DetailProjectPage() {
                         name={"search"}
                         placeholder={"Search for contributor"}
                         type={"text"}
-                        value={search}
+                        value={searchQuery}
                         onChange={(e) => {
-                          setSearch(e.target.value);
+                          setSearchQuery(e.target.value);
                         }}
                         icon={<IoIosSearch />}
                       />

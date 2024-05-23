@@ -1,79 +1,109 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import request from "@/app/utils/request";
-import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
 import DefaultLink from "@/components/link/defaultLink";
 import Pagination from "@/components/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
+import React, { useEffect, useState, useCallback } from "react";
 import { IoIosSearch } from "react-icons/io";
-import { GoX } from "react-icons/go";
 import Link from "next/link";
+
+import { useDebounce } from 'use-debounce';
+
+// Sorting Constants
+const ORDERING = 'name';
+const SORT = 'asc';
+
+// Pagination Constants
+const LIMIT = 10;
 
 function DetailAwardPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
 
-  const [modalContributor, setModalContributor] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [contributorsAward, setContributorsAward] = useState();
-  const [search, setSearch] = useState();
+  const page = searchParams.get('page') ?? '1';
+
   const [title, setTitle] = useState("");
   const [issuer, setIssuer] = useState("");
-
   const [description, setDescription] = useState("");
+
+  const [contributors, setContributors] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const [recordsTotal, setRecordsTotal] = useState(0);
+
+  const [debounceValue] = useDebounce(searchQuery, 500);
+
+  const [loading, setLoading] = useState(true);
+
+  const fetchAward = useCallback(async () => {
+    setLoading(true);
+    request
+      .get(`/cms/awards?id=${id}`)
+      .then(function (response) {
+        const data = response.data.data;
+        setTitle(data.title);
+        setIssuer(data.issuer);
+        setDescription(data.description);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [id])
+
+  const fetchContributor = useCallback(async () => {
+    const payload = {
+      id: id,
+      contributorsOnly: "true",
+      search: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
+    request
+      .get(`/cms/awards`, payload)
+      .then(function (response) {
+        setContributors(response.data.data);
+        setRecordsTotal(response.data.recordsTotal);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [id, debounceValue, page]);
 
   useEffect(() => {
     if (!id) {
       router.push("/award");
       return;
+    };
+  }, [id, fetchAward, router]);
+
+  useEffect(() => {
+    if (page < 1) {
+      router.push(`/award/detailAward?id=${id}&page=1`);
+    } else {
+      fetchAward();
+      fetchContributor();
+      setLoading(false)
     }
+  }, [id, page, fetchAward, fetchContributor, router]);
 
-    setLoading(true);
-
-    // Promise.all([request.get('/contributorAwardById'), request.get('/member')])
-    //   .then(function (responses) {
-    //     const contributorResponse = responses[0].data.data;
-    //     const memberResponse = responses[1].data.data;
-
-    //     setTitle(contributorResponse.award.issuer);
-    //     setDescription(contributorResponse.award.description);
-    //     setContributor(contributorResponse.contributor);
-    //     setSelectedMembers(contributorResponse.contributor);
-    //     setPrevSelectedMembers(contributorResponse.contributor); // Menyimpan nilai selectedMembers sebelum perubahan
-    //     setDataMember(
-    //       memberResponse.filter((member) => {
-    //         // Filter anggota yang tidak ada dalam selectedMembers
-    //         return !contributorResponse.contributor.some(
-    //           (selectedMember) => selectedMember.nim === member.nim
-    //         );
-    //       })
-    //     );
-    //     setPrevDataMember(
-    //       memberResponse.filter((member) => {
-    //         // Filter anggota yang tidak ada dalam selectedMembers
-    //         return !contributorResponse.contributor.some(
-    //           (selectedMember) => selectedMember.nim === member.nim
-    //         );
-    //       })
-    //     );
-    //     setLoading(false);
-    //   })
-    //   .catch(function (errors) {
-    //     console.log(errors);
-    //     setLoading(false);
-    //   });
-    request.get("contributorAwardById").then(function (response) {
-      setIssuer(response.data.data.issuer);
-      setTitle(response.data.data.title);
-      setDescription(response.data.data.description);
-      setContributorsAward(response.data.data.contributors);
-      setLoading(false);
-    });
-  }, [id, router]);
+  useEffect(() => {
+    if (debounceValue !== '') {
+      router.push(`/award/detailAward?id=${id}&page=1`);
+    } else {
+      fetchAward();
+      fetchContributor();
+      setLoading(false)
+    }
+  }, [id, debounceValue, fetchAward, fetchContributor, router]);
 
   return (
     <div>
@@ -104,20 +134,6 @@ function DetailAwardPage() {
                     {description}
                   </p>
                 </div>
-                <div className="flex justify-end items-center gap-4">
-                  <DefaultLink
-                    href={"/member/editMember?nim=123456789101"}
-                    size={"base"}
-                    status={"primary"}
-                    title={"Edit"}
-                  />
-                  <DefaultLink
-                    href={"/member"}
-                    size={"base"}
-                    status={"secondary"}
-                    title={"Back"}
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -138,9 +154,9 @@ function DetailAwardPage() {
                         name={"search"}
                         placeholder={"Search for contributor"}
                         type={"text"}
-                        value={search}
+                        value={searchQuery}
                         onChange={(e) => {
-                          setSearch(e.target.value);
+                          setSearchQuery(e.target.value);
                         }}
                         icon={<IoIosSearch />}
                       />
@@ -150,18 +166,18 @@ function DetailAwardPage() {
               </div>
               <div className="container mt-4 mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
-                  {contributorsAward.map((data, index) => (
+                  {contributors.map((data, index) => (
                     <div
                       key={index}
                       className="m-2 cursor-pointer border border-gray-200 rounded-lg hover:shadow-md hover:border-opacity-0 transform hover:-translate-y-1 transition-all duration-200"
                     >
                       <div className="m-3">
                         <div className="flex flex-col items-center pb-10">
-                          {data.profileUrl ? (
+                          {data.profileUri ? (
                             <div className="w-24 h-24 rounded-full shadow-lg mb-3">
                               <img
                                 className="w-24 h-24 object-cover rounded-full"
-                                src={data.profileUrl}
+                                src={"https://103-31-38-146.sslip.io" +data.profileUri}
                                 alt="Bonnie image"
                               />
                             </div>
@@ -172,7 +188,7 @@ function DetailAwardPage() {
                             {data.name}
                           </h5>
                           <span className="text-sm text-gray-500">
-                            {data.division}
+                            {data.division.name}
                           </span>
                           <div className="flex mt-4 md:mt-6">
                             <Link
@@ -187,7 +203,7 @@ function DetailAwardPage() {
                     </div>
                   ))}
                 </div>
-                <Pagination />
+                <Pagination  recordsTotal={recordsTotal} page={page} link={`award/detailAward?id=${id}`} />
               </div>
             </div>
           </div>

@@ -4,9 +4,41 @@ import InputField from '@/components/form/inputField';
 import TextareaField from '@/components/form/textareaField';
 import HeadTitle from '@/components/headTitle';
 import { useSearchParams, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import InputMultipleSelect from '@/components/form/inputMultipleSelect';
 import request from '@/app/utils/request';
+
+import { toast } from 'react-hot-toast';
+
+import { set, z } from "zod";
+
+// Sorting Constants
+const ORDERING = 'name';
+const SORT = 'asc';
+
+// Pagination Constants
+const LIMIT = 9999999;
+const page = 1;
+
+const formSchema = z.object({
+  issuer: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long."})
+    .max(30, { message: "Name must be at most 30 characters long."}),
+  title: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long."})
+    .max(30, { message: "Name must be at most 30 characters long."}),
+  description: z
+    .string()
+    .min(3, { message: "Description must be at least 3 characters long."})
+    .max(255, { message: "Description must be at most 255 characters long."}),
+  contributors: z
+    .array(z
+      .number()
+    )
+    .min(1, { message: "Contributor must be at least 1."}),
+})
 
 export default function EditAwardPage() {
   const searchParams = useSearchParams();
@@ -17,41 +49,131 @@ export default function EditAwardPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [contributor, setContributor] = useState([]);
-  const [members, setMembers] = useState([]);
+
+  const [membersData, setMembersData] = useState([]);
+  const [validations, setValidations] = useState([]);
 
   const [loading, setLoading] = useState(true);
+
+  const fetchMembers = useCallback(async () => {
+    const payload = {
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
+    request
+      .get('/cms/users', payload)
+      .then(function (response) {
+        setMembersData(response.data.data.map((data) => ({
+          value: data.nim,
+          label: `${data.nim} - ${data.name}`,
+        })));
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
+
+  console.log(validations)
+
+  const fetchData = useCallback(async () => {
+    const payload = {
+      id: id,
+    };
+    request
+      .get('/cms/awards', payload)
+      .then(function (response) {
+        const data = response.data.data;
+
+        setIssuer(data.issuer);
+        setTitle(data.title);
+        setDescription(data.description);
+        setContributor(data.contributors.map((data) => ({
+          value: data.nim,
+          label: `${data.nim} - ${data.name}`
+        })));
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [id]);
+
   useEffect(() => {
     if (!id) {
       router.push('/award');
       return;
     }
+    fetchData();
+    fetchMembers();
+    
+  }, [id, router, fetchData, fetchMembers]);
+
+  const onSubmit = async (e) => {
+    setValidations([]);
+    setLoading(true);
+    toast.loading("Saving data...");
+    e.preventDefault();
+
+    const requestBody = {
+      issuer: issuer,
+      title: title,
+      description: description,
+      contributors: contributor.map(data => Number(data.value)),
+    };
+
+    try {
+      const validation = formSchema.safeParse(requestBody);
+      if (!validation.success) {
+        validation.error.errors.map((validation) => {
+          const key = [
+            {
+              name: validation.path[0],
+              message: validation.message,
+            },
+          ];
+          setValidations(validations => [...validations, ...key]);
+        })
+        setLoading(false);
+        toast.dismiss();
+        toast.error("Invalid Input.");
+        return; 
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.dismiss();
+      toast.error("Something went wrong!");
+      console.error(error);
+    }
+
+    requestBody.contributors = JSON.stringify(requestBody.contributors)
+
     request
-      .get(`/contributorAwardById`)
+      .patch(`/cms/awards?id=${id}`, 
+        requestBody
+      )
       .then(function (response) {
-        const data = response.data.data;
-        setIssuer(data.issuer);
-        setTitle(data.title);
-        setDescription(data.description);
-        setContributor(data.contributors);
+        console.log(response);
+        if (response.data?.code === 200 || response.data?.code === 201) {
+          toast.dismiss();
+          toast.success(response.data.data.message);
+          router.push('/award');
+        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
+          setValidations(response.response.data.error.validation);
+          toast.dismiss();
+          toast.error(response.response.data.error.message);
+        } else if (response.response.data.code === 500 ) {
+          console.error("INTERNAL_SERVER_ERROR")
+          toast.dismiss();
+          toast.error(response.response.data.error.message);
+        }
         setLoading(false);
       })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-    request
-      .get('/member')
-      .then(function (response) {
-        setMembers(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [id, router]);
-  const dataMembers = members.map((item) => ({
-    value: item.nim,
-    label: item.name,
-  }));
+  }
 
   return (
     <div>
@@ -60,7 +182,7 @@ export default function EditAwardPage() {
           <div className="text-center">Loading...</div>
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
-            <form action="#">
+            <form onSubmit={onSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
                 <div className="sm:col-span-6">
                   <InputField
@@ -69,6 +191,7 @@ export default function EditAwardPage() {
                     placeholder={'e.g Gemastik'}
                     type={'text'}
                     value={issuer}
+                    validations={validations}
                     required
                     label={'Issuer'}
                     onChange={(e) => {
@@ -83,6 +206,7 @@ export default function EditAwardPage() {
                     placeholder={'e.g Gemastik'}
                     type={'text'}
                     value={title}
+                    validations={validations}
                     required
                     label={'Title'}
                     onChange={(e) => {
@@ -96,6 +220,7 @@ export default function EditAwardPage() {
                     name={'description'}
                     placeholder={'e.g Description ...'}
                     value={description}
+                    validations={validations}
                     required
                     label={'Description'}
                     onChange={(e) => {
@@ -107,16 +232,14 @@ export default function EditAwardPage() {
                   <InputMultipleSelect
                     id={'contributor'}
                     label={'Contributor'}
-                    name={'contributorAwards'}
-                    onChange={(item) => {
-                      setContributor(item);
+                    name={'contributors'}
+                    value={contributor}
+                    
+                    validations={validations}
+                    onChange={(selectedOptions) => {
+                        setContributor(selectedOptions);
                     }}
-                    value={dataMembers.find((member) =>
-                      contributor.some(
-                        (contrib) => contrib.nim === member.value
-                      )
-                    )}
-                    option={dataMembers}
+                    option={membersData}
                   />
                 </div>
                 <div className="sm:col-span-6">
@@ -125,7 +248,6 @@ export default function EditAwardPage() {
                     status={'primary'}
                     title={'Save all'}
                     type={'submit'}
-                    onClick={() => {}}
                   />
                 </div>
               </div>
