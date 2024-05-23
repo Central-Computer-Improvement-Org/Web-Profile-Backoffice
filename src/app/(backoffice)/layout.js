@@ -56,6 +56,7 @@ const MainLayout = ({ children }) => {
         setLoading(false);
       });
   }, []);
+
   return (
     <div>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
@@ -94,14 +95,13 @@ const MainLayout = ({ children }) => {
                     <div className="absolute top-[45px] right-0 w-48 py-[10px] px-[10px] bg-white border border-gray-200 rounded-md shadow-md">
                       <ul className="space-y-2">
                         <li className="w-full flex items-center justify-start px-4 py-2 rounded-[5px] text-gray-700 hover:bg-gray-100">
-                          {<CgProfile className="text-xl" />}
-                          <Link href="./profile" className="text-center w-full block">Profile</Link>
+                          {<LiaAddressBook className="text-xl" />}
+                          <Link href="./contact" className="text-center w-full block">Contact</Link>
                         </li>
                         <li className="w-full flex items-center justify-start px-4 py-2 rounded-[5px] text-gray-700 hover:bg-gray-100">
                           {<IoSettings className="text-xl" />}
                           <Link href="./settings" className="text-center w-full block">Settings</Link>
                         </li>
-                        
                         <li>
                           <DefaultButton
                             title={'Logout'}
