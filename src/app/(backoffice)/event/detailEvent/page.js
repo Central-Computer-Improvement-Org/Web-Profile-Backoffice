@@ -8,48 +8,67 @@ import DefaultLink from "@/components/link/defaultLink";
 import moment from "moment";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaLinkedin } from "react-icons/fa";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 import Link from "next/link";
+import { useDebounce } from "use-debounce";
+import { currency } from "@/app/utils/numberFormat";
 
 function DetailEventPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
 
+  const page = searchParams.get("page") ?? "1";
+
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [division, setDivision] = useState("");
-  const [mediaUrl, setMediaUrl] = useState("");
+  const [mediaUri, setMediaUri] = useState("");
+  const [divisionId, setDivisionId] = useState([]);
   const [heldOn, setHeldOn] = useState("");
-  const [budget, setBudget] = useState("");
+  const [budget, setBudget] = useState();
+  const [isActive, setIsActive] = useState(true);
+  const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!id) {
-      router.push("/event");
-      return;
-    }
+  const fetchEvent = useCallback(async () => {
+    setLoading(true);
     request
-      .get("/eventById")
+      .get(`/cms/events?id=${id}`)
       .then(function (response) {
         const data = response.data.data;
         setName(data.name);
-        setDescription(data.description);
-        setDivision(data.division.name);
-        setMediaUrl(data.mediaUrl);
+        setMediaUri(data.mediaUri);
+        setDivisionId(data.division ? data.division.name : "None");
         setHeldOn(data.heldOn);
         setBudget(data.budget);
-        setLoading(false); // Setelah data dimuat, atur loading menjadi false
+        setDescription(data.description);
+        setIsActive(data.isActive);
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
-        setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
+        setLoading(false);
       });
-  }, [id, router]);
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) {
+      router.push("/project");
+      return;
+    }
+  }, [id, fetchEvent, router]);
+
+  useEffect(() => {
+    if (page < 1) {
+      router.push(`/project/detailProject?id=${id}&page=1`);
+    } else {
+      fetchEvent();
+      setLoading(false);
+    }
+  }, [id, page, fetchEvent, router]);
 
   return (
     <div>
@@ -69,9 +88,10 @@ function DetailEventPage() {
                     </h3>
                     <div className="flex justify-center">
                       <img
-                        src={mediaUrl}
+                        src={"https://103-31-38-146.sslip.io" + mediaUri}
+                        style={{ height: 300, width: 700 }}
                         alt=""
-                        className="w-1/2 rounded-2xl "
+                        className="w-full rounded-2xl"
                       />
                     </div>
                   </div>
@@ -80,7 +100,7 @@ function DetailEventPage() {
                   <div className="flex-auto">
                     <h3 className="text-xl font-semibold mb-4">Division</h3>
                     <div className="mb-8">
-                      <p className="mb-3 text-gray-500 ">{division}</p>
+                      <p className="mb-3 text-gray-500 ">{divisionId}</p>
                     </div>
                   </div>
                   <div className="flex-auto">
@@ -94,32 +114,31 @@ function DetailEventPage() {
                   <div className="flex-auto">
                     <h3 className="text-xl font-semibold mb-4">Budget</h3>
                     <div className="mb-8">
-                      <p className="mb-3 text-gray-500 ">{budget}</p>
+                      <p className="mb-3 text-gray-500 ">{currency(budget)}</p>
+                    </div>
+                  </div>
+                  <div className="flex-auto">
+                    <h3 className="text-xl font-semibold mb-4">Status</h3>
+                    <div className="mb-8">
+                      <div className="flex gap-2 items-center">
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            isActive ? "bg-green-500" : "bg-red-500"
+                          }`}
+                        />
+                        <p>{isActive ? "Active" : "Inactive"}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Description</h3>
                 <div className="mb-8">
                   <p className="mb-3 text-gray-500 ">{description}</p>
-                  <p className="mb-3 text-gray-500 ">
-                    Track work across the enterprise through an open,
-                    collaborative platform. Link issues across Jira and ingest
-                    data from other software development tools, so your IT
-                    support and operations teams have richer contextual
-                    information to rapidly respond to requests, incidents, and
-                    changes.
-                  </p>
-                  <p className="text-gray-500 ">
-                    Deliver great service experiences fast - without the
-                    complexity of traditional ITSM solutions.Accelerate critical
-                    development work, eliminate toil, and deploy changes with
-                    ease, with a complete audit trail for every change.
-                  </p>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <DefaultLink
-                    href={"/event/editEvent?id=EVT-12345"}
+                    href={`/event/editEvent?id=${id}`}
                     size={"base"}
                     status={"primary"}
                     title={"Edit"}

@@ -8,6 +8,7 @@ import HeadTitle from "@/components/headTitle";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState, useCallback } from "react";
 import request from "@/app/utils/request";
+import moment from "moment";
 
 import { toast } from "react-hot-toast";
 
@@ -26,15 +27,20 @@ const ORDERING = "name";
 const SORT = "asc";
 
 // Pagination Constants
-const LIMIT = 9999999;
-const page = 1;
+const LIMIT = 100;
+const PAGE = 1;
+
+const defaultPayload = {
+  page: PAGE,
+  limit: LIMIT,
+};
 
 const formSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Name must be at least 3 characters long." })
     .max(15, { message: "Name must be at most 15 characters long." }),
-  imageUri: z
+  mediaUri: z
     .any()
     .refine(
       (file) => !file || file?.size <= MAX_FILE_SIZE,
@@ -44,10 +50,6 @@ const formSchema = z.object({
       (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
     ),
-  divisions: z
-    .array(z.string())
-    .min(1, { message: "Division must be at least 1." }),
-
   budget: z.number().min(0, { message: "Budget must be at least 0." }),
   description: z
     .string()
@@ -62,35 +64,30 @@ export default function EditEventPage() {
 
   // State untuk menyimpan data event
   const [name, setName] = useState("");
-  const [imageUri, setImageUri] = useState("");
-  const [divisions, setDivisions] = useState("");
+  const [mediaUri, setMediaUri] = useState("");
+  const [divisionId, setDivisionId] = useState([]);
   const [heldOn, setHeldOn] = useState("");
   const [budget, setBudget] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [description, setDescription] = useState("");
 
   const [oldData, setOldData] = useState([]);
-  const [divisionsData, setDivisionsData] = useState([]);
+  const [divisionDatas, setDivisionDatas] = useState([]);
 
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   const fetchDivisions = useCallback(async () => {
     const payload = {
-      page: page,
-      limit: LIMIT,
-      ordering: ORDERING,
-      sort: SORT,
+      ...defaultPayload,
+      ordering: "name",
+      sort: "desc",
     };
+
     request
-      .get("/cms/users/divisions", payload)
+      .get(`/cms/users/divisions`, payload)
       .then(function (response) {
-        setDivisionsData(
-          response.data.data.map((data) => ({
-            value: data.id,
-            label: data.name,
-          }))
-        );
+        setDivisionDatas(response.data.data);
         setLoading(false);
       })
       .catch(function (error) {
@@ -109,11 +106,11 @@ export default function EditEventPage() {
         const data = response.data.data;
 
         setName(data.name);
-        setDivisions(data.divisions);
+        setDivisionId(data.divisionId);
         setHeldOn(data.heldOn);
         setBudget(data.budget);
-
         setDescription(data.description);
+        setIsActive(data.isActive);
 
         setOldData(data);
         setLoading(false);
@@ -126,7 +123,7 @@ export default function EditEventPage() {
 
   useEffect(() => {
     if (!id) {
-      router.push("/project");
+      router.push("/event");
       return;
     }
     fetchData();
@@ -142,15 +139,14 @@ export default function EditEventPage() {
     const requestBody = {
       name: name,
       mediaUri: mediaUri,
-      divisions: divisions.map((data) => data.value),
-      heldOn: moment(heldOn).format("MM-YYYY"),
       budget: Number(budget),
-      isActive: isActive,
+      heldOn: moment(heldOn).format("DD-MM-YYYY"),
       description: description,
+      isActive: isActive,
     };
 
-    if (imageUri !== null && imageUri !== "") {
-      requestBody.imageUri = imageUri;
+    if (mediaUri !== null && mediaUri !== "") {
+      requestBody.mediaUri = mediaUri;
     }
 
     try {
@@ -192,7 +188,7 @@ export default function EditEventPage() {
           response.response.data.status == "VALIDATION_ERROR"
         ) {
           setValidations(response.response.data.error.validation);
-          setImageUri("");
+          setMediaUri("");
           toast.dismiss();
           toast.error(response.response.data.error.message);
         } else if (response.response.data.code === 500) {
@@ -234,6 +230,7 @@ export default function EditEventPage() {
                     name={"mediaUri"}
                     type={"image"}
                     multiple={false}
+                    previewImage={oldData.mediaUri}
                     label={"Media"}
                     required
                     validations={validations}
@@ -246,31 +243,33 @@ export default function EditEventPage() {
                   />
                 </div>
                 <div className="col-span-10 sm:col-span-3">
-                  <InputMultipleSelect
-                    id={"divisions"}
+                  <InputSelect
+                    id={"divisionId"}
+                    name={"divisionId"}
+                    type={"text"}
+                    value={divisionId}
+                    required
                     label={"Division"}
-                    name={"divisions"}
-                    validations={validations}
-                    onChange={(selectedOptions) => {
-                      if (selectedOptions) {
-                        setDivisions(
-                          selectedOptions.map((option) => option.value)
-                        );
-                      } else {
-                        setDivisions([]);
-                      }
+                    onChange={(e) => {
+                      setDivisionId(e.target.value);
                     }}
-                    option={divisionsData.map((data) => ({
-                      value: data.id,
-                      label: data.name,
-                    }))}
-                  />
+                  >
+                    <option value="" disabled>
+                      Select Division
+                    </option>
+                    {divisionDatas &&
+                      divisionDatas.map((data, index) => (
+                        <option key={index} value={data.id}>
+                          {data.name}
+                        </option>
+                      ))}
+                  </InputSelect>
                 </div>
                 <div className="col-span-10 sm:col-span-2">
                   <InputField
                     id={"heldOn"}
                     name={"heldOn"}
-                    type={"month"}
+                    type={"date"}
                     value={heldOn}
                     label={"Held On"}
                     onChange={(e) => {

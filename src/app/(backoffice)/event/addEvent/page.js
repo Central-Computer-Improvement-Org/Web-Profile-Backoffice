@@ -28,8 +28,13 @@ const ORDERING = "name";
 const SORT = "asc";
 
 // Pagination Constants
-const LIMIT = 9999999;
-const page = 1;
+const LIMIT = 100;
+const PAGE = 1;
+
+const defaultPayload = {
+  page: PAGE,
+  limit: LIMIT,
+};
 
 const formSchema = z.object({
   name: z
@@ -58,35 +63,35 @@ export default function AddEventPage() {
 
   const [name, setName] = useState("");
   const [mediaUri, setMediaUri] = useState("");
-  const [divisions, setDivisions] = useState([]);
+  const [divisionId, setDivisionId] = useState([]);
   const [heldOn, setHeldOn] = useState("");
   const [budget, setBudget] = useState();
   const [isActive, setIsActive] = useState(true);
   const [description, setDescription] = useState("");
 
-  const [divisionsData, setDivisionsData] = useState([]);
+  const [divisionDatas, setDivisionDatas] = useState([]);
 
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchDivisions = useCallback(async () => {
+  const fetchDivisions = async () => {
     const payload = {
-      page: page,
-      limit: LIMIT,
-      ordering: ORDERING,
-      sort: SORT,
+      ...defaultPayload,
+      ordering: "name",
+      sort: "desc",
     };
+
     request
-      .get("/cms/users/divisions", payload)
+      .get(`/cms/users/divisions`, payload)
       .then(function (response) {
-        setDivisionsData(response.data.data);
+        setDivisionDatas(response.data.data);
         setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  };
 
   useEffect(() => {
     fetchDivisions();
@@ -103,8 +108,6 @@ export default function AddEventPage() {
       const validation = formSchema.safeParse({
         name: name,
         mediaUri: mediaUri,
-        divisions: divisions,
-        heldOn: heldOn,
         budget: Number(budget),
         description: description,
       });
@@ -131,12 +134,12 @@ export default function AddEventPage() {
     request
       .post(`/cms/events`, {
         name: name,
+        description: description,
+        divisionId: divisionId,
         mediaUri: mediaUri,
-        divisions: JSON.stringify(divisions),
-        heldOn: moment(heldOn).format("MMM YYYY"),
+        heldOn: moment(heldOn).format("DD-MM-YYYY"),
         budget: Number(budget),
         isActive: isActive,
-        description: description,
       })
       .then(function (response) {
         if (response.data?.code === 200 || response.data?.code === 201) {
@@ -203,31 +206,33 @@ export default function AddEventPage() {
                   />
                 </div>
                 <div className="col-span-10 sm:col-span-3">
-                  <InputMultipleSelect
-                    id={"divisions"}
+                  <InputSelect
+                    id={"divisionId"}
+                    name={"divisionId"}
+                    type={"text"}
+                    value={divisionId}
+                    required
                     label={"Division"}
-                    name={"divisions"}
-                    validations={validations}
-                    onChange={(selectedOptions) => {
-                      if (selectedOptions) {
-                        setDivisions(
-                          selectedOptions.map((option) => option.value)
-                        );
-                      } else {
-                        setDivisions([]);
-                      }
+                    onChange={(e) => {
+                      setDivisionId(e.target.value);
                     }}
-                    option={divisionsData.map((data) => ({
-                      value: data.id,
-                      label: data.name,
-                    }))}
-                  />
+                  >
+                    <option value="" disabled>
+                      Select Division
+                    </option>
+                    {divisionDatas &&
+                      divisionDatas.map((data, index) => (
+                        <option key={index} value={data.id}>
+                          {data.name}
+                        </option>
+                      ))}
+                  </InputSelect>
                 </div>
                 <div className="col-span-10 sm:col-span-2">
                   <InputField
                     id={"heldOn"}
                     name={"heldOn"}
-                    type={"month"}
+                    type={"date"}
                     value={heldOn}
                     label={"Held On"}
                     onChange={(e) => {
