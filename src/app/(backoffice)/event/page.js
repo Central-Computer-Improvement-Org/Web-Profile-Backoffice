@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ListEvent from "@/components/listTable/listEvent";
 import axios from "axios";
 import InputField from "@/components/form/inputField";
@@ -16,34 +16,70 @@ import Link from "next/link";
 import request from "@/app/utils/request";
 import Pagination from "@/components/pagination";
 
+import { useDebounce } from "use-debounce";
+import { useSearchParams, useRouter } from "next/navigation";
+
+// Sorting Constants
+const ORDERING = "updatedAt";
+const SORT = "desc";
+
+// Pagination Constants
+const LIMIT = 10;
+
 export default function EventPage() {
-  // Gunakan huruf besar untuk nama fungsi komponen
-  const [search, setSearch] = useState("");
-  const [datas, setDatas] = useState([]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const page = searchParams.get("page") ?? "1";
+
+  const [eventDatas, setEventDatas] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [recordsTotal, setRecordsTotal] = useState(0);
+
+  const [debounceValue] = useDebounce(searchQuery, 500);
+
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
-    // Perbaiki penulisan rowMenu
     { menu: "NAME" },
     { menu: "DIVISION" },
     { menu: "DESCRIPTION" },
     { menu: "HELD ON" },
     { menu: "BUDGET" },
+    { menu: "STATUS" },
     { menu: "" },
   ];
 
-  useEffect(() => {
+  const fetchEvents = useCallback(async () => {
+    const payload = {
+      name: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
+
     request
-      .get("/event")
+      .get(`/cms/events`, payload)
       .then(function (response) {
-        setDatas(response.data.data);
+        setEventDatas(response.data.data);
+        setRecordsTotal(response.data.recordsTotal);
         setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [debounceValue, page]);
+
+  useEffect(() => {
+    if (page < 1) {
+      router.push("/event?page=1");
+    } else {
+      fetchEvents();
+    }
+  }, [debounceValue, page, fetchEvents, router]);
 
   return (
     <div>
@@ -58,11 +94,12 @@ export default function EventPage() {
                 <InputField
                   id={"search"}
                   name={"search"}
-                  placeholder={"Search for event"}
+                  placeholder={"Search for Event"}
                   type={"text"}
-                  value={search}
+                  value={searchQuery}
                   onChange={(e) => {
-                    setSearch(e.target.value);
+                    setSearchQuery(e.target.value);
+                    console.log(searchQuery);
                   }}
                   icon={<IoIosSearch />}
                 />
@@ -86,24 +123,26 @@ export default function EventPage() {
       ) : (
         <div className="">
           <DefaultTable rowMenu={rowMenu}>
-            {datas.map(
+            {eventDatas.map(
               (
                 data,
-                index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
+                index // Ubah 'eventDatas' menjadi 'data' untuk setiap iterasi
               ) => (
                 <ListEvent
                   key={index}
                   name={data.name}
+                  division={data.division}
                   description={data.description}
-                  division={data.division.name}
                   heldOn={data.heldOn}
                   budget={data.budget}
+                  isActive={data.isActive}
                   id={data.id}
+                  fetchData={fetchEvents}
                 />
               )
             )}
           </DefaultTable>
-          <Pagination />
+          <Pagination recordsTotal={recordsTotal} page={page} link="event" />
         </div>
       )}
     </div>
