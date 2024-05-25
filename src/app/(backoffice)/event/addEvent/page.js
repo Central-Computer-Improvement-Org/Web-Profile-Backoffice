@@ -55,7 +55,7 @@ const formSchema = z.object({
   description: z
     .string()
     .min(3, { message: "Description must be at least 3 characters long." })
-    .max(255, { message: "Description must be at most 255 characters long." }),
+    .max(130, { message: "Description must be at most 130 characters long." }),
 });
 
 export default function AddEventPage() {
@@ -290,6 +290,7 @@ export default function AddEventPage() {
                     status={"primary"}
                     title={"Save all"}
                     type={"submit"}
+                    disabled={loading}
                   />
                 </div>
               </div>
