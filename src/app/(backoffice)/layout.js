@@ -1,11 +1,14 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 //import Components
 import DefaultButton from '@/components/button/defaultButton';
 import MenuSidebar from '@/components/menuSidebar';
+import NextBreadcrumb from '@/components/breadcrumbs';
 
 //import Icon
 import { BiSolidDashboard } from 'react-icons/bi';
@@ -14,18 +17,18 @@ import { IoNewspaper, IoSettings } from 'react-icons/io5';
 import { AiFillProject } from 'react-icons/ai';
 import { FaAward } from 'react-icons/fa6';
 import { FaProjectDiagram } from 'react-icons/fa';
+import { LiaAddressBook } from 'react-icons/lia';
 import { CgProfile } from 'react-icons/cg';
 import { PiAddressBookTabsLight } from 'react-icons/pi';
-import { LiaAddressBook } from 'react-icons/lia';
-
-//import Images
 import Logo from '../../../public/assets/image/logo.png';
-import NextBreadcrumb from '@/components/breadcrumbs';
-import Link from 'next/link';
-import Cookies from 'js-cookie';
+
+import { StateContext } from './state';
 import request from '../utils/request';
 
+
+
 const MainLayout = ({ children }) => {
+  const { divisionName, divisionId } = useContext(StateContext);
   const router = useRouter();
   const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
@@ -83,7 +86,7 @@ const MainLayout = ({ children }) => {
             <div className="relative w-auto h-auto">
               <button onClick={toggleDropdown}>
                 <Image
-                  src="./assets/avatar/profile.jpg"
+                  src="/assets/avatar/profile.jpg"
                   alt="Profile User Image"
                   width={131}
                   height={72}
@@ -147,7 +150,7 @@ const MainLayout = ({ children }) => {
               <MenuSidebar
                 href="/event"
                 icon={<BsCalendar2EventFill className="text-xl" />}
-                title={'Event'}
+                title={'Events'}
               />
             </li>
             <li>
@@ -161,28 +164,28 @@ const MainLayout = ({ children }) => {
               <MenuSidebar
                 href="/division"
                 icon={<FaProjectDiagram className="text-xl" />}
-                title={'Division'}
+                title={'Divisions'}
               />
             </li>
             <li>
               <MenuSidebar
                 href="/member"
                 icon={<BsFillPeopleFill className="text-xl" />}
-                title={'Member'}
+                title={'Members'}
               />
             </li>
             <li>
               <MenuSidebar
                 href="/project"
                 icon={<AiFillProject className="text-xl" />}
-                title={'Project'}
+                title={'Projects'}
               />
             </li>
             <li>
               <MenuSidebar
                 href="/award"
                 icon={<FaAward className="text-xl" />}
-                title={'Award'}
+                title={'Awards'}
               />
             </li>
           </ul>
@@ -216,11 +219,12 @@ const MainLayout = ({ children }) => {
         </div>
       </aside>
 
-      <div className=" sm:ml-64">
+      <div className="sm:ml-64">
         <div className="mt-16">
-          <div className="px-4 py-4 bg-white block sm:flex items-center justify-between ">
+          <div className="px-4 py-4 bg-white block sm:flex items-center justify-between">
             <div className="w-full mb-1">
               <NextBreadcrumb
+                divisionId={divisionId}
                 separator={
                   <svg
                     className="w-6 h-6 text-gray-400"
@@ -240,7 +244,7 @@ const MainLayout = ({ children }) => {
               />
             </div>
           </div>
-          {children}
+          {React.cloneElement(children, { divisionName, divisionId })}
         </div>
       </div>
     </div>

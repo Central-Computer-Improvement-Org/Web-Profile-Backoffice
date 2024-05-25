@@ -177,7 +177,7 @@ export default function EditAwardPage() {
 
   return (
     <div>
-      <HeadTitle title={'Edit Award'}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : (

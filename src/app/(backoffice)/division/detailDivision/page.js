@@ -1,28 +1,27 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
+import React, { useEffect, useState, useCallback, useContext } from "react";
+import { useSearchParams } from "next/navigation";
 import request from "@/app/utils/request";
+
 import DefaultLink from "@/components/link/defaultLink";
 import ListDivisionMember from "@/components/listTable/listDivisionMember";
 import Pagination from "@/components/pagination";
 import DefaultTable from "@/components/table/defaultTable";
-import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { StateContext } from "@/app/(backoffice)/state";
+
+
 
 function DetailDivisionPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const id = searchParams.get("id");
-
   const [name, setName] = useState("");
   const [logoUri, setLogoUri] = useState("");
   const [description, setDescription] = useState("");
-
   const [members, setMembers] = useState([]);
-
   const [loading, setLoading] = useState(true);
+  const { setDivisionName, setDivisionId } = useContext(StateContext);
 
   const rowMenu = [
-    // Perbaiki penulisan rowMenu
     { menu: "NAME" },
     { menu: "DIVISION" },
     { menu: "MAJOR" },
@@ -32,40 +31,39 @@ function DetailDivisionPage() {
     { menu: "" },
   ];
 
-  const fetchDivision = async (id) => {
-    request
-      .get(`/cms/users/divisions?id=${id}`)
-      .then(function (response) {
-        const data = response.data.data;
-        setName(data.name);
-        setLogoUri(data.logoUri);
-        setDescription(data.description);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-  }
+  const fetchDivision = useCallback(async (divisionId) => {
+    try {
+      const response = await request.get(`/cms/users/divisions?id=${divisionId}`);
+      const data = response.data.data;
+      setName(data.name);
+      setLogoUri(data.logoUri);
+      setDescription(data.description);
+      setDivisionName(data.name);
+      setDivisionId(divisionId);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  }, [setDivisionName, setDivisionId]);
 
-  const fetchMembers = async (id) => {
-    request
-      .get(`/cms/users?division=${id}`)
-      .then(function (response) {
-        setMembers(response.data.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-  }
+  const fetchMembers = useCallback(async (divisionId) => {
+    try {
+      const response = await request.get(`/cms/users?division=${divisionId}`);
+      setMembers(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchDivision(id);
-    fetchMembers(id);
-  }, [id, router]);
-  
+    if (id) {
+      fetchDivision(id);
+      fetchMembers(id);
+    }
+  }, [id, fetchDivision, fetchMembers]);
 
   return (
     <div>
@@ -131,10 +129,7 @@ function DetailDivisionPage() {
         <div className="">
           <DefaultTable rowMenu={rowMenu}>
             {members.map(
-              (
-                data,
-                index // Ubah 'datas' menjadi 'data' untuk setiap iterasi
-              ) => (
+              (data, index) => (
                 <ListDivisionMember
                   key={index}
                   photoUri={data.profileUri}
@@ -146,7 +141,7 @@ function DetailDivisionPage() {
                   entryCommunity={data.yearCommunityEnrolled}
                   status={data.isActive}
                   nim={data.nim}
-                  fetchData={fetchMembers} 
+                  fetchData={() => fetchMembers(id)}
                 />
               )
             )}

@@ -206,7 +206,7 @@ export default function AddMemberPage() {
 
   return (
     <div>
-      <HeadTitle title={'Add Member'}>
+      <HeadTitle>
         <div className=" mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-6 gap-6">

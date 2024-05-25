@@ -211,7 +211,7 @@ export default function AddProjectPage() {
 
   return (
     <div>
-      <HeadTitle title={"Add Project"}>
+      <HeadTitle>
         {loading ? (
           // center the text
           <div className="text-center flex">Loading...</div>

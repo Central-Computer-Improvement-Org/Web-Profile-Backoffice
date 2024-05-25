@@ -83,7 +83,7 @@ export default function EventPage() {
 
   return (
     <div>
-      <HeadTitle title={"All Event"}>
+      <HeadTitle>
         <div className="flex lg:mt-4">
           <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
             <form className="lg:pr-3" action="#" method="GET">

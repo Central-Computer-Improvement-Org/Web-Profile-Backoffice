@@ -51,7 +51,7 @@ export default function EditNewsPage() {
 
   return (
     <div>
-      <HeadTitle title={"Edit News"}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div> // Tampilkan pesan loading jika data sedang dimuat
         ) : (
