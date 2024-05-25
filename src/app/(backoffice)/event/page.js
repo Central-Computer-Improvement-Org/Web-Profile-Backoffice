@@ -110,7 +110,7 @@ export default function EventPage() {
             <DefaultLink
               size={"small"}
               status={"primary"}
-              title={"Add event"}
+              title={"Add Event"}
               href={"/event/addEvent"}
               icon={<FaPlus />}
               onClick={() => {}}
