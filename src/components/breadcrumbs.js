@@ -45,6 +45,10 @@ const NextBreadcrumb = ({
             } else if (capitalizeLinks) {
               itemLink = link[0].toUpperCase() + link.slice(1);
             }
+            
+            if (index === 0) {
+              itemLink = itemLink + 's';
+            }
 
             return (
               <React.Fragment key={index}>
