@@ -150,7 +150,7 @@ const MainLayout = ({ children }) => {
               <MenuSidebar
                 href="/event"
                 icon={<BsCalendar2EventFill className="text-xl" />}
-                title={'Event'}
+                title={'Events'}
               />
             </li>
             <li>
@@ -164,28 +164,28 @@ const MainLayout = ({ children }) => {
               <MenuSidebar
                 href="/division"
                 icon={<FaProjectDiagram className="text-xl" />}
-                title={'Division'}
+                title={'Divisions'}
               />
             </li>
             <li>
               <MenuSidebar
                 href="/member"
                 icon={<BsFillPeopleFill className="text-xl" />}
-                title={'Member'}
+                title={'Members'}
               />
             </li>
             <li>
               <MenuSidebar
                 href="/project"
                 icon={<AiFillProject className="text-xl" />}
-                title={'Project'}
+                title={'Projects'}
               />
             </li>
             <li>
               <MenuSidebar
                 href="/award"
                 icon={<FaAward className="text-xl" />}
-                title={'Award'}
+                title={'Awards'}
               />
             </li>
           </ul>
