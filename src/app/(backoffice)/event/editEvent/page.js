@@ -202,7 +202,7 @@ export default function EditEventPage() {
 
   return (
     <div>
-      <HeadTitle title={"Edit Event"}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div> // Tampilkan pesan loading jika data sedang dimuat
         ) : (

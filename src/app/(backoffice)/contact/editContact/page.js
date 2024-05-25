@@ -152,7 +152,7 @@ export default function EditContactPage() {
 
   return (
     <div>
-      <HeadTitle title={'Edit Contact'}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : (

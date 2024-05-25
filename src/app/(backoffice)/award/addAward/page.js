@@ -138,7 +138,7 @@ export default function AddAwardPage() {
   }
   return (
     <div>
-      <HeadTitle title={'Add Award'}>
+      <HeadTitle>
         {loading ? (
           // center the text
           <div className="text-center w-full">Loading...</div>

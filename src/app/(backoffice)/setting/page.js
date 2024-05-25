@@ -160,7 +160,7 @@ export default function SettingPage() {
   }, []);
 
   return (
-    <HeadTitle title={'Setting'}>
+    <HeadTitle>
       <form onSubmit={onSubmit}>
         <div className="grid grid-cols-1  xl:grid-cols-3 xl:gap-4 ">
           <div className="col-span-full xl:col-auto">

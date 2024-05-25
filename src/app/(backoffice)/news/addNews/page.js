@@ -20,7 +20,7 @@ export default function AddNewsPage() {
   const [mediaUrl, setMediaUrl] = useState("");
   return (
     <div>
-      <HeadTitle title={"Add News"}>
+      <HeadTitle>
         <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
           <form action="#">
             <div className="grid grid-cols-6 gap-6">
