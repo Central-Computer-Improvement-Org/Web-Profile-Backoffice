@@ -46,7 +46,7 @@ const NextBreadcrumb = ({
               itemLink = link[0].toUpperCase() + link.slice(1);
             }
             
-            if (index === 0) {
+            if (index === 0 && itemLink !== 'Dashboard' && itemLink !== 'News') {
               itemLink = itemLink + 's';
             }
 
