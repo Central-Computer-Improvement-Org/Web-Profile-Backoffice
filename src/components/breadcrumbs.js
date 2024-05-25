@@ -1,8 +1,6 @@
-// /components/NextBreadcrumb.tsx
 'use client';
 
-import React, { ReactNode } from 'react';
-
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -11,6 +9,7 @@ const NextBreadcrumb = ({
   listClasses,
   activeClasses,
   capitalizeLinks,
+  divisionId
 }) => {
   const paths = usePathname();
   const pathNames = paths.split('/').filter((path) => path);
@@ -37,10 +36,16 @@ const NextBreadcrumb = ({
           </li>
 
           {pathNames.map((link, index) => {
+            let itemLink = link;
             let href = `/${pathNames.slice(0, index + 1).join('/')}`;
-            let itemLink = capitalizeLinks
-              ? link[0].toUpperCase() + link.slice(1, link.length)
-              : link;
+
+            if (index === pathNames.length - 1 && link.toLowerCase() === 'detaildivision' && divisionId) {
+              itemLink = divisionId;
+              href = `/division/${divisionId}`;
+            } else if (capitalizeLinks) {
+              itemLink = link[0].toUpperCase() + link.slice(1);
+            }
+
             return (
               <React.Fragment key={index}>
                 {pathNames.length > 0 && separator}
@@ -48,9 +53,8 @@ const NextBreadcrumb = ({
                   <div className="flex items-center">
                     <Link
                       href={href}
-                      className={`ml-1 ${
-                        activeClasses ? activeClasses : 'text-gray-700'
-                      } hover:text-primary-600 md:ml-2`}
+                      className={`ml-1 ${activeClasses ? activeClasses : 'text-gray-700'
+                        } hover:text-primary-600 md:ml-2`}
                     >
                       {itemLink}
                     </Link>
@@ -59,6 +63,19 @@ const NextBreadcrumb = ({
               </React.Fragment>
             );
           })}
+          {/* if the name of path requested, uncomment the code below */}
+          {/* {divisionName && (
+            <>
+              {separator}
+              <li>
+                <div className="flex items-center border-[20px]">
+                  <span className={`ml-1 ${activeClasses} md:ml-2`}>
+                    {divisionName}
+                  </span>
+                </div>
+              </li>
+            </>
+          )} */}
         </ol>
       </nav>
     </div>
