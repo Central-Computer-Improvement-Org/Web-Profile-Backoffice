@@ -126,7 +126,7 @@ export default function AddContactPage() {
 
   return (
     <div>
-      <HeadTitle title={'Add Contact'}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : (

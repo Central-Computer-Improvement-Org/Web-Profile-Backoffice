@@ -134,7 +134,7 @@ export default function EditDivisionPage() {
   
   return (
     <div>
-      <HeadTitle title={"Edit Division"}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : (

@@ -266,7 +266,7 @@ export default function EditProjectPage() {
 
   return (
     <div>
-      <HeadTitle title={"Edit Project"}>
+      <HeadTitle>
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : (

@@ -165,7 +165,7 @@ export default function AddEventPage() {
 
   return (
     <div>
-      <HeadTitle title={"Add Event"}>
+      <HeadTitle>
         {loading ? (
           // center the text
           <div className="text-center flex">Loading...</div>
