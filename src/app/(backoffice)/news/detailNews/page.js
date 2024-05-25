@@ -104,18 +104,12 @@ function DetailNewsPage() {
                     can benefit from technological advancements.
                   </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center">
                   <DefaultLink
                     href={"/news/editNews?id=NWS-12345"}
                     size={"base"}
                     status={"primary"}
                     title={"Edit"}
-                  />
-                  <DefaultLink
-                    href={"/news"}
-                    size={"base"}
-                    status={"secondary"}
-                    title={"Back"}
                   />
                 </div>
               </div>
