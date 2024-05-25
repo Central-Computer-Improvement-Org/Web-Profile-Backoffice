@@ -63,7 +63,7 @@ const NextBreadcrumb = ({
               </React.Fragment>
             );
           })}
-          {/* if the name of path requested, uncomment the code below */}
+          {/* if the of the divisionName needed, uncomment the code below */}
           {/* {divisionName && (
             <>
               {separator}
