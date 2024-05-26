@@ -100,18 +100,12 @@ function DetailDivisionPage() {
                       change.
                     </p>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center">
                     <DefaultLink
                       href={`/division/editDivision?id=${id}`}
                       size={"base"}
                       status={"primary"}
                       title={"Edit"}
-                    />
-                    <DefaultLink
-                      href={"/division"}
-                      size={"base"}
-                      status={"secondary"}
-                      title={"Back"}
                     />
                   </div>
                 </div>

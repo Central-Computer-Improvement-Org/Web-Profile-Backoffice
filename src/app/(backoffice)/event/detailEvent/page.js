@@ -136,18 +136,12 @@ function DetailEventPage() {
                   <p className="mb-3 text-gray-500 ">{description}</p>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center">
                   <DefaultLink
                     href={`/event/editEvent?id=${id}`}
                     size={"base"}
                     status={"primary"}
                     title={"Edit"}
-                  />
-                  <DefaultLink
-                    href={"/event"}
-                    size={"base"}
-                    status={"secondary"}
-                    title={"Back"}
                   />
                 </div>
               </div>
