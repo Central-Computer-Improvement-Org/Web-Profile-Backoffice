@@ -172,7 +172,7 @@ export default function SettingPage() {
                   src={
                     logoUri
                       ? URL.createObjectURL(logoUri)
-                      : 'https://103-31-38-146.sslip.io' + defaultLogoUri
+                      : 'https://kevinid.pythonanywhere.com' + defaultLogoUri
                   }
                   className="mb-4 rounded-lg w-28 h-28 sm:mb-0 xl:mb-4 2xl:mb-0 object-fill"
                   alt="Thumb"
