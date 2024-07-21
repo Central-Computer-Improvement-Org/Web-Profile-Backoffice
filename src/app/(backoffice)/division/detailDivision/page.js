@@ -78,7 +78,7 @@ function DetailDivisionPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root ">
                   <h3 className="text-xl font-semibold mb-4">Logo Division</h3>
-                  <img src={"https://103-31-38-146.sslip.io" + logoUri} alt="" className="w-full rounded-2xl" />
+                  <img src={"https://kevinid.pythonanywhere.com" + logoUri} alt="" className="w-full rounded-2xl" />
                 </div>
               </div>
             </div>

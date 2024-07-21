@@ -75,7 +75,7 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'https://103-31-38-146.sslip.io' + defaultLogoUri
+                      ? 'https://kevinid.pythonanywhere.com' + defaultLogoUri
                       : Logo
                   }
                   className="w-full h-12 object-cover"

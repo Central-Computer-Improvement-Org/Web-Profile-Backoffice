@@ -88,7 +88,7 @@ function DetailEventPage() {
                     </h3>
                     <div className="flex justify-center">
                       <img
-                        src={"https://103-31-38-146.sslip.io" + mediaUri}
+                        src={"https://kevinid.pythonanywhere.com" + mediaUri}
                         style={{ height: 300, width: 700 }}
                         alt=""
                         className="w-full rounded-2xl"
