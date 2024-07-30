@@ -21,6 +21,7 @@ import { LiaAddressBook } from 'react-icons/lia';
 import { CgProfile } from 'react-icons/cg';
 import { PiAddressBookTabsLight } from 'react-icons/pi';
 import Logo from '../../../public/assets/image/logo.png';
+import LogoProfile from '../../../public/assets/avatar/profile.jpg';
 
 import { StateContext } from './state';
 import request from '../utils/request';
@@ -30,6 +31,7 @@ const MainLayout = ({ children }) => {
   const router = useRouter();
   const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
+  const [defaultProfileUri, setDefaultProfileUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -54,6 +56,7 @@ const MainLayout = ({ children }) => {
           const data = response.data.data;
           setTitleWebsite(data.titleWebsite);
           setDefaultLogoUri(data.logoUri);
+          setDefaultProfileUri(data.profileUri);
           setLoading(false);
         })
         .catch(function (error) {
@@ -78,10 +81,10 @@ const MainLayout = ({ children }) => {
                       ? 'https://kevinid.pythonanywhere.com' + defaultLogoUri
                       : Logo
                   }
-                  className="w-full h-12 object-cover"
+                  className="object-cover w-full h-12"
                   alt="FlowBite Logo"
                 />
-                <span className="self-center text-gray-500 text-3xl font-semibold whitespace-nowrap ">
+                <span className="self-center text-3xl font-semibold text-gray-500 whitespace-nowrap ">
                   {titleWebsite ?? CCI}
                 </span>
               </Link>
@@ -89,7 +92,11 @@ const MainLayout = ({ children }) => {
             <div className="relative w-auto h-auto">
               <button onClick={toggleDropdown}>
                 <Image
-                  src="/assets/avatar/profile.jpg"
+                  src={
+                    defaultProfileUri
+                      ? 'https://kevinid.pythonanywhere.com' + defaultProfileUri
+                      : LogoProfile
+                  }
                   alt="Profile User Image"
                   width={131}
                   height={72}
@@ -103,7 +110,7 @@ const MainLayout = ({ children }) => {
                         {<LiaAddressBook className="text-xl" />}
                         <Link
                           href="/contact"
-                          className="text-center w-full block"
+                          className="block w-full text-center"
                         >
                           Contact
                         </Link>
@@ -112,7 +119,7 @@ const MainLayout = ({ children }) => {
                         {<IoSettings className="text-xl" />}
                         <Link
                           href="/setting"
-                          className="text-center w-full block"
+                          className="block w-full text-center"
                         >
                           Settings
                         </Link>
@@ -138,9 +145,9 @@ const MainLayout = ({ children }) => {
 
       <aside
         id="logo-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 "
+        className="fixed top-0 left-0 z-40 w-64 h-screen pt-[100px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 "
       >
-        <div className="h-full px-3 pb-4 overflow-y-auto bg-white flex flex-col justify-between ">
+        <div className="flex flex-col justify-between h-full px-3 pb-4 overflow-y-auto bg-white ">
           <ul className="space-y-2 font-medium">
             <li>
               <MenuSidebar
@@ -224,7 +231,7 @@ const MainLayout = ({ children }) => {
 
       <div className="sm:ml-64">
         <div className="mt-16">
-          <div className="px-4 py-4 bg-white block sm:flex items-center justify-between">
+          <div className="items-center justify-between block px-4 py-4 bg-white sm:flex">
             <div className="w-full mb-1">
               <NextBreadcrumb
                 divisionId={divisionId}
