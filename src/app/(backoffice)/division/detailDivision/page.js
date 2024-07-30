@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams } from "next/navigation";
-import request from "@/app/utils/request";
 
+import { StateContext } from "@/app/(backoffice)/state";
+import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
 import ListDivisionMember from "@/components/listTable/listDivisionMember";
 import Pagination from "@/components/pagination";
 import DefaultTable from "@/components/table/defaultTable";
-import { StateContext } from "@/app/(backoffice)/state";
-
 
 
 function DetailDivisionPage() {
@@ -18,8 +17,8 @@ function DetailDivisionPage() {
   const [logoUri, setLogoUri] = useState("");
   const [description, setDescription] = useState("");
   const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { setDivisionName, setDivisionId } = useContext(StateContext);
+  const [loading, setLoading] = useState(true);
 
   const rowMenu = [
     { menu: "NAME" },
@@ -68,7 +67,7 @@ function DetailDivisionPage() {
   return (
     <div>
       {loading ? (
-        <div className="w-full h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-screen">
           <h1>Loading...</h1>
         </div>
       ) : (
@@ -77,7 +76,7 @@ function DetailDivisionPage() {
             <div className="col-span-full xl:col-auto">
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root ">
-                  <h3 className="text-xl font-semibold mb-4">Logo Division</h3>
+                  <h3 className="mb-4 text-xl font-semibold">Logo Division</h3>
                   <img src={"https://kevinid.pythonanywhere.com" + logoUri} alt="" className="w-full rounded-2xl" />
                 </div>
               </div>
@@ -85,11 +84,11 @@ function DetailDivisionPage() {
             <div className="col-span-2">
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root ">
-                  <h3 className="text-xl font-semibold mb-4">Division</h3>
+                  <h3 className="mb-4 text-xl font-semibold">Division</h3>
                   <div className="mb-8">
                     <p className="mb-3 text-gray-500 ">{name}</p>
                   </div>
-                  <h3 className="text-xl font-semibold mb-4">Description</h3>
+                  <h3 className="mb-4 text-xl font-semibold">Description</h3>
                   <div className="mb-8">
                     <p className="mb-3 text-gray-500 ">{description}</p>
                     <p className="text-gray-500 ">
@@ -116,7 +115,7 @@ function DetailDivisionPage() {
       )}
       <div className="">
         <div className="p-4 ">
-          <h3 className=" text-xl font-semibold ">
+          <h3 className="text-xl font-semibold ">
             Member Division Web Development
           </h3>
         </div>
