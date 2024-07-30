@@ -1,20 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import request from "@/app/utils/request";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
-import DefaultLink from "@/components/link/defaultLink";
-import moment from "moment";
-import Image from "next/image";
+import React, { useEffect, useState, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { FaLinkedin } from "react-icons/fa";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 import Link from "next/link";
-
 import toast from "react-hot-toast";
+import moment from "moment";
+
+import { StateContext } from "@/app/(backoffice)/state";
+import request from "@/app/utils/request";
+import InputField from "@/components/form/inputField";
+import DefaultButton from "@/components/button/defaultButton";
+import InputSelect from "@/components/form/inputSelect";
+import DefaultLink from "@/components/link/defaultLink";
+import Image from "next/image";
+
 
 export default function DetailMemberPage() {
   const searchParams = useSearchParams();
@@ -35,7 +37,7 @@ export default function DetailMemberPage() {
   const [project, setProject] = useState();
   const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState("");
   const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState("");
-
+  const { setMemberName, setMemberNim } = useContext(StateContext);
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
   const copyToClipboard = (text) => {
@@ -67,6 +69,8 @@ export default function DetailMemberPage() {
         setStatus(data.isActive);
         setYearUniversityEnrolled(data.yearUniversityEnrolled);
         setYearCommunityEnrolled(data.yearCommunityEnrolled);
+        setMemberName(data.name);
+        setMemberNim(data.nim);
         // setAward(data.awards);
         // setProject(data.projects);
         setLoading(false); // Setelah data dimuat, atur loading menjadi false
@@ -74,9 +78,9 @@ export default function DetailMemberPage() {
       .catch(function (error) {
         console.log(error);
         setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
-      });
+      }
+    );
   }
-
 
   useEffect(() => {
     fetchMember(nim);
@@ -85,10 +89,11 @@ export default function DetailMemberPage() {
       return;
     }
   }, [nim, router]);
+  
   return (
     <div>
       {loading ? (
-        <div className="w-full h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-screen">
           <h1>Loading...</h1>
         </div>
       ) : (
@@ -97,17 +102,17 @@ export default function DetailMemberPage() {
             <div className="col-span-full xl:col-auto">
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
-                  <div className="w-28 h-28 rounded-lg">
+                  <div className="rounded-lg w-28 h-28">
                     <img
                       src={"https://kevinid.pythonanywhere.com" + profileUri}
                       width={0}
                       height={0}
-                      className="mb-4 rounded-lg w-full h-full object-cover sm:mb-0 xl:mb-4 2xl:mb-0"
+                      className="object-cover w-full h-full mb-4 rounded-lg sm:mb-0 xl:mb-4 2xl:mb-0"
                       alt="profile"
                     />
                   </div>
                   <div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       <span className={`w-3 h-3 rounded-full bg-green-500`} />
                       <h3 className="mb-1 text-xl font-bold text-gray-900 ">
                         {name}
@@ -164,7 +169,7 @@ export default function DetailMemberPage() {
                           </p>
                           <Link
                             href={linkedinUri}
-                            className="text-sm font-normal text-secondary-500 truncate underline "
+                            className="text-sm font-normal underline truncate text-secondary-500 "
                           >
                             {linkedinUri.substring(0, 30)}
                             ...
@@ -223,7 +228,7 @@ export default function DetailMemberPage() {
               </div>
             </div>
             <div className="col-span-2 ">
-              <div className="p-4  bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
+              <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <h3 className="mb-4 text-xl font-semibold ">
                   General information
                 </h3>
@@ -332,7 +337,7 @@ export default function DetailMemberPage() {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 px-4  xl:grid-cols-4 xl:gap-4 ">
+          <div className="grid grid-cols-1 px-4 xl:grid-cols-4 xl:gap-4 ">
             <div className="col-span-full xl:col-span-2">
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <h3 className="mb-4 text-xl font-semibold ">Awards</h3>
@@ -341,7 +346,7 @@ export default function DetailMemberPage() {
                     award.map((data, index) => (
                       <span
                         key={index}
-                        className="inline-block bg-gray-200 rounded-full px-3 py-3 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                        className="inline-block px-3 py-3 mb-2 mr-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full"
                       >
                         {data.issuer}
                       </span>
@@ -357,7 +362,7 @@ export default function DetailMemberPage() {
                     project.map((data, index) => (
                       <span
                         key={index}
-                        className="inline-block bg-gray-200 rounded-full px-3 py-3 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                        className="inline-block px-3 py-3 mb-2 mr-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full"
                       >
                         {data.name}
                       </span>

@@ -1,14 +1,18 @@
 'use client';
 import React, { useEffect, useState, useContext } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
 //import Components
+import { StateContext } from './state';
 import DefaultButton from '@/components/button/defaultButton';
 import MenuSidebar from '@/components/menuSidebar';
 import NextBreadcrumb from '@/components/breadcrumbs';
+import request from '../utils/request';
+import Logo from '../../../public/assets/image/logo.png';
+import LogoProfile from '../../../public/assets/avatar/profile.jpg';
 
 //import Icon
 import { BiSolidDashboard } from 'react-icons/bi';
@@ -20,20 +24,21 @@ import { FaProjectDiagram } from 'react-icons/fa';
 import { LiaAddressBook } from 'react-icons/lia';
 import { CgProfile } from 'react-icons/cg';
 import { PiAddressBookTabsLight } from 'react-icons/pi';
-import Logo from '../../../public/assets/image/logo.png';
-import LogoProfile from '../../../public/assets/avatar/profile.jpg';
 
-import { StateContext } from './state';
-import request from '../utils/request';
 
 const MainLayout = ({ children }) => {
-  const { divisionName, divisionId } = useContext(StateContext);
   const router = useRouter();
+  const { divisionName, divisionId } = useContext(StateContext);
+  const { projectName, projectId } = useContext(StateContext);
+  const { memberName, memberNim } = useContext(StateContext);
+  const { awardName, awardId } = useContext(StateContext); 
+  const { newsName, newsId } = useContext(StateContext);   
+  const { eventName, eventId } = useContext(StateContext);                            
   const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
   const [defaultProfileUri, setDefaultProfileUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
 
   const handleLogout = () => {
     localStorage.removeItem('nim');
@@ -235,6 +240,11 @@ const MainLayout = ({ children }) => {
             <div className="w-full mb-1">
               <NextBreadcrumb
                 divisionId={divisionId}
+                projectId={projectId}
+                memberNim={memberNim}
+                awardId={awardId}
+                newsId={newsId}
+                eventId={eventId}
                 separator={
                   <svg
                     className="w-6 h-6 text-gray-400"
@@ -254,7 +264,7 @@ const MainLayout = ({ children }) => {
               />
             </div>
           </div>
-          {React.cloneElement(children, { divisionName, divisionId })}
+          {React.cloneElement(children, { divisionName, divisionId, projectName, projectId, memberName, memberNim, awardName, awardId, newsName, newsId, eventName, eventId })}
         </div>
       </div>
     </div>
