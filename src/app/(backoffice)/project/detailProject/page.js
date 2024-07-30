@@ -212,7 +212,7 @@ function DetailProjectPage() {
                               <div className="w-24 h-24 rounded-full shadow-lg mb-3">
                                 <img
                                   className="w-24 h-24 object-cover rounded-full"
-                                  src={"https://103-31-38-146.sslip.io" + data.profileUri}
+                                  src={"https://kevinid.pythonanywhere.com" + data.profileUri}
                                   alt="Bonnie image"
                                 />
                               </div>

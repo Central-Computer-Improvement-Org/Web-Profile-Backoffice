@@ -25,8 +25,6 @@ import Logo from '../../../public/assets/image/logo.png';
 import { StateContext } from './state';
 import request from '../utils/request';
 
-
-
 const MainLayout = ({ children }) => {
   const { divisionName, divisionId } = useContext(StateContext);
   const router = useRouter();
@@ -46,19 +44,24 @@ const MainLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    request
-      .get(`/cms/setting`)
-      .then(function (response) {
-        const data = response.data.data;
-        setTitleWebsite(data.titleWebsite);
-        setDefaultLogoUri(data.logoUri);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
-  }, []);
+    const token = Cookies.get('token');
+    if (!token) {
+      router.push('/login');
+    } else {
+      request
+        .get(`/cms/setting`)
+        .then(function (response) {
+          const data = response.data.data;
+          setTitleWebsite(data.titleWebsite);
+          setDefaultLogoUri(data.logoUri);
+          setLoading(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+          setLoading(false);
+        });
+    }
+  }, [router]);
 
   return (
     <div>
@@ -72,7 +75,7 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'https://103-31-38-146.sslip.io' + defaultLogoUri
+                      ? 'https://kevinid.pythonanywhere.com' + defaultLogoUri
                       : Logo
                   }
                   className="w-full h-12 object-cover"
