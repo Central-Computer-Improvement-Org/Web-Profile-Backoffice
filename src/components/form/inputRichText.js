@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { Map } from 'immutable';
 import {
   convertFromHTML,
@@ -7,9 +8,12 @@ import {
   DefaultDraftBlockRenderMap
 } from 'draft-js';
 import { useState } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
+
+const Editor = dynamic(
+    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
+    { ssr: false })
 
 const ImageComponent = (props) => {
   const { src } = props.contentState.getEntity(props.block.getEntityAt(0)).getData();
@@ -19,7 +23,6 @@ const ImageComponent = (props) => {
 
 const blockRendererFn = (block) => {
   if (block.getType() === "IMAGE") {
-    console.info("YESS IMAGE")
     return {
       component: ImageComponent,
       editable: false,
@@ -59,7 +62,6 @@ const RichTextEditor = ({ id, value, placeholder, required, onChange}) => {
       name={name}
       value={value}
       onChange={(e) => {
-        console.info(e);
         onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())));
       }}
       placeholder={placeholder}

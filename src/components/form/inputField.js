@@ -20,6 +20,7 @@ const InputField = ({
   readOnly = false,
   validations,
 }) => {
+  console.info(validations)
   return (
     <div className="w-full ">
       {label && (  

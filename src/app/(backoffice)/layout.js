@@ -1,14 +1,18 @@
 'use client';
 import React, { useEffect, useState, useContext } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
 //import Components
+import { StateContext } from './state';
 import DefaultButton from '@/components/button/defaultButton';
 import MenuSidebar from '@/components/menuSidebar';
 import NextBreadcrumb from '@/components/breadcrumbs';
+import request from '../utils/request';
+import Logo from '../../../public/assets/image/logo.png';
+import LogoProfile from '../../../public/assets/avatar/profile.jpg';
 
 //import Icon
 import { BiSolidDashboard } from 'react-icons/bi';
@@ -20,16 +24,19 @@ import { FaProjectDiagram } from 'react-icons/fa';
 import { LiaAddressBook } from 'react-icons/lia';
 import { CgProfile } from 'react-icons/cg';
 import { PiAddressBookTabsLight } from 'react-icons/pi';
-import Logo from '../../../public/assets/image/logo.png';
 
-import { StateContext } from './state';
-import request from '../utils/request';
 
 const MainLayout = ({ children }) => {
-  const { divisionName, divisionId } = useContext(StateContext);
   const router = useRouter();
+  const { divisionName, divisionId } = useContext(StateContext);
+  const { projectName, projectId } = useContext(StateContext);
+  const { memberName, memberNim } = useContext(StateContext);
+  const { awardName, awardId } = useContext(StateContext);
+  const { newsName, newsId } = useContext(StateContext);
+  const { eventName, eventId } = useContext(StateContext);
   const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
+  const [defaultProfileUri, setDefaultProfileUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -54,6 +61,7 @@ const MainLayout = ({ children }) => {
           const data = response.data.data;
           setTitleWebsite(data.titleWebsite);
           setDefaultLogoUri(data.logoUri);
+          setDefaultProfileUri(data.profileUri);
           setLoading(false);
         })
         .catch(function (error) {
@@ -78,7 +86,7 @@ const MainLayout = ({ children }) => {
                       ? process.env.NEXT_PUBLIC_HOST + defaultLogoUri
                       : Logo
                   }
-                  className="w-full h-12 object-cover"
+                  className="object-cover w-full h-12"
                   alt="FlowBite Logo"
                 />
                 <span className="self-center text-gray-500 text-3xl font-semibold whitespace-nowrap ">
@@ -89,7 +97,11 @@ const MainLayout = ({ children }) => {
             <div className="relative w-auto h-auto">
               <button onClick={toggleDropdown}>
                 <Image
-                  src="/assets/avatar/profile.jpg"
+                  src={
+                    defaultProfileUri
+                      ? 'https://kevinid.pythonanywhere.com' + defaultProfileUri
+                      : LogoProfile
+                  }
                   alt="Profile User Image"
                   width={131}
                   height={72}
@@ -103,7 +115,7 @@ const MainLayout = ({ children }) => {
                         {<LiaAddressBook className="text-xl" />}
                         <Link
                           href="/contact"
-                          className="text-center w-full block"
+                          className="block w-full text-center"
                         >
                           Contact
                         </Link>
@@ -112,7 +124,7 @@ const MainLayout = ({ children }) => {
                         {<IoSettings className="text-xl" />}
                         <Link
                           href="/setting"
-                          className="text-center w-full block"
+                          className="block w-full text-center"
                         >
                           Settings
                         </Link>
@@ -224,10 +236,15 @@ const MainLayout = ({ children }) => {
 
       <div className="sm:ml-64">
         <div className="mt-16">
-          <div className="px-4 py-4 bg-white block sm:flex items-center justify-between">
+          <div className="items-center justify-between block px-4 py-4 bg-white sm:flex">
             <div className="w-full mb-1">
               <NextBreadcrumb
                 divisionId={divisionId}
+                projectId={projectId}
+                memberNim={memberNim}
+                awardId={awardId}
+                newsId={newsId}
+                eventId={eventId}
                 separator={
                   <svg
                     className="w-6 h-6 text-gray-400"

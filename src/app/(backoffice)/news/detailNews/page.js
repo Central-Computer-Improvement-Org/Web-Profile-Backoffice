@@ -1,28 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import request from "@/app/utils/request";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
-import DefaultLink from "@/components/link/defaultLink";
-import moment from "moment";
-import Image from "next/image";
+import React, { useEffect, useState, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import moment from "moment";
 import { FaLinkedin } from "react-icons/fa";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
-import Link from "next/link";
+
+import { StateContext } from "@/app/(backoffice)/state";
+import request from "@/app/utils/request";
+import DefaultLink from "@/components/link/defaultLink";
+import DefaultButton from "@/components/button/defaultButton";
+import InputField from "@/components/form/inputField";
+import InputSelect from "@/components/form/inputSelect";
+
+
 
 function DetailNewsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
-
+  const { setNewsName, setNewsId } = useContext(StateContext);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,18 +40,20 @@ function DetailNewsPage() {
         setTitle(data.title);
         setDescription(data.description);
         setMediaUrl(data.mediaUrl);
+        setNewsName(data.title);
+        setNewsId(data.id);
         setLoading(false); // Setelah data dimuat, atur loading menjadi false
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
       });
-  }, [id, router]);
+  }, [id, router, setNewsName, setNewsId]);
 
   return (
     <div>
       {loading ? (
-        <div className="w-full h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-screen">
           <h1>Loading...</h1>
         </div>
       ) : (
@@ -58,7 +63,7 @@ function DetailNewsPage() {
               <div className="flow-root">
                 <div className="flow-root">
                   <div className="mb-8 ">
-                    <h3 className="text-xl font-semibold mb-4 flex justify-center">
+                    <h3 className="flex justify-center mb-4 text-xl font-semibold">
                       {title}
                     </h3>
                     <div className="flex justify-center">
@@ -72,7 +77,7 @@ function DetailNewsPage() {
                 </div>
                 <div className="mb-8">
                   <p className="mb-3 text-gray-500 ">{description}</p>
-                  <p className="mb-3 text-gray-500 ">
+                  <p className="mb-3 text-white ">
                     We are on the brink of a new era driven by technological
                     advancements that fundamentally change the way we live and
                     work. Breakthroughs in information and communication
@@ -81,27 +86,6 @@ function DetailNewsPage() {
                     through the internet and mobile devices. This ease of access
                     has opened doors to various services and information,
                     enabling us to lead more efficient and informed lifestyles.
-                  </p>
-                  <p className="mb-3 text-gray-500 ">
-                    Furthermore, the industrial revolution propelled by
-                    automation and artificial intelligence has reshaped the
-                    landscape of work. Many routine and repetitive tasks can now
-                    be performed by machines and algorithms, freeing humans to
-                    focus on tasks that require creativity and strategic
-                    thinking. The phenomenon of remote work is also becoming
-                    increasingly common, with companies leveraging online
-                    collaboration technologies to enable teams to work together
-                    from different locations.
-                  </p>
-                  <p className="text-gray-500 ">
-                    However, technological advancements also bring challenges
-                    that cannot be ignored. There is still a significant digital
-                    divide worldwide, where some people lack adequate access to
-                    information technology. Additionally, there are growing
-                    concerns about data privacy and security, with an increasing
-                    amount of personal information being stored digitally. These
-                    challenges require sustainable solutions so that everyone
-                    can benefit from technological advancements.
                   </p>
                 </div>
                 <div className="flex items-center">

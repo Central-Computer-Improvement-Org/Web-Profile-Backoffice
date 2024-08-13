@@ -8,8 +8,6 @@ import {z} from "zod";
 import {useRouter, useSearchParams} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import HeadTitle from "@/components/headTitle";
-import 'dotenv/config';
-console.info(process.env)
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -21,11 +19,13 @@ const formSchema = z.object({
         .min(3, {message: "Title must be at least 3 characters long."})
         .max(30, {message: "Title must be at most 30 characters long."}),
     mediaUri: z
-        .any()
-        .refine((file) => file?.size <= MAX_FILE_SIZE, `The maximum file size that can be uploaded is 2MB`)
+        .union([z.any().nullable(), z.instanceof(File)])
+        .refine((file) => file === null || file.size <= MAX_FILE_SIZE, {
+            message: "The maximum file size that can be uploaded is 2MB",
+        })
         .refine(
-            (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-            "Only .jpg, .jpeg, .png and .webp formats are supported."
+            (file) => file === null || ACCEPTED_IMAGE_TYPES.includes(file.type),
+            { message: "Only .jpg, .jpeg, .png and .webp formats are supported." }
         ),
     description: z
         .string()
@@ -46,6 +46,7 @@ export default function EditNewsPage() {
   const [oldData, setOldData] = useState([]);
     const onSubmit = async (e) => {
         e.preventDefault();
+        setValidations([]);
         toast.loading("Saving data...");
 
         try {

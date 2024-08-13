@@ -1,28 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import request from "@/app/utils/request";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
-import DefaultLink from "@/components/link/defaultLink";
-import moment from "moment";
-import Image from "next/image";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useDebounce } from "use-debounce";
+import moment from "moment";
 import { FaLinkedin } from "react-icons/fa";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
-import Link from "next/link";
-import { useDebounce } from "use-debounce";
+
+import { StateContext } from "@/app/(backoffice)/state";
 import { currency } from "@/app/utils/numberFormat";
+import request from "@/app/utils/request";
+import DefaultLink from "@/components/link/defaultLink";
+import DefaultButton from "@/components/button/defaultButton";
+import InputField from "@/components/form/inputField";
+import InputSelect from "@/components/form/inputSelect";
+
+
 
 function DetailEventPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
-
   const page = searchParams.get("page") ?? "1";
-
   const [name, setName] = useState("");
   const [mediaUri, setMediaUri] = useState("");
   const [divisionId, setDivisionId] = useState([]);
@@ -30,7 +32,7 @@ function DetailEventPage() {
   const [budget, setBudget] = useState();
   const [isActive, setIsActive] = useState(true);
   const [description, setDescription] = useState("");
-
+  const { setEventName, setEventId } = useContext(StateContext);
   const [loading, setLoading] = useState(true);
 
   const fetchEvent = useCallback(async () => {
@@ -46,13 +48,15 @@ function DetailEventPage() {
         setBudget(data.budget);
         setDescription(data.description);
         setIsActive(data.isActive);
+        setEventName(data.name);
+        setEventId(data.id);
         setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, setEventName, setEventId]);
 
   useEffect(() => {
     if (!id) {
@@ -73,7 +77,7 @@ function DetailEventPage() {
   return (
     <div>
       {loading ? (
-        <div className="w-full h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-screen">
           <h1>Loading...</h1>
         </div>
       ) : (
@@ -83,7 +87,7 @@ function DetailEventPage() {
               <div className="flow-root">
                 <div className="flow-root">
                   <div className="mb-8 ">
-                    <h3 className="text-xl font-semibold mb-4 flex justify-center">
+                    <h3 className="flex justify-center mb-4 text-xl font-semibold">
                       {name}
                     </h3>
                     <div className="flex justify-center">
@@ -98,13 +102,13 @@ function DetailEventPage() {
                 </div>
                 <div className="flex ">
                   <div className="flex-auto">
-                    <h3 className="text-xl font-semibold mb-4">Division</h3>
+                    <h3 className="mb-4 text-xl font-semibold">Division</h3>
                     <div className="mb-8">
                       <p className="mb-3 text-gray-500 ">{divisionId}</p>
                     </div>
                   </div>
                   <div className="flex-auto">
-                    <h3 className="text-xl font-semibold mb-4">Held On</h3>
+                    <h3 className="mb-4 text-xl font-semibold">Held On</h3>
                     <div className="mb-8">
                       <p className="mb-3 text-gray-500 ">
                         {moment(heldOn).format("MMM YYYY")}
@@ -112,15 +116,15 @@ function DetailEventPage() {
                     </div>
                   </div>
                   <div className="flex-auto">
-                    <h3 className="text-xl font-semibold mb-4">Budget</h3>
+                    <h3 className="mb-4 text-xl font-semibold">Budget</h3>
                     <div className="mb-8">
                       <p className="mb-3 text-gray-500 ">{currency(budget)}</p>
                     </div>
                   </div>
                   <div className="flex-auto">
-                    <h3 className="text-xl font-semibold mb-4">Status</h3>
+                    <h3 className="mb-4 text-xl font-semibold">Status</h3>
                     <div className="mb-8">
-                      <div className="flex gap-2 items-center">
+                      <div className="flex items-center gap-2">
                         <span
                           className={`w-2 h-2 rounded-full ${
                             isActive ? "bg-green-500" : "bg-red-500"
@@ -131,7 +135,7 @@ function DetailEventPage() {
                     </div>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-4">Description</h3>
+                <h3 className="mb-4 text-xl font-semibold">Description</h3>
                 <div className="mb-8">
                   <p className="mb-3 text-gray-500 ">{description}</p>
                 </div>
