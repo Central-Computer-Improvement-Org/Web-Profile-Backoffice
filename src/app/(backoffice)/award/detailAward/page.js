@@ -175,7 +175,7 @@ function DetailAwardPage() {
                             <div className="w-24 h-24 mb-3 rounded-full shadow-lg">
                               <Image
                                 className="w-24 h-24 object-cover rounded-full"
-                                src={process.env.NEXT_PUBLIC_HOST +data.profileUri}
+                                src={process.env.NEXT_PUBLIC_HOST + data.profileUri}
                                 alt="Bonnie image"
                               />
                             </div>

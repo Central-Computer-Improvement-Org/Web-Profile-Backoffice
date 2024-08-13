@@ -224,14 +224,14 @@ export default function EditMemberPage() {
           toast.dismiss();
           toast.success(response.data.data.message);
           router.push("/member");
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
+        } else if (response.data.data.code === 400 && response.data.data.status == "VALIDATION_ERROR") {
+          setValidations(response.data.data.error.validation);
           setProfileUri("");
           toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500 ) {
+          toast.error(response.data.data.error.message);
+        } else if (response.data.data.code === 500 ) {
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
         }
         setLoading(false)
      })

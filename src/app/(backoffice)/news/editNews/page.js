@@ -89,16 +89,16 @@ export default function EditNewsPage() {
                         toast.dismiss();
                         toast.success(response.data.data.message);
                         router.push("/news");
-                    } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-                        setValidations(response.response.data.error.validation);
+                    } else if (response.data.data.code === 400 && response.data.data.status == "VALIDATION_ERROR") {
+                        setValidations(response.data.data.error.validation);
                         setMediaUri("");
                         toast.dismiss();
-                        toast.error(response.response.data.error.message);
+                        toast.error(response.data.data.error.message);
 
-                    } else if (response.response.data.code === 500) {
+                    } else if (response.data.data.code === 500) {
                         console.error("INTERNAL_SERVER_ERROR")
                         toast.dismiss();
-                        toast.error(response.response.data.error.message);
+                        toast.error(response.data.data.error.message);
                     }
                     setLoading(false)
                 })

@@ -40,17 +40,17 @@ export default function EditDivisionPage() {
   const [oldData, setOldData] = useState([]);
 
   const [name, setName] = useState("");
-  const [logoUri, setLogoUri] = useState("");
+  const [logoUri, setLogoUri] = useState(null);
   const [description, setDescription] = useState("");
 
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     setValidations([]);
     setLoading(true);
     toast.loading("Saving data...");
-    e.preventDefault();
 
     try {
       const validation = formSchema.safeParse({
@@ -95,18 +95,20 @@ export default function EditDivisionPage() {
         requestBody
       )
       .then(function (response) {
+        console.info(response)
+
         if (response.data?.code === 200 || response.data?.code === 201) {
           toast.dismiss();
           toast.success(response.data.data.message);
           router.push("/division");
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
-          setLogoUri("");
+        } else if (response.data.data.code === 400 && response.data.data.status == "VALIDATION_ERROR") {
+          setValidations(response.data.data.error.validation);
+          setLogoUri(null);
           toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500 ) {
+          toast.error(response.data.data.error.message);
+        } else if (response.data.data.code === 500 ) {
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
         }
         setLoading(false)
       })

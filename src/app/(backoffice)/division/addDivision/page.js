@@ -1,11 +1,10 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import request from "@/app/utils/request";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
-import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -36,19 +35,17 @@ export default function AddDevisionPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
-  const [logoUri, setLogoUri] = useState("");
+  const [logoUri, setLogoUri] = useState(null);
   const [description, setDescription] = useState("");
 
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     setValidations([]);
     setLoading(true);
     toast.loading("Saving data...");
-    e.preventDefault();
-
-    console.info(logoUri)
 
     try {
       const validation = formSchema.safeParse({
@@ -87,16 +84,16 @@ export default function AddDevisionPage() {
           toast.dismiss();
           toast.success(response.data.data.message);
           router.push("/division");
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
-          setLogoUri("");
+        } else if (response.data.data.code === 400 && response.data.data.status == "VALIDATION_ERROR") {
+          setValidations(response.data.data.error.validation);
+          setLogoUri(null);
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
 
-        } else if (response.response.data.code === 500 ) {
+        } else if (response.data.data.code === 500 ) {
           console.error("INTERNAL_SERVER_ERROR")
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
         }
         setLoading(false)
       })

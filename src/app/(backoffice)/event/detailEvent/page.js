@@ -2,21 +2,11 @@
 "use client";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { useDebounce } from "use-debounce";
 import moment from "moment";
-import { FaLinkedin } from "react-icons/fa";
-import { MdOutlinePhoneAndroid } from "react-icons/md";
-import { MdEmail } from "react-icons/md";
-
 import { StateContext } from "@/app/(backoffice)/state";
 import { currency } from "@/app/utils/numberFormat";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
 
 
 
@@ -26,7 +16,7 @@ function DetailEventPage() {
   const id = searchParams.get("id");
   const page = searchParams.get("page") ?? "1";
   const [name, setName] = useState("");
-  const [mediaUri, setMediaUri] = useState("");
+  const [mediaUri, setMediaUri] = useState(null);
   const [divisionId, setDivisionId] = useState([]);
   const [heldOn, setHeldOn] = useState("");
   const [budget, setBudget] = useState();
@@ -94,7 +84,7 @@ function DetailEventPage() {
                       <img
                         src={process.env.NEXT_PUBLIC_HOST + mediaUri}
                         style={{ height: 300, width: 700 }}
-                        alt=""
+                        alt="media_event"
                         className="w-full rounded-2xl"
                       />
                     </div>

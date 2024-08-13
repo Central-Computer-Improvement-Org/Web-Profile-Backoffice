@@ -1,16 +1,44 @@
 'use client';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import TextareaField from '@/components/form/textareaField';
-import HeadTitle from '@/components/headTitle';
-import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useCallback } from 'react';
-import InputMultipleSelect from '@/components/form/inputMultipleSelect';
+import dynamic from "next/dynamic";
+import { useSearchParams, useRouter } from 'next/navigation';
 import request from '@/app/utils/request';
-
 import { toast } from 'react-hot-toast';
+import { z } from "zod";
 
-import { set, z } from "zod";
+
+const DefaultButton = dynamic(
+    () => {
+      return import("@/components/button/defaultButton");
+    },
+    { ssr: false }
+);
+
+const InputField = dynamic(
+    () => {
+      return import("@/components/form/inputField");
+    },
+    { ssr: false }
+);
+const TextareaField = dynamic(
+    () => {
+      return import("@/components/form/textareaField");
+    },
+    { ssr: false }
+);
+const HeadTitle = dynamic(
+    () => {
+      return import("@/components/headTitle");
+    },
+    { ssr: false }
+);
+const InputMultipleSelect = dynamic(
+    () => {
+      return import("@/components/form/inputMultipleSelect");
+    },
+    { ssr: false }
+);
+
 
 // Sorting Constants
 const ORDERING = 'name';
@@ -76,8 +104,6 @@ export default function EditAwardPage() {
         setLoading(false);
       });
   }, []);
-
-  console.log(validations)
 
   const fetchData = useCallback(async () => {
     const payload = {
@@ -157,19 +183,18 @@ export default function EditAwardPage() {
         requestBody
       )
       .then(function (response) {
-        console.log(response);
         if (response.data?.code === 200 || response.data?.code === 201) {
           toast.dismiss();
           toast.success(response.data.data.message);
           router.push('/award');
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
+        } else if (response.data.data.code === 400 && response.data.data.status == "VALIDATION_ERROR") {
+          setValidations(response.data.data.error.validation);
           toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500 ) {
+          toast.error(response.data.data.error.message);
+        } else if (response.data.data.code === 500 ) {
           console.error("INTERNAL_SERVER_ERROR")
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
         }
         setLoading(false);
       })

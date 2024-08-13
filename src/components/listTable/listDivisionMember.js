@@ -41,12 +41,12 @@ const ListDivisionMember = ({
           toast.dismiss();
           toast.success("User removed successfully.");
           fetchData(divisi.id);
-        } else if (response.response.data.code === 404 && response.response.data.status == "NOT_FOUND") {
+        } else if (response.data.data.code === 404 && response.data.data.status == "NOT_FOUND") {
           toast.dismiss();
           toast.error("User not found.");
-        } else if (response.response.data.code === 500) {
+        } else if (response.data.data.code === 500) {
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
         }
         setLoading(false);
       }

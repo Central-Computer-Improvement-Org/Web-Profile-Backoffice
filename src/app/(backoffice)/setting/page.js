@@ -124,16 +124,16 @@ export default function SettingPage() {
         toast.success(response.data.data.message);
         location.reload();
       } else if (
-        response.response.data.code === 400 &&
-        response.response.data.status == 'VALIDATION_ERROR'
+        response.data.data.code === 400 &&
+        response.data.data.status == 'VALIDATION_ERROR'
       ) {
-        setValidations(response.response.data.error.validation);
+        setValidations(response.data.data.error.validation);
         setLogoUri('');
         toast.dismiss();
-        toast.error(response.response.data.error.message);
-      } else if (response.response.data.code === 500) {
+        toast.error(response.data.data.error.message);
+      } else if (response.data.data.code === 500) {
         toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(response.data.data.error.message);
       }
       setLoading(false);
     });

@@ -84,8 +84,8 @@ export default function EditProjectPage() {
   const [budget, setBudget] = useState("");
   const [contributor, setContributor] = useState([]);
   const [divisions, setDivisions] = useState([]);
-  const [imageUri, setImageUri] = useState("");
-  const [iconUri, setIconUri] = useState("");
+  const [imageUri, setImageUri] = useState(null);
+  const [iconUri, setIconUri] = useState(null);
 
   const [oldData, setOldData] = useState([]);
   const [divisionsData, setDivisionsData] = useState([]);
@@ -247,18 +247,18 @@ export default function EditProjectPage() {
           toast.success(response.data.data.message);
           router.push("/project");
         } else if (
-          response.response.data.code === 400 &&
-          response.response.data.status == "VALIDATION_ERROR"
+          response.data.data.code === 400 &&
+          response.data.data.status == "VALIDATION_ERROR"
         ) {
-          setValidations(response.response.data.error.validation);
-          setIconUri("");
-          setImageUri("");
+          setValidations(response.data.data.error.validation);
+          setIconUri(null);
+          setImageUri(null);
           toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500) {
+          toast.error(response.data.data.error.message);
+        } else if (response.data.data.code === 500) {
           console.error("INTERNAL_SERVER_ERROR");
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response.data.data.error.message);
         }
         setLoading(false);
       });

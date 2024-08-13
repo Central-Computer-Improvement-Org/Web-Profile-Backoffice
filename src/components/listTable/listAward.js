@@ -25,14 +25,14 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
         toast.success(response.data.data.message);
         fetchData();
       } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == 'NOT_FOUND'
+        response.data.data.code === 404 &&
+        response.data.data.status == 'NOT_FOUND'
       ) {
         toast.dismiss();
         toast.error('Award not found.');
-      } else if (response.response.data.code === 500) {
+      } else if (response.data.data.code === 500) {
         toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(response.data.data.error.message);
       }
       setLoading(false);
     });
