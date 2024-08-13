@@ -62,20 +62,20 @@ const ListDivision = ({
       </td>
 
       <td className="text-xs font-medium px-6 py-4">{name}</td>
-      <th
+      <td
         scope="row"
         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
       >
         <div className="w-10 h-10 rounded-full">
           <img
-            src={"https://kevinid.pythonanywhere.com" + logoUri}
+            src={process.env.NEXT_PUBLIC_HOST + logoUri}
             width={0}
             height={0}
             className="w-full h-full object-cover rounded-full"
             alt="profile"
           />
         </div>
-      </th>
+      </td>
       <td className="text-xs font-medium px-6 py-4">
         {formatDescription(description)}
       </td>

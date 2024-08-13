@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import request from "@/app/utils/request";
-
 import DefaultLink from "@/components/link/defaultLink";
 import ListDivisionMember from "@/components/listTable/listDivisionMember";
 import Pagination from "@/components/pagination";
@@ -78,7 +77,7 @@ function DetailDivisionPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root ">
                   <h3 className="text-xl font-semibold mb-4">Logo Division</h3>
-                  <img src={"https://kevinid.pythonanywhere.com" + logoUri} alt="" className="w-full rounded-2xl" />
+                  <img src={process.env.NEXT_PUBLIC_HOST + logoUri} alt="" className="w-full rounded-2xl" />
                 </div>
               </div>
             </div>

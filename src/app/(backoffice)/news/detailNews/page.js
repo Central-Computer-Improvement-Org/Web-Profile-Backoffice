@@ -31,7 +31,7 @@ function DetailNewsPage() {
       return;
     }
     request
-      .get("/newsById")
+      .get(`/news?id=${id}`)
       .then(function (response) {
         const data = response.data.data;
         setTitle(data.title);

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import "dotenv/config"
 import request from "@/app/utils/request";
 import InputField from "@/components/form/inputField";
-import DefaultLink from "@/components/link/defaultLink";
 import Pagination from "@/components/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useCallback } from "react";
@@ -177,7 +177,7 @@ function DetailAwardPage() {
                             <div className="w-24 h-24 rounded-full shadow-lg mb-3">
                               <img
                                 className="w-24 h-24 object-cover rounded-full"
-                                src={"https://kevinid.pythonanywhere.com" +data.profileUri}
+                                src={process.env.NEXT_PUBLIC_HOST +data.profileUri}
                                 alt="Bonnie image"
                               />
                             </div>

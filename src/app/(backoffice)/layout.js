@@ -75,14 +75,14 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'https://kevinid.pythonanywhere.com' + defaultLogoUri
+                      ? process.env.NEXT_PUBLIC_HOST + defaultLogoUri
                       : Logo
                   }
                   className="w-full h-12 object-cover"
                   alt="FlowBite Logo"
                 />
                 <span className="self-center text-gray-500 text-3xl font-semibold whitespace-nowrap ">
-                  {titleWebsite ?? CCI}
+                  {titleWebsite ?? 'Central Computer Improvement'}
                 </span>
               </Link>
             </div>

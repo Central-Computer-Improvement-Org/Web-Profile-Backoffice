@@ -99,7 +99,7 @@ export default function DetailMemberPage() {
                 <div className="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
                   <div className="w-28 h-28 rounded-lg">
                     <img
-                      src={"https://kevinid.pythonanywhere.com" + profileUri}
+                      src={process.env.NEXT_PUBLIC_HOST + profileUri}
                       width={0}
                       height={0}
                       className="mb-4 rounded-lg w-full h-full object-cover sm:mb-0 xl:mb-4 2xl:mb-0"

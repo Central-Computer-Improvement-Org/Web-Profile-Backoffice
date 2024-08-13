@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
-
+import 'dotenv/config';
+// import pkg from 'dotenv-webpack';
+// const {Dotenv} = pkg;
+// import path from 'path';
+// console.info(pkg)
 const cspHeader = `
    default-src 'self';
    script-src 'self' 'unsafe-eval' 'unsafe-inline';
@@ -18,18 +22,17 @@ const nextConfig = {
    images: {
       unoptimized: true,
    },
-   source: '/(.*)',
-   headers: [
-      {
-         key: 'Content-Security-Policy',
-         value: cspHeader.replace(/\n/g, ''),
-      },
-   ],
-   // TODO : komen config dibawah jika running lokal, aktifkan kembali ketika push
+   // source: '/(.*)',
+   // headers: [
+   //    {
+   //       key: 'Content-Security-Policy',
+   //       value: cspHeader.replace(/\n/g, ''),
+   //    },
+   // ],
+   // TODO : komen config dibawah jika running lokal, aktifkan kembali ketika push & SET TO ENV
    output: "export",
-   assetPrefix:
-      "https://central-computer-improvement-org.github.io/Web-Profile-Backoffice",
-   basePath: "/Web-Profile-Backoffice",
+   assetPrefix: process.env.NEXT_PUBLIC_DEVELOPMENT == 1 ? '' : process.env.NEXT_PUBLIC_ASSET_PREFIX,
+   basePath: process.env.NEXT_PUBLIC_DEVELOPMENT == 1 ? '' : process.env.NEXT_PUBLIC_BASE_PATH,
    experimental: {
       missingSuspenseWithCSRBailout: false,
    },

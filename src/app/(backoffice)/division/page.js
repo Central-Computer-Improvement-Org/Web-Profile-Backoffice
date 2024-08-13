@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { host } from '@/app/utils/urlApi';
 import ListDivision from '@/components/listTable/listDivision';
 import InputField from '@/components/form/inputField';
 

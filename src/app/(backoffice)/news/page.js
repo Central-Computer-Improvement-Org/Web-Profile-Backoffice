@@ -15,25 +15,33 @@ import DefaultTable from "@/components/table/defaultTable";
 import Link from "next/link";
 import request from "@/app/utils/request";
 import Pagination from "@/components/pagination";
+import {useSearchParams} from "next/navigation";
 
 export default function NewsPage() {
+   const searchParams = useSearchParams();
+
    // Gunakan huruf besar untuk nama fungsi komponen
    const [search, setSearch] = useState("");
    const [datas, setDatas] = useState([]);
    const [loading, setLoading] = useState(true);
+   const [recordsTotal, setRecordsTotal] = useState(0);
+
+   const page = (searchParams.get("page")) ?? "1";
 
    const rowMenu = [
       // Perbaiki penulisan rowMenu
+      { menu: "MEDIA" },
       { menu: "TITLE" },
       { menu: "DESCRIPTION" },
-      { menu: "" },
+      { menu: "" }
    ];
 
    useEffect(() => {
       request
-         .get("/news")
+         .get(`/news`)
          .then(function (response) {
             setDatas(response.data.data);
+            setRecordsTotal(response.data.recordsTotal);
             setLoading(false);
          })
          .catch(function (error) {
@@ -92,12 +100,13 @@ export default function NewsPage() {
                            key={index}
                            title={data.title}
                            description={data.description}
+                           mediaUri={data.mediaUri}
                            id={data.id}
                         />
                      )
                   )}
                </DefaultTable>
-               <Pagination />
+               <Pagination recordsTotal={recordsTotal} page={page} link="division"/>
             </div>
          )}
       </div>

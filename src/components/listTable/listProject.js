@@ -59,7 +59,7 @@ const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fe
       <td className="text-xs font-medium px-6 py-4">
         <div className="w-10 h-10 rounded-full">
           <img
-            src={`https://103-31-38-146.sslip.io${iconUri}`}
+            src={process.env.NEXT_PUBLIC_HOST + iconUri}
             width={0}
             height={0}
             className="w-full h-full object-cover rounded-full"

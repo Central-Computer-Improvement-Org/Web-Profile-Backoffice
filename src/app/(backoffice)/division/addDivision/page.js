@@ -48,6 +48,8 @@ export default function AddDevisionPage() {
     toast.loading("Saving data...");
     e.preventDefault();
 
+    console.info(logoUri)
+
     try {
       const validation = formSchema.safeParse({
         name: name,

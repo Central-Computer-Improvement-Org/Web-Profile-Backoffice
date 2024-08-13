@@ -1,12 +1,19 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 export default function Index() {
   const router = useRouter();
 
+  const currentUser = Cookies.get('token') !== undefined ? true : false;
+
   useEffect(() => {
-    router.push('/login'); // Mengarahkan pengguna dari / ke /login
+    if (currentUser) {
+      router.push('/dashboard');
+    } else {
+      router.push('/login'); // Mengarahkan pengguna dari / ke /login
+    }
   }, [router]); // Komponen ini hanya dijalankan sekali setelah mounting
 
   return null; // Atau tampilkan pesan atau komponen lain jika perlu

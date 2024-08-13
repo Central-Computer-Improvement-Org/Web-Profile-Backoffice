@@ -126,7 +126,7 @@ function DetailProjectPage() {
               <div className="flow-root">
                 <div className="mb-4">
                   <img
-                    src={`https://103-31-38-146.sslip.io${imageUri}`}
+                    src={process.env.NEXT_PUBLIC_HOST + imageUri}
                     width={0}
                     height={0}
                     className="w-full h-[250px] object-cover rounded-md"
@@ -212,7 +212,7 @@ function DetailProjectPage() {
                               <div className="w-24 h-24 rounded-full shadow-lg mb-3">
                                 <img
                                   className="w-24 h-24 object-cover rounded-full"
-                                  src={"https://kevinid.pythonanywhere.com" + data.profileUri}
+                                  src={process.env.NEXT_PUBLIC_HOST + data.profileUri}
                                   alt="Bonnie image"
                                 />
                               </div>

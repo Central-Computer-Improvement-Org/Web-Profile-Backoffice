@@ -63,7 +63,7 @@ const ListContact = ({
       >
         <div className="w-10 h-10 ">
           <img
-            src={'https://kevinid.pythonanywhere.com' + iconUri}
+            src={process.env.NEXT_PUBLIC_HOST + iconUri}
             width={0}
             height={0}
             className="w-full h-full object-fill "

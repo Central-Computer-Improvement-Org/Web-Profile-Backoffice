@@ -79,7 +79,7 @@ const ListDivisionMember = ({
         <div className="flex gap-2 items-center">
           <div className="w-10 h-10 rounded-full">
             <img
-              src={"https://kevinid.pythonanywhere.com" + photoUri}
+              src={process.env.NEXT_PUBLIC_HOST + photoUri}
               width={0}
               height={0}
               className="w-full h-full object-cover rounded-full"
