@@ -1,15 +1,20 @@
 'use client';
-
 import React from 'react';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 
 const NextBreadcrumb = ({
   separator,
   listClasses,
   activeClasses,
   capitalizeLinks,
-  divisionId
+  divisionId,
+  projectId,
+  memberNim,
+  awardId,
+  newsId,
+  eventId
 }) => {
   const paths = usePathname();
   const pathNames = paths.split('/').filter((path) => path);
@@ -36,16 +41,39 @@ const NextBreadcrumb = ({
           </li>
 
           {pathNames.map((link, index) => {
+            const a = newsId
+            console.log(a)
             let itemLink = link;
             let href = `/${pathNames.slice(0, index + 1).join('/')}`;
 
-            if (index === pathNames.length - 1 && link.toLowerCase() === 'detaildivision' && divisionId) {
+            // start playground
+            // const id = projectId;
+            // console.log("cek id", id);
+            // const Link = pathNames[pathNames.length - 1];
+            // console.log("cek Link", Link);
+            // end playground
+            if (index === pathNames.length - 1 && link.toLowerCase() === 'detailevent' && eventId) {
+              itemLink = eventId;
+              href = `/news/${newsId}`;
+            } else if (index === pathNames.length - 1 && link.toLowerCase() === 'detailnews' && newsId) {
+              itemLink = newsId;
+              href = `/news/${newsId}`;
+            } else if (index === pathNames.length - 1 && link.toLowerCase() === 'detailmember' && memberNim) {
+              itemLink = memberNim;
+              href = `/member/${memberNim}`;
+            } else if (index === pathNames.length - 1 && link.toLowerCase() === 'detailaward' && awardId) {
+              itemLink = awardId;
+              href = `/award/${awardId}`;
+            } else if (index === pathNames.length - 1 && link.toLowerCase() === 'detaildivision' && divisionId) {
               itemLink = divisionId;
               href = `/division/${divisionId}`;
+            } else if (index === pathNames.length - 1 && link.toLowerCase() === 'detailproject' && projectId) {
+              itemLink = projectId;
+              href = `/project/${projectId}`;
             } else if (capitalizeLinks) {
               itemLink = link[0].toUpperCase() + link.slice(1);
             }
-            
+
             if (index === 0 && itemLink !== 'Dashboard' && itemLink !== 'News') {
               itemLink = itemLink + 's';
             }
