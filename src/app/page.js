@@ -14,7 +14,7 @@ export default function Index() {
     } else {
       router.push('/login'); // Mengarahkan pengguna dari / ke /login
     }
-  }, [router]); // Komponen ini hanya dijalankan sekali setelah mounting
+  }, [currentUser, router]); // Komponen ini hanya dijalankan sekali setelah mounting
 
   return null; // Atau tampilkan pesan atau komponen lain jika perlu
 }

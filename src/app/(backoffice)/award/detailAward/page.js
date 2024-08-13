@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import "dotenv/config"
@@ -11,10 +10,7 @@ import { useDebounce } from 'use-debounce';
 import { IoIosSearch } from "react-icons/io";
 
 import { StateContext } from "@/app/(backoffice)/state";
-import Pagination from "@/components/pagination";
-import request from "@/app/utils/request";
-import InputField from "@/components/form/inputField";
-import DefaultLink from "@/components/link/defaultLink";
+import Image from "next/image";
 
 // Sorting Constants
 const ORDERING = 'name';
@@ -177,7 +173,7 @@ function DetailAwardPage() {
                         <div className="flex flex-col items-center pb-10">
                           {data.profileUri ? (
                             <div className="w-24 h-24 mb-3 rounded-full shadow-lg">
-                              <img
+                              <Image
                                 className="w-24 h-24 object-cover rounded-full"
                                 src={process.env.NEXT_PUBLIC_HOST +data.profileUri}
                                 alt="Bonnie image"

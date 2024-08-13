@@ -83,12 +83,8 @@ export default function DetailMemberPage() {
   }
 
   useEffect(() => {
-    fetchMember(nim);
-    if (!nim) {
-      router.push("/member");
-      return;
-    }
-  }, [nim, router]);
+      fetchMember(nim);
+  }, [nim]);
   
   return (
     <div>

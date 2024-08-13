@@ -95,8 +95,7 @@ export default function AddEventPage() {
 
   useEffect(() => {
     fetchDivisions();
-    setLoading(false);
-  }, [fetchDivisions]);
+  }, []);
 
   const onSubmit = async (e) => {
     setValidations([]);

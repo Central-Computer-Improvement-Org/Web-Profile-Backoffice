@@ -61,10 +61,10 @@ export default function EditContactPage() {
   const [loading, setLoading] = useState(true);
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     setValidations([]);
     setLoading(true);
     toast.loading('Saving data...');
-    e.preventDefault();
 
     const requestBody = {
       value: name,

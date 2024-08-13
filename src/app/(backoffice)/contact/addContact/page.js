@@ -1,14 +1,12 @@
 'use client';
 import DefaultButton from '@/components/button/defaultButton';
 import InputField from '@/components/form/inputField';
-import TextareaField from '@/components/form/textareaField';
 import InputSelect from '@/components/form/inputSelect';
 import HeadTitle from '@/components/headTitle';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import request from '@/app/utils/request';
 import toast from 'react-hot-toast';
-
 import { z } from 'zod';
 
 const MAX_FILE_SIZE = 2000000;
@@ -54,7 +52,7 @@ export default function AddContactPage() {
   const [accountUri, setAccountUri] = useState('');
 
   const [validations, setValidations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e) => {
     setValidations([]);
@@ -120,9 +118,6 @@ export default function AddContactPage() {
     });
   };
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
 
   return (
     <div>

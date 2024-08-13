@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
+import Image from "next/image";
 
 const Editor = dynamic(
     () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -17,7 +18,7 @@ const Editor = dynamic(
 
 const ImageComponent = (props) => {
   const { src } = props.contentState.getEntity(props.block.getEntityAt(0)).getData();
-  return <img src={src} alt="draft-image" style={{ maxWidth: '100%' }} />;
+  return <Image src={src} alt="draft-image" style={{ maxWidth: '100%' }} />;
 };
 
 
