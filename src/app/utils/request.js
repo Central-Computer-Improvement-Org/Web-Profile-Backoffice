@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const request = axios.create({
-  baseURL: `https://kevinid.pythonanywhere.com/api/v1/`,
+  baseURL: `${process.env.NEXT_PUBLIC_HOST}/api/v1`,
   timeout: 10000,
   headers: {
     // 'Content-Type': 'application/json',
