@@ -33,7 +33,7 @@ const InputField = ({
             {/* Preview Image */}
             {previewImage && (
               <Link 
-                href={"https://kevinid.pythonanywhere.com" + previewImage} 
+                href={"http://103.187.147.80:8000" + previewImage} 
                 target="_blank"
                 className="block mb-2 mr-4 text-sm font-medium text-gray-900">
                 Preview Image

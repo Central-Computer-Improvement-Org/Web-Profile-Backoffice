@@ -68,7 +68,7 @@ const ListDivision = ({
       >
         <div className="w-10 h-10 rounded-full">
           <img
-            src={"https://kevinid.pythonanywhere.com" + logoUri}
+            src={"http://103.187.147.80:8000" + logoUri}
             width={0}
             height={0}
             className="w-full h-full object-cover rounded-full"

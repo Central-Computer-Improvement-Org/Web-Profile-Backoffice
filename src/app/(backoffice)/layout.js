@@ -83,7 +83,7 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'https://kevinid.pythonanywhere.com' + defaultLogoUri
+                      ? 'http://103.187.147.80:8000' + defaultLogoUri
                       : Logo
                   }
                   className="object-cover w-full h-12"
@@ -99,7 +99,7 @@ const MainLayout = ({ children }) => {
                 <Image
                   src={
                     defaultProfileUri
-                      ? 'https://kevinid.pythonanywhere.com' + defaultProfileUri
+                      ? 'http://103.187.147.80:8000' + defaultProfileUri
                       : LogoProfile
                   }
                   alt="Profile User Image"

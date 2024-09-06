@@ -104,7 +104,7 @@ export default function DetailMemberPage() {
                 <div className="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
                   <div className="rounded-lg w-28 h-28">
                     <img
-                      src={"https://kevinid.pythonanywhere.com" + profileUri}
+                      src={"http://103.187.147.80:8000" + profileUri}
                       width={0}
                       height={0}
                       className="object-cover w-full h-full mb-4 rounded-lg sm:mb-0 xl:mb-4 2xl:mb-0"
