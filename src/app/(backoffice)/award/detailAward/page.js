@@ -175,7 +175,7 @@ function DetailAwardPage() {
                             <div className="w-24 h-24 mb-3 rounded-full shadow-lg">
                               <img
                                 className="object-cover w-24 h-24 rounded-full"
-                                src={"http://103.187.147.80:8000" +data.profileUri}
+                                src={"https://kevinid.pythonanywhere.com" +data.profileUri}
                                 alt="Bonnie image"
                               />
                             </div>
