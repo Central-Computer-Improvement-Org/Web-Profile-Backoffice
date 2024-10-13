@@ -83,11 +83,12 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'http://103.187.147.80:8000' + defaultLogoUri
+                      ? 'https://kanzen523.pythonanywhere.com' + defaultLogoUri
                       : Logo
                   }
+                  priority
                   className="object-cover w-full h-12"
-                  alt="FlowBite Logo"
+                  alt="Logo CCI"
                 />
                 <span className="self-center text-3xl font-semibold text-gray-500 whitespace-nowrap ">
                   {titleWebsite ?? CCI}
@@ -99,13 +100,12 @@ const MainLayout = ({ children }) => {
                 <Image
                   src={
                     defaultProfileUri
-                      ? 'http://103.187.147.80:8000' + defaultProfileUri
+                      ? 'https://kanzen523.pythonanywhere.com' + defaultProfileUri
                       : LogoProfile
                   }
-                  alt="Profile User Image"
+                  alt="Image User Profile"
                   width={131}
                   height={72}
-                  responsive="true"
                   className="w-[50px] h-[50px] sm:w-[70px] sm:h-[35px] md:w-[40px] md:h-[40px] rounded-[100px] cursor-pointer object-contain"
                 />
                 {isDropdown && (
