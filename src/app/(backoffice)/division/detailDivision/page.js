@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 import { StateContext } from "@/app/(backoffice)/state";
 import request from "@/app/utils/request";
@@ -77,7 +78,17 @@ function DetailDivisionPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root ">
                   <h3 className="mb-4 text-xl font-semibold">Logo Division</h3>
-                  <img src={"https://kevinid.pythonanywhere.com" + logoUri} alt="" className="w-full rounded-2xl" />
+                  <img
+                    src={
+                      logoUri
+                        ? `${process.env.NEXT_PUBLIC_HOST}` + logoUri
+                        : '/assets/icon/notfound.svg'
+                    }
+                    width={100}
+                    height={100}
+                    className="w-full rounded-2xl"
+                    alt="Division Logo CCI"
+                  />
                 </div>
               </div>
             </div>

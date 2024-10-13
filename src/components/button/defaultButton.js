@@ -34,9 +34,9 @@ export default function DefaultButton({
           : ''
       }
       ${icon && title ? 'inline-flex ' : ''}
-         items-center justify-center px-3 py-2 font-medium text-center text-white rounded-lg focus:ring-4 `}
+        items-center justify-center px-3 py-2 font-medium text-center text-white rounded-lg focus:ring-4 `}
     >
-      <div className="text-xl mr-2 -ml-1">{icon}</div>
+      <div className="mr-2 -ml-1 text-xl">{icon}</div>
       {title}
     </button>
   );

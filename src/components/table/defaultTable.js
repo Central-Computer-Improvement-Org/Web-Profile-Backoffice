@@ -1,11 +1,10 @@
 import React from 'react';
 
 export default function DefaultTable({ rowMenu, children }) {
-  // Perbaiki deklarasi fungsi dan tambahkan kurung kurawal di sekitar props
   return (
     <div className="relative overflow-x-auto shadow-md border-t-[1px] border-gray-200">
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
+      <table className="w-full text-sm text-left text-gray-500 rtl:text-right ">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
           <tr>
             <th scope="col" className="p-4">
               <div className="flex items-center">
@@ -22,7 +21,7 @@ export default function DefaultTable({ rowMenu, children }) {
             {rowMenu.map(
               (
                 item,
-                index // Ubah 'datas' menjadi 'item' untuk setiap iterasi
+                index
               ) => (
                 <th key={index} scope="col" className="px-6 py-3">
                   {item.menu}

@@ -11,8 +11,6 @@ import DefaultButton from '@/components/button/defaultButton';
 import MenuSidebar from '@/components/menuSidebar';
 import NextBreadcrumb from '@/components/breadcrumbs';
 import request from '../utils/request';
-import Logo from '../../../public/assets/image/logo.png';
-import LogoProfile from '../../../public/assets/avatar/profile.jpg';
 
 //import Icon
 import { BiSolidDashboard } from 'react-icons/bi';
@@ -83,8 +81,8 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'https://kanzen523.pythonanywhere.com' + defaultLogoUri
-                      : Logo
+                      ? `${process.env.NEXT_PUBLIC_HOST}` + defaultLogoUri
+                      : '/assets/icon/notfound.svg'
                   }
                   priority
                   className="object-cover w-full h-12"
@@ -100,10 +98,10 @@ const MainLayout = ({ children }) => {
                 <Image
                   src={
                     defaultProfileUri
-                      ? 'https://kanzen523.pythonanywhere.com' + defaultProfileUri
-                      : LogoProfile
+                      ? `${process.env.NEXT_PUBLIC_HOST}` + defaultProfileUri
+                      : '/assets/avatar/profile.jpg'
                   }
-                  alt="Image User Profile"
+                  alt="User Profile Image"
                   width={131}
                   height={72}
                   className="w-[50px] h-[50px] sm:w-[70px] sm:h-[35px] md:w-[40px] md:h-[40px] rounded-[100px] cursor-pointer object-contain"

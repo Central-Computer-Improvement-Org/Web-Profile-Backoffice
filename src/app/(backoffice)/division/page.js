@@ -1,21 +1,19 @@
 'use client';
-
 import React, { useEffect, useState, useCallback } from 'react';
-import { host } from '@/app/utils/urlApi';
-import ListDivision from '@/components/listTable/listDivision';
-import InputField from '@/components/form/inputField';
-
+import { useDebounce } from 'use-debounce';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
+import { host } from '@/app/utils/urlApi';
+import ListDivision from '@/components/listTable/listDivision';
+import InputField from '@/components/form/inputField';
 import DefaultLink from '@/components/link/defaultLink';
 import HeadTitle from '@/components/headTitle';
 import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
 import Pagination from '@/components/pagination';
 
-import { useDebounce } from 'use-debounce';
-import { useSearchParams, useRouter } from 'next/navigation';
 
 // Sorting Constants
 const ORDERING = 'updatedAt';
@@ -27,18 +25,12 @@ const LIMIT = 10;
 export default function DivisionPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const page = (searchParams.get("page")) ?? "1";
-
   const [divisionDatas, setDivisionDatas] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [recordsTotal, setRecordsTotal] = useState(0);
-
   const [debounceValue] = useDebounce(searchQuery, 500);
-
   const [loading, setLoading] = useState(true);
-
   const rowMenu = [
     { menu: 'NAME' },
     { menu: 'LOGO' },
@@ -121,7 +113,7 @@ export default function DivisionPage() {
             {divisionDatas.map(
               (
                 data,
-                index // Ubah 'awardDatas' menjadi 'data' untuk setiap iterasi
+                index
               ) => (
                 <ListDivision
                   key={index}
