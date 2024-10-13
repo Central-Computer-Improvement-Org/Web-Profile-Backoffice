@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import request from "@/app/utils/request";
 import { formatDescription } from "@/app/utils/stringUtils";
 import DefaultButton from "../button/defaultButton";
-import Logo from '../../../public/assets/image/logo.png';
 
 const ListDivision = ({ 
   name, 
