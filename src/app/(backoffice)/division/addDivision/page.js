@@ -1,15 +1,15 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import toast from "react-hot-toast";
+
 import request from "@/app/utils/request";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
-import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-
-import { z } from "zod";
+import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -32,13 +32,12 @@ const formSchema = z.object({
     .max(255, { message: "Description must be at most 255 characters long."}),
 })
 
+
 export default function AddDevisionPage() {
   const router = useRouter();
-
   const [name, setName] = useState("");
   const [logoUri, setLogoUri] = useState("");
   const [description, setDescription] = useState("");
-
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -67,7 +66,7 @@ export default function AddDevisionPage() {
         })
         setLoading(false);
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error("Invalid Input");
         return;
       }
     } catch (error) {
@@ -100,7 +99,6 @@ export default function AddDevisionPage() {
       })
   }
 
-
   useEffect(() => {
       setLoading(false);
   }, []);
@@ -110,7 +108,7 @@ export default function AddDevisionPage() {
       <HeadTitle>
         <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
           <form onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
               <div className="col-span-6 sm:col-span-4">
                 <InputField
                   id={"name"}

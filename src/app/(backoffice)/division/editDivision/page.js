@@ -1,14 +1,14 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { z } from "zod";
+import toast from "react-hot-toast";
+
+import request from "@/app/utils/request";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
-import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import request from "@/app/utils/request";
-import toast from "react-hot-toast";
-
-import { z } from "zod";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -29,20 +29,16 @@ const formSchema = z.object({
     .string()
     .min(3, { message: "Description must be at least 3 characters long."})
     .max(255, { message: "Description must be at most 255 characters long."}),
-})
-
+});
 
 export default function EditDivisionPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
-
   const [oldData, setOldData] = useState([]);
-
   const [name, setName] = useState("");
   const [logoUri, setLogoUri] = useState("");
   const [description, setDescription] = useState("");
-
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -71,7 +67,7 @@ export default function EditDivisionPage() {
         })
         setLoading(false);
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error("Invalid Input");
         return;
       }
     } catch (error) {
@@ -140,7 +136,7 @@ export default function EditDivisionPage() {
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="col-span-6 sm:col-span-4">
                   <InputField
                     id={"name"}
