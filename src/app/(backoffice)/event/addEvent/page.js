@@ -1,19 +1,17 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
+import moment from "moment";
 
 import request from "@/app/utils/request";
 import DefaultButton from "@/components/button/defaultButton";
 import InputField from "@/components/form/inputField";
 import InputSelect from "@/components/form/inputSelect";
-import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
-import moment from "moment";
-
-import { toast } from "react-hot-toast";
-
-import { z } from "zod";
+import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -60,7 +58,6 @@ const formSchema = z.object({
 
 export default function AddEventPage() {
   const router = useRouter();
-
   const [name, setName] = useState("");
   const [mediaUri, setMediaUri] = useState("");
   const [divisionId, setDivisionId] = useState([]);
@@ -68,9 +65,7 @@ export default function AddEventPage() {
   const [budget, setBudget] = useState();
   const [isActive, setIsActive] = useState(true);
   const [description, setDescription] = useState("");
-
   const [divisionDatas, setDivisionDatas] = useState([]);
-
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -124,7 +119,7 @@ export default function AddEventPage() {
         });
         setLoading(false);
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error("Invalid Input");
         return;
       }
     } catch (error) {
@@ -167,8 +162,7 @@ export default function AddEventPage() {
     <div>
       <HeadTitle>
         {loading ? (
-          // center the text
-          <div className="text-center flex">Loading...</div>
+          <div className="flex text-center">Loading...</div>
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>

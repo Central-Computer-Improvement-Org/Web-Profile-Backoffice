@@ -34,4 +34,4 @@ export default function DefaultTable({ rowMenu, children }) {
       </table>
     </div>
   );
-}
+};
