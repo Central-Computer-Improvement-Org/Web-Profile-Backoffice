@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-// components/InputField.js
 
 const InputField = ({
   id,
@@ -38,7 +37,7 @@ const InputField = ({
             )}
           </div>
       )}
-
+        
       <div className="relative w-full ">
         <input
           id={id}

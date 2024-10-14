@@ -2,22 +2,12 @@
 "use client";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { useDebounce } from "use-debounce";
 import moment from "moment";
-import { FaLinkedin } from "react-icons/fa";
-import { MdOutlinePhoneAndroid } from "react-icons/md";
-import { MdEmail } from "react-icons/md";
 
 import { StateContext } from "@/app/(backoffice)/state";
 import { currency } from "@/app/utils/numberFormat";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
-
 
 
 function DetailEventPage() {
@@ -91,15 +81,20 @@ function DetailEventPage() {
                       {name}
                     </h3>
                     <div className="flex justify-center">
-                      <img
-                        src={"http://103.187.147.80:8000" + mediaUri}
-                        style={{ height: 300, width: 700 }}
-                        alt=""
-                        className="w-full rounded-2xl"
-                      />
+                    <img
+                      src={
+                        mediaUri
+                          ? `${process.env.NEXT_PUBLIC_HOST}` + mediaUri
+                          : '/assets/icon/notfound.svg'
+                      }
+                      style={{ height: 300, width: 700 }}
+                      className="w-full rounded-2xl"
+                      alt="Event Thumbnail CCI"
+                    />
                     </div>
                   </div>
                 </div>
+                
                 <div className="flex ">
                   <div className="flex-auto">
                     <h3 className="mb-4 text-xl font-semibold">Division</h3>
@@ -135,6 +130,7 @@ function DetailEventPage() {
                     </div>
                   </div>
                 </div>
+                
                 <h3 className="mb-4 text-xl font-semibold">Description</h3>
                 <div className="mb-8">
                   <p className="mb-3 text-gray-500 ">{description}</p>

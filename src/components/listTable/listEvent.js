@@ -1,12 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { formatDescription } from "@/app/utils/stringUtils";
-import DefaultButton from "../button/defaultButton";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import moment from "moment";
+
+import { formatDescription } from "@/app/utils/stringUtils";
 import { currency } from "@/app/utils/numberFormat";
 import request from "@/app/utils/request";
-import { toast } from "react-hot-toast";
+import DefaultButton from "../button/defaultButton";
+
 
 const ListEvent = ({
   name,
@@ -36,7 +38,7 @@ const ListEvent = ({
         response.response.data.status == "NOT_FOUND"
       ) {
         toast.dismiss();
-        toast.error("Event not found.");
+        toast.error("Event not found");
       } else if (response.response.data.code === 500) {
         toast.dismiss();
         toast.error(response.response.data.error.message);
@@ -47,7 +49,7 @@ const ListEvent = ({
 
   return (
     <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      className="text-gray-700 bg-white border-b cursor-pointer hover:bg-gray-50"
       onClick={() => {
         router.push(`/event/detailEvent?id=${id}`);
       }}
@@ -57,26 +59,26 @@ const ListEvent = ({
           <input
             id="checkbox-table-search-2"
             type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  "
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 "
           />
           <label htmlFor="checkbox-table-search-2" className="sr-only">
             checkbox
           </label>
         </div>
       </td>
-      <td className="text-xs font-medium px-6 py-4">{name}</td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">{name}</td>
+      <td className="px-6 py-4 text-xs font-medium">
         {division ? division.name : "None"}
       </td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">
         {formatDescription(description)}
       </td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">
         {moment(heldOn).format("MMM YYYY")}
       </td>
-      <td className="text-xs font-medium px-6 py-4">{currency(budget)}</td>
-      <td className="text-xs font-normal px-6 py-4">
-        <div className="flex gap-2 items-center">
+      <td className="px-6 py-4 text-xs font-medium">{currency(budget)}</td>
+      <td className="px-6 py-4 text-xs font-normal">
+        <div className="flex items-center gap-2">
           <span
             className={`w-2 h-2 rounded-full ${
               isActive ? "bg-green-500" : "bg-red-500"
@@ -85,7 +87,7 @@ const ListEvent = ({
           <p>{isActive ? "Active" : "Inactive"}</p>
         </div>
       </td>
-      <td className="text-xs font-medium px-6 py-4 flex gap-3">
+      <td className="flex gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();

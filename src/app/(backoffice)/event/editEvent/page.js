@@ -1,18 +1,17 @@
 "use client";
-import DefaultButton from "@/components/button/defaultButton";
-import DefaultLink from "@/components/link/defaultLink";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
-import TextareaField from "@/components/form/textareaField";
-import HeadTitle from "@/components/headTitle";
-import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState, useCallback } from "react";
-import request from "@/app/utils/request";
+import { useSearchParams, useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 import moment from "moment";
 
-import { toast } from "react-hot-toast";
-
-import { z } from "zod";
+import request from "@/app/utils/request";
+import DefaultButton from "@/components/button/defaultButton";
+import TextareaField from "@/components/form/textareaField";
+import InputSelect from "@/components/form/inputSelect";
+import InputField from "@/components/form/inputField";
+import HeadTitle from "@/components/headTitle";
+import DefaultLink from "@/components/link/defaultLink";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -57,6 +56,7 @@ const formSchema = z.object({
     .max(130, { message: "Description must be at most 130 characters long." }),
 });
 
+
 export default function EditEventPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -70,12 +70,10 @@ export default function EditEventPage() {
   const [budget, setBudget] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [description, setDescription] = useState("");
-
   const [oldData, setOldData] = useState([]);
   const [divisionDatas, setDivisionDatas] = useState([]);
-
   const [validations, setValidations] = useState([]);
-  const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
+  const [loading, setLoading] = useState(true);
 
   const fetchDivisions = useCallback(async () => {
     const payload = {
@@ -104,7 +102,6 @@ export default function EditEventPage() {
       .get("/cms/events", payload)
       .then(function (response) {
         const data = response.data.data;
-
         setName(data.name);
         setDivisionId(data.divisionId);
         setHeldOn(data.heldOn);
@@ -163,7 +160,7 @@ export default function EditEventPage() {
         });
         setLoading(false);
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error("Invalid Input");
         return;
       }
     } catch (error) {
@@ -204,7 +201,7 @@ export default function EditEventPage() {
     <div>
       <HeadTitle>
         {loading ? (
-          <div className="text-center">Loading...</div> // Tampilkan pesan loading jika data sedang dimuat
+          <div className="flex items-center justify-center w-full h-full text-center">Loading...</div>
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
@@ -336,4 +333,4 @@ export default function EditEventPage() {
       </HeadTitle>
     </div>
   );
-}
+};
