@@ -21,6 +21,7 @@ import { LiaAddressBook } from 'react-icons/lia';
 import { AiFillProject } from 'react-icons/ai';
 import { FaAward } from 'react-icons/fa6';
 import LogoNotfound from '/public/assets/icon/notfound.svg';
+import LogoUserNotfound from '/public/assets/avatar/profile.jpg';
 
 
 const MainLayout = ({ children }) => {
@@ -90,7 +91,7 @@ const MainLayout = ({ children }) => {
                   alt="Logo CCI"
                 />
                 <span className="self-center text-3xl font-semibold text-gray-500 whitespace-nowrap ">
-                  {titleWebsite ?? CCI}
+                  {titleWebsite ?? "CCI"}
                 </span>
               </Link>
             </div>
@@ -100,7 +101,7 @@ const MainLayout = ({ children }) => {
                   src={
                     defaultProfileUri
                       ? `${process.env.NEXT_PUBLIC_HOST}` + defaultProfileUri
-                      : '/assets/avatar/profile.jpg'
+                      : LogoUserNotfound
                   }
                   alt="User Profile Image"
                   width={131}
