@@ -7,25 +7,25 @@ import Cookies from 'js-cookie';
 
 //import Components
 import { StateContext } from './state';
+import request from '../utils/request';
 import DefaultButton from '@/components/button/defaultButton';
 import MenuSidebar from '@/components/menuSidebar';
 import NextBreadcrumb from '@/components/breadcrumbs';
-import request from '../utils/request';
 
 //import Icon
-import { BiSolidDashboard } from 'react-icons/bi';
 import { BsCalendar2EventFill, BsFillPeopleFill } from 'react-icons/bs';
 import { IoNewspaper, IoSettings } from 'react-icons/io5';
-import { AiFillProject } from 'react-icons/ai';
-import { FaAward } from 'react-icons/fa6';
+import { BiSolidDashboard } from 'react-icons/bi';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { LiaAddressBook } from 'react-icons/lia';
-import { CgProfile } from 'react-icons/cg';
-import { PiAddressBookTabsLight } from 'react-icons/pi';
+import { AiFillProject } from 'react-icons/ai';
+import { FaAward } from 'react-icons/fa6';
+import LogoNotfound from '/public/assets/icon/notfound.svg';
 
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
+  
   const { divisionName, divisionId } = useContext(StateContext);
   const { projectName, projectId } = useContext(StateContext);
   const { memberName, memberNim } = useContext(StateContext);
@@ -36,6 +36,7 @@ const MainLayout = ({ children }) => {
   const [defaultLogoUri, setDefaultLogoUri] = useState();
   const [defaultProfileUri, setDefaultProfileUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
+  
   const [loading, setLoading] = useState(true); 
 
   const handleLogout = () => {
@@ -82,7 +83,7 @@ const MainLayout = ({ children }) => {
                   src={
                     defaultLogoUri
                       ? `${process.env.NEXT_PUBLIC_HOST}` + defaultLogoUri
-                      : '/assets/icon/notfound.svg'
+                      : LogoNotfound
                   }
                   priority
                   className="object-cover w-full h-12"
