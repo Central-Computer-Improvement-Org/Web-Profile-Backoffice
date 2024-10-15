@@ -1,15 +1,14 @@
 'use client';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import TextareaField from '@/components/form/textareaField';
-import InputSelect from '@/components/form/inputSelect';
-import HeadTitle from '@/components/headTitle';
-import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import request from '@/app/utils/request';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { z } from 'zod';
 import toast from 'react-hot-toast';
 
-import { z } from 'zod';
+import request from '@/app/utils/request';
+import DefaultButton from '@/components/button/defaultButton';
+import InputSelect from '@/components/form/inputSelect';
+import InputField from '@/components/form/inputField';
+import HeadTitle from '@/components/headTitle';
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -44,19 +43,19 @@ const formSchema = z.object({
     .max(255, { message: 'Account URI must be at most 255 characters long.' }),
 });
 
+
 export default function EditContactPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const id = searchParams.get('id');
 
   const [oldData, setOldData] = useState({});
-
-  const [iconUri, setIconUri] = useState(null);
-  const [platform, setPlatform] = useState('');
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [accountUri, setAccountUri] = useState('');
-
+  const [iconUri, setIconUri] = useState(null);
+  const [platform, setPlatform] = useState('');
+  
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -77,8 +76,6 @@ export default function EditContactPage() {
       requestBody.iconUri = iconUri;
     }
 
-    console.log(requestBody);
-
     try {
       const validation = formSchema.safeParse(requestBody);
       if (!validation.success) {
@@ -93,7 +90,7 @@ export default function EditContactPage() {
         });
         setLoading(false);
         toast.dismiss();
-        toast.error('Invalid Input.');
+        toast.error('Invalid Input');
         return;
       }
     } catch (error) {
@@ -102,10 +99,10 @@ export default function EditContactPage() {
       toast.error('Something went wrong!');
       console.error(error);
     }
+    
     request
       .patch(`/cms/contact?id=${id}`, requestBody)
       .then(function (response) {
-        console.log(response);
         if (response.data?.code === 200 || response.data?.code === 201) {
           toast.dismiss();
           toast.success(response.data.data.message);
@@ -126,7 +123,7 @@ export default function EditContactPage() {
         setLoading(false);
       });
   };
-
+  
   useEffect(() => {
     if (!id) {
       router.push('/contact');
@@ -136,7 +133,6 @@ export default function EditContactPage() {
       .get(`/cms/contact?id=${id}`)
       .then((response) => {
         const data = response.data.data;
-        // setIconUri(data.iconUri || null);
         setPlatform(data.platform);
         setName(data.value);
         setStatus(data.isActive);
@@ -158,13 +154,12 @@ export default function EditContactPage() {
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
                     id={'iconUri'}
                     name={'iconUri'}
                     type={'file'}
-                    multiple={false}
                     previewImage={oldData.iconUri}
                     imageOnly={true}
                     label={'Icon Platform'}
@@ -254,4 +249,4 @@ export default function EditContactPage() {
       </HeadTitle>
     </div>
   );
-}
+};

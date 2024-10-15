@@ -3,7 +3,6 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-
 const NextBreadcrumb = ({
   separator,
   listClasses,
@@ -41,17 +40,9 @@ const NextBreadcrumb = ({
           </li>
 
           {pathNames.map((link, index) => {
-            const a = newsId
-            console.log(a)
             let itemLink = link;
             let href = `/${pathNames.slice(0, index + 1).join('/')}`;
-
-            // start playground
-            // const id = projectId;
-            // console.log("cek id", id);
-            // const Link = pathNames[pathNames.length - 1];
-            // console.log("cek Link", Link);
-            // end playground
+            
             if (index === pathNames.length - 1 && link.toLowerCase() === 'detailevent' && eventId) {
               itemLink = eventId;
               href = `/news/${newsId}`;

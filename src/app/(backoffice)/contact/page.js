@@ -1,16 +1,15 @@
 'use client';
-import request from '@/app/utils/request';
-import InputField from '@/components/form/inputField';
-import HeadTitle from '@/components/headTitle';
-import DefaultLink from '@/components/link/defaultLink';
-import ListContact from '@/components/listTable/listContact';
-import Pagination from '@/components/pagination';
-import DefaultTable from '@/components/table/defaultTable';
-import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa6';
-import { IoIosSearch } from 'react-icons/io';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
+import { FaPlus } from 'react-icons/fa6';
+
+import request from '@/app/utils/request';
+import DefaultTable from '@/components/table/defaultTable';
+import ListContact from '@/components/listTable/listContact';
+import DefaultLink from '@/components/link/defaultLink';
+import Pagination from '@/components/pagination';
+import HeadTitle from '@/components/headTitle';
 
 // Sorting Constants
 const ORDERING = 'updatedAt';
@@ -20,18 +19,13 @@ const SORT = 'desc';
 const LIMIT = 10;
 
 export default function ContactPage() {
-  const [datasContact, setDatasContact] = useState();
-  const searchParams = useSearchParams();
   const router = useRouter();
-
+  const searchParams = useSearchParams();
   const page = searchParams.get('page') ?? '1';
-
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [datasContact, setDatasContact] = useState();
   const [recordsTotal, setRecordsTotal] = useState(0);
-
   const [debounceValue] = useDebounce(searchQuery, 500);
-
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
@@ -41,8 +35,6 @@ export default function ContactPage() {
     { menu: 'STATUS' },
     { menu: '' },
   ];
-
-  // const router = useRouter();
 
   const fetchDataContact = useCallback(async () => {
     const payload = {
@@ -105,7 +97,7 @@ export default function ContactPage() {
             {datasContact.map(
               (
                 data,
-                index // Ubah 'awardDatas' menjadi 'data' untuk setiap iterasi
+                index
               ) => (
                 <ListContact
                   key={index}
@@ -125,4 +117,4 @@ export default function ContactPage() {
       )}
     </>
   );
-}
+};
