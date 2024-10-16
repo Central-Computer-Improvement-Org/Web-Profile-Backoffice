@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import request from "@/app/utils/request";
 import { formatDescription } from "@/app/utils/stringUtils";
+import request from "@/app/utils/request";
 import DefaultButton from "../button/defaultButton";
+import LogoNotfound from '/public/assets/icon/notfound.svg';
 
 const ListDivision = ({ 
   name, 
@@ -73,7 +74,7 @@ const ListDivision = ({
             src={
               logoUri
                 ? `${process.env.NEXT_PUBLIC_HOST}` + logoUri
-                : '/assets/icon/notfound.svg'
+                : LogoNotfound
             }
             width={100}
             height={100}

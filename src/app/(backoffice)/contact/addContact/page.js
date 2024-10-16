@@ -1,15 +1,14 @@
 'use client';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import TextareaField from '@/components/form/textareaField';
-import InputSelect from '@/components/form/inputSelect';
-import HeadTitle from '@/components/headTitle';
-import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import request from '@/app/utils/request';
+import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 import toast from 'react-hot-toast';
 
-import { z } from 'zod';
+import request from '@/app/utils/request';
+import DefaultButton from '@/components/button/defaultButton';
+import InputField from '@/components/form/inputField';
+import InputSelect from '@/components/form/inputSelect';
+import HeadTitle from '@/components/headTitle';
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -44,6 +43,7 @@ const formSchema = z.object({
     .max(255, { message: 'Description must be at most 255 characters long.' }),
 });
 
+
 export default function AddContactPage() {
   const router = useRouter();
 
@@ -52,7 +52,6 @@ export default function AddContactPage() {
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [accountUri, setAccountUri] = useState('');
-
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -83,7 +82,7 @@ export default function AddContactPage() {
         });
         setLoading(false);
         toast.dismiss();
-        toast.error('Invalid Input.');
+        toast.error('Invalid Input');
         return;
       }
     } catch (error) {
@@ -132,7 +131,7 @@ export default function AddContactPage() {
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
                     id={'iconUri'}

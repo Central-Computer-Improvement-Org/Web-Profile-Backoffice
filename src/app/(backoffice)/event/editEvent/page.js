@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { z } from "zod";
+import { set, z } from "zod";
 import moment from "moment";
 
 import request from "@/app/utils/request";
@@ -11,7 +11,6 @@ import TextareaField from "@/components/form/textareaField";
 import InputSelect from "@/components/form/inputSelect";
 import InputField from "@/components/form/inputField";
 import HeadTitle from "@/components/headTitle";
-import DefaultLink from "@/components/link/defaultLink";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -20,10 +19,6 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
-
-// Sorting Constants
-const ORDERING = "name";
-const SORT = "asc";
 
 // Pagination Constants
 const LIMIT = 100;
@@ -58,11 +53,10 @@ const formSchema = z.object({
 
 
 export default function EditEventPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
-  // State untuk menyimpan data event
   const [name, setName] = useState("");
   const [mediaUri, setMediaUri] = useState("");
   const [divisionId, setDivisionId] = useState([]);
@@ -72,6 +66,7 @@ export default function EditEventPage() {
   const [description, setDescription] = useState("");
   const [oldData, setOldData] = useState([]);
   const [divisionDatas, setDivisionDatas] = useState([]);
+  
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -98,6 +93,7 @@ export default function EditEventPage() {
     const payload = {
       id: id,
     };
+    
     request
       .get("/cms/events", payload)
       .then(function (response) {
@@ -108,7 +104,6 @@ export default function EditEventPage() {
         setBudget(data.budget);
         setDescription(data.description);
         setIsActive(data.isActive);
-
         setOldData(data);
         setLoading(false);
       })
@@ -117,31 +112,21 @@ export default function EditEventPage() {
         setLoading(false);
       });
   }, [id]);
-
-  useEffect(() => {
-    if (!id) {
-      router.push("/event");
-      return;
-    }
-    fetchData();
-    fetchDivisions();
-  }, [id, router, fetchData, fetchDivisions]);
-
+  
   const onSubmit = async (e) => {
     setValidations([]);
     setLoading(true);
     toast.loading("Saving data...");
     e.preventDefault();
-
+    
     const requestBody = {
       name: name,
-      mediaUri: mediaUri,
       budget: Number(budget),
       heldOn: moment(heldOn).format("DD-MM-YYYY"),
       description: description,
       isActive: isActive,
     };
-
+    
     if (mediaUri !== null && mediaUri !== "") {
       requestBody.mediaUri = mediaUri;
     }
@@ -169,36 +154,44 @@ export default function EditEventPage() {
       toast.error("Something went wrong!");
       console.error(error);
     }
-
+    
     requestBody.divisions = JSON.stringify(requestBody.divisions);
-
+    
     request
-      .patch(`/cms/events?id=${id}`, requestBody)
-      .then(function (response) {
-        console.log(response);
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          router.push("/event");
-        } else if (
-          response.response.data.code === 400 &&
-          response.response.data.status == "VALIDATION_ERROR"
-        ) {
-          setValidations(response.response.data.error.validation);
-          setMediaUri("");
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500) {
-          console.error("INTERNAL_SERVER_ERROR");
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        }
+    .patch(`/cms/events?id=${id}`, requestBody)
+    .then(function (response) {
+      if (response.data?.code === 200 || response.data?.code === 201) {
+        toast.dismiss();
+        toast.success(response.data.data.message);
+        router.push("/event");
+      } else if (
+        response.response.data.code === 400 &&
+        response.response.data.status == "VALIDATION_ERROR"
+      ) {
+        setValidations(response.response.data.error.validation);
+        setMediaUri('');
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      } else if (response.response.data.code === 500) {
+        console.error("INTERNAL_SERVER_ERROR");
+        toast.dismiss();
+        toast.error(response.response.data.error.message);
+      }
         setLoading(false);
       });
-  };
-
-  return (
-    <div>
+    };
+    
+    useEffect(() => {
+      if (!id) {
+        router.push("/event");
+        return;
+      }
+      fetchData();
+      fetchDivisions();
+    }, [id, router, fetchData, fetchDivisions]);
+    
+    return (
+      <div>
       <HeadTitle>
         {loading ? (
           <div className="flex items-center justify-center w-full h-full text-center">Loading...</div>
@@ -225,11 +218,10 @@ export default function EditEventPage() {
                   <InputField
                     id={"mediaUri"}
                     name={"mediaUri"}
-                    type={"image"}
-                    multiple={false}
+                    type={"file"}
                     previewImage={oldData.mediaUri}
+                    imageOnly={true}
                     label={"Media"}
-                    required
                     validations={validations}
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
