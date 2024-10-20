@@ -6,13 +6,13 @@ import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
 import { host } from '@/app/utils/urlApi';
-import ListDivision from '@/components/listTable/listDivision';
+import request from '@/app/utils/request';
+import HeadTitle from '@/components/headTitle';
+import Pagination from '@/components/pagination';
 import InputField from '@/components/form/inputField';
 import DefaultLink from '@/components/link/defaultLink';
-import HeadTitle from '@/components/headTitle';
 import DefaultTable from '@/components/table/defaultTable';
-import request from '@/app/utils/request';
-import Pagination from '@/components/pagination';
+import ListDivision from '@/components/listTable/listDivision';
 
 
 // Sorting Constants
@@ -22,15 +22,18 @@ const SORT = 'desc';
 // Pagination Constants
 const LIMIT = 10;
 
+
 export default function DivisionPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const page = (searchParams.get("page")) ?? "1";
+
   const [divisionDatas, setDivisionDatas] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [recordsTotal, setRecordsTotal] = useState(0);
   const [debounceValue] = useDebounce(searchQuery, 500);
   const [loading, setLoading] = useState(true);
+
   const rowMenu = [
     { menu: 'NAME' },
     { menu: 'LOGO' },
@@ -40,11 +43,11 @@ export default function DivisionPage() {
 
   const fetchDivisions = useCallback(async () => {
     const payload = {
-      name : debounceValue,
-      page : page,
-      limit : LIMIT,
-      ordering : ORDERING,
-      sort : SORT,
+      name: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
     }
 
     request
@@ -57,8 +60,8 @@ export default function DivisionPage() {
       .catch(function (error) {
         console.log(error);
         setLoading(false);
-    });
-  }, [debounceValue, page])
+      });
+  }, [debounceValue, page]);
 
   useEffect(() => {
     if (page < 1) {
@@ -86,7 +89,6 @@ export default function DivisionPage() {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    console.log(searchQuery);
                   }}
                   icon={<IoIosSearch />}
                 />
@@ -100,7 +102,7 @@ export default function DivisionPage() {
               title={'Add Division'}
               href={'/division/addDivision'}
               icon={<FaPlus />}
-              onClick={() => {}}
+              onClick={() => { }}
             />
           </div>
         </div>
@@ -121,14 +123,14 @@ export default function DivisionPage() {
                   logoUri={data.logoUri}
                   description={data.description}
                   id={data.id}
-                  fetchData={fetchDivisions} 
+                  fetchData={fetchDivisions}
                 />
               )
             )}
           </DefaultTable>
-          <Pagination recordsTotal={recordsTotal} page={page} link="division"/>
+          <Pagination recordsTotal={recordsTotal} page={page} link="division" />
         </div>
       )}
     </div>
   );
-}
+};

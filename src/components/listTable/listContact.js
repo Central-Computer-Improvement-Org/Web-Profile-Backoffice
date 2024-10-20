@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import request from '@/app/utils/request';
 import DefaultButton from '../button/defaultButton';
 import DefaultLink from '../link/defaultLink';
+import LogoNotfound from '/public/assets/icon/notfound.svg';
+
 
 const ListContact = ({
   iconUri,
