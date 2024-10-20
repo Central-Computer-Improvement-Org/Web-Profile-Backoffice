@@ -1,13 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import toast from "react-hot-toast";
 
 import { formatDescription } from "@/app/utils/stringUtils";
 import request from "@/app/utils/request";
 import DefaultButton from "../button/defaultButton";
 import LogoNotfound from '/public/assets/icon/notfound.svg';
+
 
 const ListDivision = ({ 
   name, 
@@ -70,17 +72,21 @@ const ListDivision = ({
         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
       >
         <div className="w-10 h-10 rounded-full">
-          <img
-            src={
-              logoUri
-                ? `${process.env.NEXT_PUBLIC_HOST}` + logoUri
-                : LogoNotfound
-            }
-            width={100}
-            height={100}
-            className="object-cover w-full h-full rounded-full"
-            alt="Logo Division CCI"
-          />
+        <Image
+          src={logoUri ? `${process.env.NEXT_PUBLIC_HOST}` + logoUri : LogoNotfound}
+          width={100}
+          height={100}
+          className="object-cover w-full h-full rounded-full"
+          alt="Logo Division CCI"
+        />
+        {/* Jika ingin menggunakan tag img, gunakan kode di bawah ini */}
+        {/* <img
+          src={logoUri ? `${process.env.NEXT_PUBLIC_HOST}` + logoUri : LogoNotfound.src}
+          width={100}
+          height={100}
+          className="object-cover w-full h-full rounded-full"
+          alt="Logo Division CCI"
+        /> */}
         </div>
       </th>
       <td className="px-6 py-4 text-xs font-medium">
