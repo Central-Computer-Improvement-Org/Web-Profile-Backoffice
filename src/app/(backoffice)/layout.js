@@ -26,19 +26,19 @@ import LogoUserNotfound from '/public/assets/avatar/profile.jpg';
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
-  
+
   const { divisionName, divisionId } = useContext(StateContext);
   const { projectName, projectId } = useContext(StateContext);
   const { memberName, memberNim } = useContext(StateContext);
-  const { awardName, awardId } = useContext(StateContext); 
-  const { newsName, newsId } = useContext(StateContext);   
-  const { eventName, eventId } = useContext(StateContext);                            
+  const { awardName, awardId } = useContext(StateContext);
+  const { newsName, newsId } = useContext(StateContext);
+  const { eventName, eventId } = useContext(StateContext);
   const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
   const [defaultProfileUri, setDefaultProfileUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
-  
-  const [loading, setLoading] = useState(true); 
+
+  const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
     localStorage.removeItem('nim');
@@ -235,7 +235,7 @@ const MainLayout = ({ children }) => {
       </aside>
 
       <div className="sm:ml-64">
-        <div className="mt-16">
+        <div className="mt-20">
           <div className="items-center justify-between block px-4 py-4 bg-white sm:flex">
             <div className="w-full mb-1">
               <NextBreadcrumb
