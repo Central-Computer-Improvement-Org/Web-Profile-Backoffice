@@ -2,20 +2,21 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { FaLinkedin } from "react-icons/fa";
-import { MdOutlinePhoneAndroid } from "react-icons/md";
-import { MdEmail } from "react-icons/md";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { MdEmail } from "react-icons/md";
+import { FaLinkedin } from "react-icons/fa";
+import { MdOutlinePhoneAndroid } from "react-icons/md";
 
 import { StateContext } from "@/app/(backoffice)/state";
 import request from "@/app/utils/request";
 import InputField from "@/components/form/inputField";
-import DefaultButton from "@/components/button/defaultButton";
-import InputSelect from "@/components/form/inputSelect";
-import DefaultLink from "@/components/link/defaultLink";
-import Image from "next/image";
+import LogoNotfound from '/public/assets/icon/notfound.svg';
+// import DefaultButton from "@/components/button/defaultButton";
+// import InputSelect from "@/components/form/inputSelect";
+// import DefaultLink from "@/components/link/defaultLink";
+// import Image from "next/image";
 
 
 export default function DetailMemberPage() {
@@ -23,7 +24,6 @@ export default function DetailMemberPage() {
   const router = useRouter();
   const nim = searchParams.get("nim");
 
-  // State untuk menyimpan data member
   const [role, setRole] = useState("");
   const [division, setDivision] = useState("");
   const [name, setName] = useState("");
@@ -33,22 +33,24 @@ export default function DetailMemberPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [profileUri, setProfileUri] = useState("");
   const [status, setStatus] = useState();
-  const [award, setAward] = useState();
-  const [project, setProject] = useState();
   const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState("");
   const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState("");
   const { setMemberName, setMemberNim } = useContext(StateContext);
-  const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
+  // GUNAKAN INI JIKA INGIN MENAMPILKAN AWARD DAN PROJECT
+  // const [award, setAward] = useState();
+  // const [project, setProject] = useState();
+
+  const [loading, setLoading] = useState(true);
 
   const copyToClipboard = (text) => {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        toast.success("Text copied to clipboard:", text);
+        toast.success("Text copied to clipboard :", text);
         // Optionally, you can show a toast or notification to indicate successful copy
       })
       .catch((error) => {
-        toast.error("Error copying text to clipboard:", error);
+        toast.error("Error copying text to clipboard :", error);
         // Optionally, you can show a toast or notification to indicate copy failure
       });
   };
@@ -68,9 +70,10 @@ export default function DetailMemberPage() {
         setProfileUri(data.profileUri);
         setStatus(data.isActive);
         setYearUniversityEnrolled(data.yearUniversityEnrolled);
-        setYearCommunityEnrolled(data.yearCommunityEnrolled);
+        setYearCommunityEnrolled(data?.yearCommunityEnrolled);
         setMemberName(data.name);
         setMemberNim(data.nim);
+        // GUNAKAN INI JIKA INGIN MENAMPILKAN AWARD DAN PROJECT
         // setAward(data.awards);
         // setProject(data.projects);
         setLoading(false); // Setelah data dimuat, atur loading menjadi false
@@ -79,7 +82,7 @@ export default function DetailMemberPage() {
         console.log(error);
         setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
       }
-    );
+      );
   }
 
   useEffect(() => {
@@ -89,7 +92,7 @@ export default function DetailMemberPage() {
       return;
     }
   }, [nim, router]);
-  
+
   return (
     <div>
       {loading ? (
@@ -104,17 +107,21 @@ export default function DetailMemberPage() {
                 <div className="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
                   <div className="rounded-lg w-28 h-28">
                     <img
-                      src={"http://103.187.147.80:8000" + profileUri}
+                      src={
+                        profileUri
+                          ? `${process.env.NEXT_PUBLIC_HOST}` + profileUri
+                          : LogoNotfound
+                      }
                       width={0}
                       height={0}
                       className="object-cover w-full h-full mb-4 rounded-lg sm:mb-0 xl:mb-4 2xl:mb-0"
-                      alt="profile"
+                      alt="Picture member CCI"
                     />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className={`w-3 h-3 rounded-full bg-green-500`} />
-                      <h3 className="mb-1 text-xl font-bold text-gray-900 ">
+                      <h3 className="mt-1 mb-1 text-xl font-bold text-gray-900 ">
                         {name}
                       </h3>
                     </div>
@@ -258,25 +265,25 @@ export default function DetailMemberPage() {
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                          id={"name"}
-                          name={"name"}
-                          type={"text"}
-                          value={(name) ? name : "None"}
-                          required 
-                          label={"Name"}
-                          disabled={true}
-                          readOnly={true}
-                        />
+                        id={"name"}
+                        name={"name"}
+                        type={"text"}
+                        value={(name) ? name : "None"}
+                        required
+                        label={"Name"}
+                        disabled={true}
+                        readOnly={true}
+                      />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <InputField
-                          id={"division"}
-                          name={"division"}
-                          type={"text"}
-                          value={(division) ? division.name : "None"}
-                          label={"Division"}
-                          disabled={true}
-                          readOnly={true}
+                        id={"division"}
+                        name={"division"}
+                        type={"text"}
+                        value={(division) ? division.name : "None"}
+                        label={"Division"}
+                        disabled={true}
+                        readOnly={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -323,9 +330,7 @@ export default function DetailMemberPage() {
                         id={"entryCommunity"}
                         name={"entryCommunity"}
                         type={"text"}
-                        value={moment(yearCommunityEnrolled).format(
-                          "D MMM YYYY"
-                        )}
+                        value={ yearCommunityEnrolled}
                         required
                         label={"Entry community"}
                         disabled={true}
@@ -375,4 +380,4 @@ export default function DetailMemberPage() {
       )}
     </div>
   );
-}
+};

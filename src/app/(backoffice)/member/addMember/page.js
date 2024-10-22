@@ -1,17 +1,16 @@
 'use client';
-import request from '@/app/utils/request';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import InputSelect from '@/components/form/inputSelect';
-import HeadTitle from '@/components/headTitle';
-import moment from 'moment';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { z } from "zod";
+import moment from 'moment';
 import toast from "react-hot-toast";
 
-import { z } from "zod";
+import request from '@/app/utils/request';
+import DefaultButton from '@/components/button/defaultButton';
+import InputSelect from '@/components/form/inputSelect';
+import InputField from '@/components/form/inputField';
+import HeadTitle from '@/components/headTitle';
 
-// Pagination Constants
 const LIMIT = 100;
 const PAGE = 1;
 
@@ -62,11 +61,12 @@ const formSchema = z.object({
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
     ),
-})
+});
+
 
 export default function AddMemberPage() {
   const router = useRouter();
-
+  
   const [nim, setNim] = useState('');
   const [roleId, setRoleId] = useState('');
   const [divisionId, setDivisionId] = useState('');
@@ -80,13 +80,11 @@ export default function AddMemberPage() {
   const [isActive, setIsActive] = useState(true);
   const [yearUniversityEnrolled, setYearUniversityEnrolled] = useState('');
   const [yearCommunityEnrolled, setYearCommunityEnrolled] = useState('');
-
   const [divisionDatas, setDivisionDatas] = useState([]);
   const [roleDatas, setRoleDatas] = useState();
-
+  
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
-  
 
   const fetchDivisions = async () => {
     const payload = {
@@ -119,7 +117,7 @@ export default function AddMemberPage() {
         setLoading(false);
     });
   }
-
+  
   const onSubmit = async (e) => {
     setValidations([]);
     setLoading(true);
@@ -150,8 +148,7 @@ export default function AddMemberPage() {
         })
         setLoading(false);
         toast.dismiss();
-        toast.error("Invalid Input.");
-        console.log(validations);
+        toast.error("Invalid Input");
         return;
       }
     } catch (error) {
@@ -171,9 +168,7 @@ export default function AddMemberPage() {
         yearUniversityEnrolled: moment(yearUniversityEnrolled).format(
           'DD-MM-YYYY'
         ),
-        yearCommunityEnrolled: moment(yearCommunityEnrolled).format(
-          'DD-MM-YYYY'
-        ),
+        yearCommunityEnrolled: yearCommunityEnrolled,
         profileUri: profileUri,
         password: password,
         isActive: isActive,
@@ -207,7 +202,7 @@ export default function AddMemberPage() {
   return (
     <div>
       <HeadTitle>
-        <div className=" mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
+        <div className="border border-gray-200 rounded-lg shadow-sm bg-4white mt- 2xl:col-span-2 sm:p-6">
           <form onSubmit={onSubmit}>
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-6 sm:col-span-3">
@@ -399,7 +394,6 @@ export default function AddMemberPage() {
                   type={'date'}
                   value={yearUniversityEnrolled}
                   required
-                  // label={'Entry University'}
                   label={'Entry university'}
                   onChange={(e) => {
                     setYearUniversityEnrolled(e.target.value);
@@ -407,18 +401,20 @@ export default function AddMemberPage() {
                 />
               </div>
               <div className="col-span-6 sm:col-span-3">
-                <InputField
+                <InputSelect
                   id={'entryCommunity'}
                   name={'entryCommunity'}
-                  type={'date'}
+                  label={'Entry community'}
                   value={yearCommunityEnrolled}
                   required
-                  // label={'Entry Community'}
-                  label={'Entry community'}
                   onChange={(e) => {
                     setYearCommunityEnrolled(e.target.value);
                   }}
-                />
+                >
+                  <option value={"5.0"}>5.0</option>
+                  <option value={"6.0"}>6.0</option>
+                  <option value={"7.0"}>7.0</option>
+                </InputSelect>
               </div>
               <div className="col-span-6 sm:col-full">
                 <DefaultButton
@@ -434,4 +430,4 @@ export default function AddMemberPage() {
       </HeadTitle>
     </div>
   );
-}
+};
