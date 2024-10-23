@@ -147,7 +147,8 @@ const MainLayout = ({ children }) => {
           </div>
         </div>
       </nav>
-
+      
+      {/* Sidebar area */}
       <aside
         id="logo-sidebar"
         className="fixed top-0 left-0 z-40 w-64 h-screen pt-[100px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 "
@@ -233,11 +234,12 @@ const MainLayout = ({ children }) => {
           </ul> */}
         </div>
       </aside>
-
+      
+      {/* UI Url path area*/}
       <div className="sm:ml-64">
         <div className="mt-20">
           <div className="items-center justify-between block px-4 py-4 bg-white sm:flex">
-            <div className="w-full mb-1">
+            <div className="w-full">
               <NextBreadcrumb
                 divisionId={divisionId}
                 projectId={projectId}
