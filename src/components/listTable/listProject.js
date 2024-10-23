@@ -39,7 +39,7 @@ const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fe
 
   return (
     <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      className="text-gray-700 bg-white border-b cursor-pointer hover:bg-gray-50"
       onClick={() => {
         router.push(`/project/detailProject?id=${id}`);
       }}
@@ -49,34 +49,34 @@ const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fe
           <input
             id="checkbox-table-search-2"
             type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  "
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 "
           />
           <label htmlFor="checkbox-table-search-2" className="sr-only">
             checkbox
           </label>
         </div>
       </td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">
         <div className="w-10 h-10 rounded-full">
           <img
-            src={`https://103-31-38-146.sslip.io${iconUri}`}
+            src={`${process.env.NEXT_PUBLIC_HOST}` + iconUri}
             width={0}
             height={0}
-            className="w-full h-full object-cover rounded-full"
+            className="object-cover w-full h-full rounded-full"
             alt="profile"
           />
         </div>
       </td>
-      <td className="text-xs font-medium px-6 py-4">
-       <div className="flex gap-2 items-center">
+      <td className="px-6 py-4 text-xs font-medium">
+       <div className="flex items-center gap-2">
         {name}
         </div>
       </td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">
         {formatDescription(description)}
       </td>
-      <td className="text-xs font-medium px-6 py-4">{currency(budget)}</td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">{currency(budget)}</td>
+      <td className="px-6 py-4 text-xs font-medium">
         <p
           onClick={(e) => {
             e.stopPropagation();
@@ -87,7 +87,7 @@ const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fe
           {productionUrl}
         </p>
       </td>
-      <td className="text-xs font-medium px-6 py-4 flex gap-3">
+      <td className="flex gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();

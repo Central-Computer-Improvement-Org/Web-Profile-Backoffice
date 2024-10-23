@@ -241,7 +241,6 @@ export default function EditProjectPage() {
     request
       .patch(`/cms/projects?id=${id}`, requestBody)
       .then(function (response) {
-        console.log(response);
         if (response.data?.code === 200 || response.data?.code === 201) {
           toast.dismiss();
           toast.success(response.data.data.message);
@@ -272,7 +271,7 @@ export default function EditProjectPage() {
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="sm:col-span-6">
                   <InputField
                     id={"Name"}
