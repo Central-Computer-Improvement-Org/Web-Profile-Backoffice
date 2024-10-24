@@ -7,10 +7,9 @@ import { useDebounce } from 'use-debounce';
 import { IoIosSearch } from "react-icons/io";
 
 import { StateContext } from "@/app/(backoffice)/state";
+import InputField from "@/components/form/inputField";
 import Pagination from "@/components/pagination";
 import request from "@/app/utils/request";
-import InputField from "@/components/form/inputField";
-import DefaultLink from "@/components/link/defaultLink";
 
 // Sorting Constants
 const ORDERING = 'name';
@@ -24,6 +23,7 @@ function DetailAwardPage() {
   const router = useRouter();
   const id = searchParams.get("id");
   const page = searchParams.get('page') ?? '1';
+  
   const [title, setTitle] = useState("");
   const [issuer, setIssuer] = useState("");
   const [description, setDescription] = useState("");
@@ -32,6 +32,7 @@ function DetailAwardPage() {
   const [recordsTotal, setRecordsTotal] = useState(0);
   const [debounceValue] = useDebounce(searchQuery, 500);
   const { setAwardName, setAwardId } = useContext(StateContext);
+  
   const [loading, setLoading] = useState(true);
 
   const fetchAward = useCallback(async () => {
@@ -117,19 +118,19 @@ function DetailAwardPage() {
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Issuer Award</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {issuer}
+                    {issuer || "Not found"}
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Title Award</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {title}
+                    {title || "Not found"}
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Description</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {description}
+                    {description || "Not found"}
                   </p>
                 </div>
               </div>
@@ -175,8 +176,8 @@ function DetailAwardPage() {
                             <div className="w-24 h-24 mb-3 rounded-full shadow-lg">
                               <img
                                 className="object-cover w-24 h-24 rounded-full"
-                                src={"https://kevinid.pythonanywhere.com" +data.profileUri}
-                                alt="Bonnie image"
+                                src={`${process.env.NEXT_PUBLIC_HOST}` + data.profileUri}
+                                alt="Profile Picture User"
                               />
                             </div>
                           ) : (
@@ -209,6 +210,6 @@ function DetailAwardPage() {
       )}
     </div>
   );
-}
+};
 
 export default DetailAwardPage;

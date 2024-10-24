@@ -1,20 +1,17 @@
 'use client';
-
 import React, { useEffect, useState, useCallback } from 'react';
-import ListAward from '@/components/listTable/listAward';
-import InputField from '@/components/form/inputField';
-
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useDebounce } from 'use-debounce';
 import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
-import DefaultLink from '@/components/link/defaultLink';
-import HeadTitle from '@/components/headTitle';
-import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
+import DefaultTable from '@/components/table/defaultTable';
+import ListAward from '@/components/listTable/listAward';
+import DefaultLink from '@/components/link/defaultLink';
+import InputField from '@/components/form/inputField';
 import Pagination from '@/components/pagination';
-
-import { useDebounce } from 'use-debounce';
-import { useSearchParams, useRouter } from 'next/navigation';
+import HeadTitle from '@/components/headTitle';
 
 // Sorting Constants
 const ORDERING = 'updatedAt';
@@ -23,19 +20,16 @@ const SORT = 'desc';
 // Pagination Constants
 const LIMIT = 10;
 
+
 export default function AwardPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const page = searchParams.get('page') ?? '1';
 
   const [searchQuery, setSearchQuery] = useState('');
-
   const [search, setSearch] = useState('');
   const [awardDatas, setAwardDatas] = useState([]);
-
   const [recordsTotal, setRecordsTotal] = useState(0);
-
   const [debounceValue] = useDebounce(searchQuery, 500);
 
   const [loading, setLoading] = useState(true);
@@ -49,28 +43,28 @@ export default function AwardPage() {
 
   const fetchAwards = useCallback(async () => {
     const payload = {
-       search: debounceValue,
-       page: page,
-       limit: LIMIT,
-       ordering: ORDERING,
-       sort: SORT,
-     };
-     request
-       .get(`/cms/awards`, payload)
-       .then(function (response) {
-         setAwardDatas(response.data.data);
-         setRecordsTotal(response.data.recordsTotal);
-         setLoading(false);
-       })
-       .catch(function (error) {
-         console.log(error);
-         setLoading(false);
-       });
- }, [debounceValue, page]);
+      search: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
+    request
+      .get(`/cms/awards`, payload)
+      .then(function (response) {
+        setAwardDatas(response.data.data);
+        setRecordsTotal(response.data.recordsTotal);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [debounceValue, page]);
 
   useEffect(() => {
     if (page < 1) {
-      router.push('/project?page=1');
+      router.push('/award?page=1');
     } else {
       fetchAwards();
     }
@@ -78,12 +72,11 @@ export default function AwardPage() {
 
   useEffect(() => {
     if (debounceValue !== '') {
-      router.push('/project?page=1');
+      router.push('/award?page=1');
     } else {
       fetchAwards();
     }
   }, [debounceValue, fetchAwards, router]);
-
 
   return (
     <div>
@@ -128,7 +121,7 @@ export default function AwardPage() {
             {awardDatas.map(
               (
                 data,
-                index // Ubah 'awardDatas' menjadi 'data' untuk setiap iterasi
+                index
               ) => (
                 <ListAward
                   key={index}
@@ -146,4 +139,4 @@ export default function AwardPage() {
       )}
     </div>
   );
-}
+};

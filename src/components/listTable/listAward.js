@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {toast} from 'react-hot-toast';
+
+import request from '@/app/utils/request';
 import { formatDescription } from '@/app/utils/stringUtils';
 import DefaultButton from '../button/defaultButton';
-import { useRouter } from 'next/navigation';
-import request from '@/app/utils/request';
 
-import {toast} from 'react-hot-toast';
 
 const ListAward = ({ issuer, title, description, id, fetchData }) => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
   
   return (
     <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      className="text-gray-700 bg-white border-b cursor-pointer hover:bg-gray-50"
       onClick={() => {
         router.push(`/award/detailAward?id=${id}`);
       }}
@@ -50,7 +51,7 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
           <input
             id="checkbox-table-search-2"
             type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  "
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 "
           />
           <label htmlFor="checkbox-table-search-2" className="sr-only">
             checkbox
@@ -58,12 +59,12 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
         </div>
       </td>
 
-      <td className="text-xs font-medium px-6 py-4">{issuer}</td>
-      <td className="text-xs font-medium px-6 py-4">{title}</td>
-      <td className="text-xs font-medium px-6 py-4">
+      <td className="px-6 py-4 text-xs font-medium">{issuer}</td>
+      <td className="px-6 py-4 text-xs font-medium">{title}</td>
+      <td className="px-6 py-4 text-xs font-medium">
         {formatDescription(description)}
       </td>
-      <td className="text-xs font-medium px-6 py-4 flex gap-3">
+      <td className="flex justify-end gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();
