@@ -89,7 +89,7 @@ export default function Page() {
           <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0">
             <form className="lg:pr-3" action="#" method="GET">
               <label htmlFor="users-search" className="sr-only">
-                Search6
+                Search
               </label>
               <div className="relative mt-1 lg:w-64 xl:w-96">
                 <InputField

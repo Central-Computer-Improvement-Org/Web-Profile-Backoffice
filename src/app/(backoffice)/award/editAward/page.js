@@ -1,16 +1,15 @@
 'use client';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import TextareaField from '@/components/form/textareaField';
-import HeadTitle from '@/components/headTitle';
-import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useCallback } from 'react';
-import InputMultipleSelect from '@/components/form/inputMultipleSelect';
-import request from '@/app/utils/request';
-
+import { useSearchParams, useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-
 import { set, z } from "zod";
+
+import request from '@/app/utils/request';
+import InputMultipleSelect from '@/components/form/inputMultipleSelect';
+import DefaultButton from '@/components/button/defaultButton';
+import TextareaField from '@/components/form/textareaField';
+import InputField from '@/components/form/inputField';
+import HeadTitle from '@/components/headTitle';
 
 // Sorting Constants
 const ORDERING = 'name';
@@ -23,22 +22,23 @@ const page = 1;
 const formSchema = z.object({
   issuer: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long."})
-    .max(30, { message: "Name must be at most 30 characters long."}),
+    .min(3, { message: "Name must be at least 3 characters long." })
+    .max(30, { message: "Name must be at most 30 characters long." }),
   title: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long."})
-    .max(30, { message: "Name must be at most 30 characters long."}),
+    .min(3, { message: "Name must be at least 3 characters long." })
+    .max(30, { message: "Name must be at most 30 characters long." }),
   description: z
     .string()
-    .min(3, { message: "Description must be at least 3 characters long."})
-    .max(255, { message: "Description must be at most 255 characters long."}),
+    .min(3, { message: "Description must be at least 3 characters long." })
+    .max(255, { message: "Description must be at most 255 characters long." }),
   contributors: z
     .array(z
       .number()
     )
-    .min(1, { message: "Contributor must be at least 1."}),
+    .min(1, { message: "Contributor must be at least 1." }),
 })
+
 
 export default function EditAwardPage() {
   const searchParams = useSearchParams();
@@ -49,10 +49,9 @@ export default function EditAwardPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [contributor, setContributor] = useState([]);
-
   const [membersData, setMembersData] = useState([]);
-  const [validations, setValidations] = useState([]);
 
+  const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchMembers = useCallback(async () => {
@@ -76,8 +75,6 @@ export default function EditAwardPage() {
         setLoading(false);
       });
   }, []);
-
-  console.log(validations)
 
   const fetchData = useCallback(async () => {
     const payload = {
@@ -110,7 +107,7 @@ export default function EditAwardPage() {
     }
     fetchData();
     fetchMembers();
-    
+
   }, [id, router, fetchData, fetchMembers]);
 
   const onSubmit = async (e) => {
@@ -141,7 +138,7 @@ export default function EditAwardPage() {
         setLoading(false);
         toast.dismiss();
         toast.error("Invalid Input.");
-        return; 
+        return;
       }
     } catch (error) {
       setLoading(false);
@@ -153,11 +150,10 @@ export default function EditAwardPage() {
     requestBody.contributors = JSON.stringify(requestBody.contributors)
 
     request
-      .patch(`/cms/awards?id=${id}`, 
+      .patch(`/cms/awards?id=${id}`,
         requestBody
       )
       .then(function (response) {
-        console.log(response);
         if (response.data?.code === 200 || response.data?.code === 201) {
           toast.dismiss();
           toast.success(response.data.data.message);
@@ -166,7 +162,7 @@ export default function EditAwardPage() {
           setValidations(response.response.data.error.validation);
           toast.dismiss();
           toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500 ) {
+        } else if (response.response.data.code === 500) {
           console.error("INTERNAL_SERVER_ERROR")
           toast.dismiss();
           toast.error(response.response.data.error.message);
@@ -183,7 +179,7 @@ export default function EditAwardPage() {
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="sm:col-span-6">
                   <InputField
                     id={'issuer'}
@@ -234,10 +230,9 @@ export default function EditAwardPage() {
                     label={'Contributor'}
                     name={'contributors'}
                     value={contributor}
-                    
                     validations={validations}
                     onChange={(selectedOptions) => {
-                        setContributor(selectedOptions);
+                      setContributor(selectedOptions);
                     }}
                     option={membersData}
                   />
@@ -257,4 +252,4 @@ export default function EditAwardPage() {
       </HeadTitle>
     </div>
   );
-}
+};
