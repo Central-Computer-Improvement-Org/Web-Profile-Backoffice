@@ -30,25 +30,25 @@ const page = 1;
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(255, { message: "Name must be at most 255 characters long." }),
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(255, { message: "Name must be at most 255 characters long" }),
   description: z
     .string()
-    .min(3, { message: "Description must be at least 3 characters long." })
-    .max(255, { message: "Description must be at most 255 characters long." }),
+    .min(3, { message: "Description must be at least 3 characters long" })
+    .max(255, { message: "Description must be at most 255 characters long" }),
   productionUri: z
     .string()
-    .url({ message: "Production Uri must be a valid Uri." }),
+    .url({ message: "Production Uri must be a valid Uri" }),
   repositoryUri: z
     .string()
-    .url({ message: "Repository Uri must be a valid Uri." }),
-  budget: z.number().min(0, { message: "Budget must be at least 0." }),
+    .url({ message: "Repository Uri must be a valid Uri" }),
+  budget: z.number().min(0, { message: "Budget must be at least 0" }),
   contributor: z
     .array(z.number())
-    .min(1, { message: "Contributor must be at least 1." }),
+    .min(1, { message: "Contributor must be at least 1" }),
   divisions: z
     .array(z.string())
-    .min(1, { message: "Division must be at least 1." }),
+    .min(1, { message: "Division must be at least 1" }),
   imageUri: z
     .any()
     .refine(
@@ -57,7 +57,7 @@ const formSchema = z.object({
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
     ),
   iconUri: z
     .any()
@@ -67,7 +67,7 @@ const formSchema = z.object({
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
     ),
 });
 

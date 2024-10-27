@@ -24,29 +24,30 @@ const ListEvent = ({
   const [loading, setLoading] = useState(false);
 
   const onDelete = async (e) => {
+    e.preventDefault();
     setLoading(true);
     toast.loading("Deleting data...");
-    e.preventDefault();
 
     request.delete(`/cms/events?id=${id}`).then(function (response) {
-      if (response.data?.code === 200 || response.data?.code === 201) {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
         toast.dismiss();
-        toast.success(response.data.data.message);
+        toast.success(data?.message);
+        router.push('/event');
         fetchData();
-      } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == "NOT_FOUND"
-      ) {
+      } else {
+        const formattedStatus = status
+          .split('_')
+          .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
         toast.dismiss();
-        toast.error("Event not found");
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
       }
       setLoading(false);
     });
   };
-
+  
   return (
     <tr
       className="text-gray-700 bg-white border-b cursor-pointer hover:bg-gray-50"
@@ -68,13 +69,13 @@ const ListEvent = ({
       </td>
       <td className="px-6 py-4 text-xs font-medium">{name}</td>
       <td className="px-6 py-4 text-xs font-medium">
-        {division ? division.name : "None"}
+        {division ? division?.name : "No division found"}
       </td>
       <td className="px-6 py-4 text-xs font-medium">
-        {formatDescription(description)}
+        {description ? formatDescription(description) : "No description found"}
       </td>
       <td className="px-6 py-4 text-xs font-medium">
-        {moment(heldOn).format("MMM YYYY")}
+        {moment ? moment(heldOn).format("DD MMMM YYYY") : "No date found"}
       </td>
       <td className="px-6 py-4 text-xs font-medium">{currency(budget)}</td>
       <td className="px-6 py-4 text-xs font-normal">

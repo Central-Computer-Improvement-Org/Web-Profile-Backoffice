@@ -1,20 +1,17 @@
 'use client';
-
 import React, { useEffect, useState, useCallback } from 'react';
-import InputField from '@/components/form/inputField';
-
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useDebounce } from 'use-debounce';
 import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
-import DefaultLink from '@/components/link/defaultLink';
-import HeadTitle from '@/components/headTitle';
-import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
-import Pagination from '@/components/pagination';
 import ListProject from '@/components/listTable/listProject';
-
-import { useDebounce } from 'use-debounce';
-import { useSearchParams, useRouter } from 'next/navigation';
+import DefaultTable from '@/components/table/defaultTable';
+import DefaultLink from '@/components/link/defaultLink';
+import InputField from '@/components/form/inputField';
+import Pagination from '@/components/pagination';
+import HeadTitle from '@/components/headTitle';
 
 // Sorting Constants
 const ORDERING = 'updatedAt';
@@ -28,16 +25,12 @@ export default function ProjectPage() {
    const router = useRouter();
 
    const page = searchParams.get('page') ?? '1';
-
    const [searchQuery, setSearchQuery] = useState('');
    const [projectDatas, setProjectDatas] = useState([]);
-
    const [recordsTotal, setRecordsTotal] = useState(0);
-
    const [debounceValue] = useDebounce(searchQuery, 500);
-
    const [loading, setLoading] = useState(true);
-   
+
    const rowMenu = [
       { menu: 'ICON' },
       { menu: 'TITLE' },
@@ -54,35 +47,36 @@ export default function ProjectPage() {
          limit: LIMIT,
          ordering: ORDERING,
          sort: SORT,
-       };
-       request
+      };
+      request
          .get(`/cms/projects`, payload)
          .then(function (response) {
-           setProjectDatas(response.data.data);
-           setRecordsTotal(response.data.recordsTotal);
-           setLoading(false);
+            setProjectDatas(response.data.data);
+            setRecordsTotal(response.data.recordsTotal);
+            setLoading(false);
          })
          .catch(function (error) {
-           console.log(error);
-           setLoading(false);
+            console.log(error);
+            setLoading(false);
          });
    }, [debounceValue, page]);
 
    useEffect(() => {
-    if (page < 1) {
-      router.push('/project?page=1');
-    } else {
-      fetchProjects();
-    }
-  }, [page, fetchProjects, router]);
+      if (page < 1) {
+         router.push('/project?page=1');
+      } else {
+         fetchProjects();
+      }
+   }, [page, fetchProjects, router]);
 
-  useEffect(() => {
-    if (debounceValue !== '') {
-      router.push('/project?page=1');
-    } else {
-      fetchProjects();
-    }
-  }, [debounceValue, fetchProjects, router]);
+   useEffect(() => {
+      if (debounceValue !== '') {
+         router.push('/project?page=1');
+      } else {
+         fetchProjects();
+      }
+   }, [debounceValue, fetchProjects, router]);
+   
    return (
       <div>
          <HeadTitle>
@@ -96,8 +90,8 @@ export default function ProjectPage() {
                         <InputField
                            id={'search'}
                            name={'search'}
-                           placeholder={'Search for project'}
                            type={'text'}
+                           placeholder={'Search for project'}
                            value={searchQuery}
                            onChange={(e) => {
                               setSearchQuery(e.target.value);
@@ -141,4 +135,4 @@ export default function ProjectPage() {
          )}
       </div>
    );
-}
+};

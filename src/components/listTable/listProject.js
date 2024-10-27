@@ -1,37 +1,40 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useState } from 'react';
-import { formatDescription } from '@/app/utils/stringUtils';
-import DefaultButton from '../button/defaultButton';
 import { useRouter } from 'next/navigation';
-import { currency } from '@/app/utils/numberFormat';
-import request from '@/app/utils/request';
+import { toast } from 'react-hot-toast';
 
-import {toast} from 'react-hot-toast';
+import request from '@/app/utils/request';
+import { formatDescription } from '@/app/utils/stringUtils';
+import { currency } from '@/app/utils/numberFormat';
+import DefaultButton from '../button/defaultButton';
+import LogoNotfound from '/public/assets/icon/notfound.svg';
+
 
 const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fetchData }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const onDelete = async (e) => {
+    e.preventDefault();
     setLoading(true);
     toast.loading('Deleting data...');
-    e.preventDefault();
 
     request.delete(`/cms/projects?id=${id}`).then(function (response) {
-      if (response.data?.code === 200 || response.data?.code === 201) {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
         toast.dismiss();
-        toast.success(response.data.data.message);
+        toast.success(data?.message);
+        router.push('/project');
         fetchData();
-      } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == 'NOT_FOUND'
-      ) {
+      } else {
+        const formattedStatus = status
+          .split('_')
+          .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
         toast.dismiss();
-        toast.error('Project not found.');
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
       }
       setLoading(false);
     });
@@ -59,17 +62,21 @@ const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fe
       <td className="px-6 py-4 text-xs font-medium">
         <div className="w-10 h-10 rounded-full">
           <img
-            src={`${process.env.NEXT_PUBLIC_HOST}` + iconUri}
+            src={
+              iconUri
+                ? `${process.env.NEXT_PUBLIC_HOST}` + iconUri
+                : LogoNotfound.src
+            }
             width={0}
             height={0}
             className="object-cover w-full h-full rounded-full"
-            alt="profile"
+            alt="Project Icon"
           />
         </div>
       </td>
       <td className="px-6 py-4 text-xs font-medium">
-       <div className="flex items-center gap-2">
-        {name}
+        <div className="flex items-center gap-2">
+          {name ? name : 'Not found'}
         </div>
       </td>
       <td className="px-6 py-4 text-xs font-medium">
@@ -84,10 +91,10 @@ const ListProject = ({ name, iconUri, description, productionUrl, budget, id, fe
           }}
           className="text-blue-600 underline cursor-pointer"
         >
-          {productionUrl}
+          {productionUrl ? productionUrl : 'Not found'}
         </p>
       </td>
-      <td className="flex gap-3 px-6 py-4 text-xs font-medium">
+      <td className="flex justify-end gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
@@ -20,25 +20,30 @@ const ListContact = ({
   fetchData,
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  
   const onDelete = async (e) => {
-    toast.loading('Deleting data...');
     e.preventDefault();
+    toast.loading('Deleting data...');
 
     request.delete(`/cms/contact?id=${id}`).then(function (response) {
-      if (response.data?.code === 200 || response.data?.code === 201) {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
         toast.dismiss();
-        toast.success(response.data.data.message);
+        toast.success(data?.message);
+        router.push('/contact');
         fetchData();
-      } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == 'NOT_FOUND'
-      ) {
+      } else {
+        const formattedStatus = status
+          .split('_')
+          .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+          
         toast.dismiss();
-        toast.error('Division not found.');
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
       }
+      setLoading(false);
     });
   };
 
@@ -65,7 +70,7 @@ const ListContact = ({
             src={
               iconUri
                 ? `${process.env.NEXT_PUBLIC_HOST}` + iconUri
-                : LogoNotfound
+                : LogoNotfound.src
             }
             width={100}
             height={100}
@@ -74,12 +79,12 @@ const ListContact = ({
           />
         </div>
       </th>
-      <td className="px-6 py-4 text-xs font-medium">{platform}</td>
-      <td className="px-6 py-4 text-xs font-medium">{name}</td>
+      <td className="px-6 py-4 text-xs font-medium">{platform ? platform : 'Platform not found'}</td>
+      <td className="px-6 py-4 text-xs font-medium">{name ? name : 'Name not found'}</td>
       <td className="px-6 py-4 text-xs font-medium">
         {status ? 'Active' : 'InActive'}
       </td>
-      <td className="flex gap-3 px-6 py-4 text-xs font-medium">
+      <td className="flex justify-end gap-3 px-6 py-4 text-xs font-medium">
         <DefaultLink
           href={accountUri}
           size={'small'}

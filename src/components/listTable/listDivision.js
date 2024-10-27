@@ -21,29 +21,30 @@ const ListDivision = ({
   const [loading, setLoading] = useState(false);
 
   const onDelete = async (e) => {
+    e.preventDefault();
     setLoading(true);
     toast.loading("Deleting data...");
-    e.preventDefault();
 
     request
-      .delete(`/cms/users/divisions?id=${id}`)
-      .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          fetchData();
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          toast.dismiss();
-          toast.error("Division cannot be deleted");
-        } else if (response.response.data.code === 404 && response.response.data.status == "NOT_FOUND") {
-          toast.dismiss();
-          toast.error("Division not found");
-        } else if (response.response.data.code === 500) {
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        }
-        setLoading(false);
-      });
+    .delete(`/cms/users/divisions?id=${id}`)
+    .then(function (response) {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
+        toast.dismiss();
+        toast.success(data?.message);
+        router.push('/division');
+        fetchData();  
+      } else {
+        const formattedStatus = status
+          .split('_')
+          .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+        toast.dismiss();
+        toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+      }
+      setLoading(false);
+    });  
   }
 
   return (
@@ -81,9 +82,11 @@ const ListDivision = ({
         </div>
       </th>
       <td className="px-6 py-4 text-xs font-medium">
-        {formatDescription(description)}
+        {
+          description ? formatDescription(description) : "No description found"
+        }
       </td>
-      <td className="flex gap-3 px-6 py-4 text-xs font-medium">
+      <td className="flex justify-end gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();

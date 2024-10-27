@@ -27,11 +27,9 @@ export default function AwardPage() {
   const page = searchParams.get('page') ?? '1';
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [search, setSearch] = useState('');
   const [awardDatas, setAwardDatas] = useState([]);
   const [recordsTotal, setRecordsTotal] = useState(0);
   const [debounceValue] = useDebounce(searchQuery, 500);
-
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
@@ -49,17 +47,16 @@ export default function AwardPage() {
       ordering: ORDERING,
       sort: SORT,
     };
-    request
-      .get(`/cms/awards`, payload)
-      .then(function (response) {
-        setAwardDatas(response.data.data);
-        setRecordsTotal(response.data.recordsTotal);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
+    request.get(`/cms/awards`, payload)
+    .then(function (response) {
+      setAwardDatas(response.data.data);
+      setRecordsTotal(response.data.recordsTotal);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.error(error);
+      setLoading(false);
+    });
   }, [debounceValue, page]);
 
   useEffect(() => {
@@ -91,8 +88,8 @@ export default function AwardPage() {
                 <InputField
                   id={'search'}
                   name={'search'}
-                  placeholder={'Search for Award'}
                   type={'text'}
+                  placeholder={'Search for Award'}
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);

@@ -22,21 +22,21 @@ const page = 1;
 const formSchema = z.object({
   issuer: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(30, { message: "Name must be at most 30 characters long." }),
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(30, { message: "Name must be at most 30 characters long" }),
   title: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(30, { message: "Name must be at most 30 characters long." }),
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(30, { message: "Name must be at most 30 characters long" }),
   description: z
     .string()
-    .min(3, { message: "Description must be at least 3 characters long." })
-    .max(255, { message: "Description must be at most 255 characters long." }),
+    .min(3, { message: "Description must be at least 3 characters long" })
+    .max(255, { message: "Description must be at most 255 characters long" }),
   contributors: z
     .array(z
       .number()
     )
-    .min(1, { message: "Contributor must be at least 1." }),
+    .min(1, { message: "Contributor must be at least 1" }),
 })
 
 
@@ -50,7 +50,6 @@ export default function EditAwardPage() {
   const [description, setDescription] = useState('');
   const [contributor, setContributor] = useState([]);
   const [membersData, setMembersData] = useState([]);
-
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -61,19 +60,18 @@ export default function EditAwardPage() {
       ordering: ORDERING,
       sort: SORT,
     };
-    request
-      .get('/cms/users', payload)
-      .then(function (response) {
-        setMembersData(response.data.data.map((data) => ({
-          value: data.nim,
-          label: `${data.nim} - ${data.name}`,
-        })));
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
+    request.get('/cms/users', payload)
+    .then(function (response) {
+      setMembersData(response.data.data.map((data) => ({
+        value: data.nim,
+        label: `${data.nim} - ${data.name}`,
+      })));
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.error("Error :", error);
+      setLoading(false);
+    });
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -84,7 +82,6 @@ export default function EditAwardPage() {
       .get('/cms/awards', payload)
       .then(function (response) {
         const data = response.data.data;
-
         setIssuer(data.issuer);
         setTitle(data.title);
         setDescription(data.description);
@@ -95,7 +92,7 @@ export default function EditAwardPage() {
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error("Error validation :", error);
         setLoading(false);
       });
   }, [id]);
@@ -111,10 +108,10 @@ export default function EditAwardPage() {
   }, [id, router, fetchData, fetchMembers]);
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     setValidations([]);
     setLoading(true);
-    toast.loading("Saving data...");
-    e.preventDefault();
+    toast.loading("Updating data...");
 
     const requestBody = {
       issuer: issuer,
@@ -126,49 +123,47 @@ export default function EditAwardPage() {
     try {
       const validation = formSchema.safeParse(requestBody);
       if (!validation.success) {
-        validation.error.errors.map((validation) => {
-          const key = [
-            {
-              name: validation.path[0],
-              message: validation.message,
-            },
-          ];
-          setValidations(validations => [...validations, ...key]);
-        })
-        setLoading(false);
+        setValidations(validation.error.errors.map(error => ({
+          name: error.path[0],
+          message: error.message
+        })));
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error("Invalid Input");
+        setLoading(false);
         return;
       }
     } catch (error) {
-      setLoading(false);
       toast.dismiss();
-      toast.error("Something went wrong!");
-      console.error(error);
+      toast.error(error.message);
+      setLoading(false);
+      return;
     }
 
-    requestBody.contributors = JSON.stringify(requestBody.contributors)
-
-    request
-      .patch(`/cms/awards?id=${id}`,
-        requestBody
-      )
-      .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
+    requestBody.contributors = JSON.stringify(requestBody.contributors);
+    
+    request.patch(`/cms/awards?id=${id}`, requestBody)
+    .then(function (response) {
+      const { code, status, data, error } = response.data;
+  
+      if (code === 200 || code === 201) {
           toast.dismiss();
-          toast.success(response.data.data.message);
-          router.push('/award');
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
+          toast.success(data?.message);
+          router.push("/award");
+      } else {
+          const formattedStatus = status
+            .split('_')
+            .map(res => res[0].toUpperCase() + res.slice(1).toLowerCase())
+            .join(' ');
+          setValidations(error?.validation);
           toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500) {
-          console.error("INTERNAL_SERVER_ERROR")
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        }
-        setLoading(false);
-      })
+          toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+      };
+      setLoading(false);
+    }).catch(function (error) {
+      toast.dismiss();
+      toast.error(error?.message);
+      setLoading(false);
+    });
   }
 
   return (
@@ -184,12 +179,12 @@ export default function EditAwardPage() {
                   <InputField
                     id={'issuer'}
                     name={'issuer'}
-                    placeholder={'e.g Gemastik'}
                     type={'text'}
+                    placeholder={'e.g Gemastik'}
+                    label={'Issuer'}
                     value={issuer}
                     validations={validations}
                     required
-                    label={'Issuer'}
                     onChange={(e) => {
                       setIssuer(e.target.value);
                     }}
@@ -199,12 +194,12 @@ export default function EditAwardPage() {
                   <InputField
                     id={'title'}
                     name={'title'}
-                    placeholder={'e.g Gemastik'}
                     type={'text'}
+                    placeholder={'e.g Gemastik'}
+                    label={'Title'}
                     value={title}
                     validations={validations}
                     required
-                    label={'Title'}
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
@@ -215,10 +210,10 @@ export default function EditAwardPage() {
                     id={'description'}
                     name={'description'}
                     placeholder={'e.g Description ...'}
+                    label={'Description'}
                     value={description}
                     validations={validations}
                     required
-                    label={'Description'}
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
@@ -227,8 +222,8 @@ export default function EditAwardPage() {
                 <div className="sm:col-span-6">
                   <InputMultipleSelect
                     id={'contributor'}
-                    label={'Contributor'}
                     name={'contributors'}
+                    label={'Contributor'}
                     value={contributor}
                     validations={validations}
                     onChange={(selectedOptions) => {

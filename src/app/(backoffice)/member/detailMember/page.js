@@ -5,18 +5,14 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import moment from "moment";
-import { MdEmail } from "react-icons/md";
-import { FaLinkedin } from "react-icons/fa";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
+import { FaLinkedin } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 import { StateContext } from "@/app/(backoffice)/state";
 import request from "@/app/utils/request";
 import InputField from "@/components/form/inputField";
 import LogoNotfound from '/public/assets/icon/notfound.svg';
-// import DefaultButton from "@/components/button/defaultButton";
-// import InputSelect from "@/components/form/inputSelect";
-// import DefaultLink from "@/components/link/defaultLink";
-// import Image from "next/image";
 
 
 export default function DetailMemberPage() {
@@ -76,11 +72,11 @@ export default function DetailMemberPage() {
         // GUNAKAN INI JIKA INGIN MENAMPILKAN AWARD DAN PROJECT
         // setAward(data.awards);
         // setProject(data.projects);
-        setLoading(false); // Setelah data dimuat, atur loading menjadi false
+        setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
-        setLoading(false); // Jika terjadi kesalahan, tetap atur loading menjadi false
+        console.error(error);
+        setLoading(false);
       }
       );
   }
@@ -110,7 +106,7 @@ export default function DetailMemberPage() {
                       src={
                         profileUri
                           ? `${process.env.NEXT_PUBLIC_HOST}` + profileUri
-                          : LogoNotfound
+                          : LogoNotfound.src
                       }
                       width={0}
                       height={0}
@@ -246,10 +242,10 @@ export default function DetailMemberPage() {
                         id={"nim"}
                         name={"nim"}
                         type={"text"}
-                        value={nim}
                         label={"NIM"}
                         disabled={true}
                         readOnly={true}
+                        value={nim}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -257,10 +253,10 @@ export default function DetailMemberPage() {
                         id={"role"}
                         name={"role"}
                         type={"text"}
-                        value={(role) ? role.name : "None"}
                         label={"Role"}
                         disabled={true}
                         readOnly={true}
+                        value={(role) ? role.name : "None"}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -269,10 +265,10 @@ export default function DetailMemberPage() {
                         name={"name"}
                         type={"text"}
                         value={(name) ? name : "None"}
-                        required
                         label={"Name"}
                         disabled={true}
                         readOnly={true}
+                        required
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -280,10 +276,10 @@ export default function DetailMemberPage() {
                         id={"division"}
                         name={"division"}
                         type={"text"}
-                        value={(division) ? division.name : "None"}
                         label={"Division"}
                         disabled={true}
                         readOnly={true}
+                        value={(division) ? division.name : "None"}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -293,10 +289,10 @@ export default function DetailMemberPage() {
                         placeholder={"e.g. S1 Informatika"}
                         type={"text"}
                         value={(major) ? major : "None"}
-                        required
                         label={"Major"}
                         disabled={true}
                         readOnly={true}
+                        required
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -304,11 +300,11 @@ export default function DetailMemberPage() {
                         id={"phoneNumber"}
                         name={"phoneNumber"}
                         type={"text"}
-                        value={(phoneNumber) ? phoneNumber : "None"}
-                        required
                         label={"Phone number"}
+                        value={(phoneNumber) ? phoneNumber : "None"}
                         disabled={true}
                         readOnly={true}
+                        required
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -316,13 +312,13 @@ export default function DetailMemberPage() {
                         id={"entryUniversity"}
                         name={"entryUniversity"}
                         type={"text"}
+                        label={"Entry university"}
                         value={moment(yearUniversityEnrolled).format(
                           "D MMM YYYY"
                         )}
-                        required
-                        label={"Entry university"}
                         disabled={true}
                         readOnly={true}
+                        required
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -330,11 +326,11 @@ export default function DetailMemberPage() {
                         id={"entryCommunity"}
                         name={"entryCommunity"}
                         type={"text"}
-                        value={ yearCommunityEnrolled}
-                        required
                         label={"Entry community"}
+                        value={ yearCommunityEnrolled}
                         disabled={true}
                         readOnly={true}
+                        required
                       />
                     </div>
                   </div>

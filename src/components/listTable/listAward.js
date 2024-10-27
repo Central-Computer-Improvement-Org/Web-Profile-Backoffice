@@ -14,27 +14,27 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
   const [loading, setLoading] = useState(false);
 
   const onDelete = async (e) => {
+    e.preventDefault();
     setLoading(true);
     toast.loading('Deleting data...');
-    e.preventDefault();
 
-    request
-      .delete(`/cms/awards?id=${id}`)
-      .then(function (response) {
-      if (response.data?.code === 200 || response.data?.code === 201) {
-        toast.dismiss();
-        toast.success(response.data.data.message);
-        fetchData();
-      } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == 'NOT_FOUND'
-      ) {
-        toast.dismiss();
-        toast.error('Award not found.');
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
-      }
+    request.delete(`/cms/awards?id=${id}`).then(function (response) {
+      const { code, status, data, error } = response.data;
+  
+      if (code === 200 || code === 201) {
+          toast.dismiss();
+          toast.success(data?.message);
+          router.push("/award");
+          fetchData();
+      } else {
+          const formattedStatus = status
+            .split('_')
+            .map(res => res[0].toUpperCase() + res.slice(1).toLowerCase())
+            .join(' ');
+          setValidations(error?.validation);
+          toast.dismiss();
+          toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+      };
       setLoading(false);
     });
   };
@@ -59,10 +59,10 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
         </div>
       </td>
 
-      <td className="px-6 py-4 text-xs font-medium">{issuer}</td>
-      <td className="px-6 py-4 text-xs font-medium">{title}</td>
+      <td className="px-6 py-4 text-xs font-medium">{issuer ? issuer : 'Issuer not found'}</td>
+      <td className="px-6 py-4 text-xs font-medium">{title ? title : 'Title not found'}</td>
       <td className="px-6 py-4 text-xs font-medium">
-        {formatDescription(description)}
+        {description ? formatDescription(description) : 'Description not found'}
       </td>
       <td className="flex justify-end gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton

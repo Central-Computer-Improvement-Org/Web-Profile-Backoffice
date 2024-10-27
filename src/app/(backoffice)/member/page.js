@@ -7,12 +7,12 @@ import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
 import request from '@/app/utils/request';
+import ListMember from '@/components/listTable/listMember';
+import DefaultTable from '@/components/table/defaultTable';
+import DefaultLink from '@/components/link/defaultLink';
+import InputField from '@/components/form/inputField';
 import Pagination from '@/components/pagination';
 import HeadTitle from '@/components/headTitle';
-import InputField from '@/components/form/inputField';
-import DefaultLink from '@/components/link/defaultLink';
-import DefaultTable from '@/components/table/defaultTable';
-import ListMember from '@/components/listTable/listMember';
 
 // Sorting Constants
 const ORDERING = 'updatedAt';
@@ -31,7 +31,6 @@ export default function Page() {
   const [memberDatas, setMemberDatas] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [debounceValue] = useDebounce(searchQuery, 500);
-
   const [recordsTotal, setRecordsTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -95,8 +94,8 @@ export default function Page() {
                 <InputField
                   id={'search'}
                   name={'search'}
-                  placeholder={'Search for member'}
                   type={'text'}
+                  placeholder={'Search for member'}
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
