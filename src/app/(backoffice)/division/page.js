@@ -1,18 +1,17 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
-import { useDebounce } from 'use-debounce';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useDebounce } from 'use-debounce';
 import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
-import { host } from '@/app/utils/urlApi';
 import request from '@/app/utils/request';
-import HeadTitle from '@/components/headTitle';
-import Pagination from '@/components/pagination';
-import InputField from '@/components/form/inputField';
-import DefaultLink from '@/components/link/defaultLink';
-import DefaultTable from '@/components/table/defaultTable';
 import ListDivision from '@/components/listTable/listDivision';
+import DefaultTable from '@/components/table/defaultTable';
+import DefaultLink from '@/components/link/defaultLink';
+import InputField from '@/components/form/inputField';
+import Pagination from '@/components/pagination';
+import HeadTitle from '@/components/headTitle';
 
 
 // Sorting Constants
@@ -53,12 +52,12 @@ export default function DivisionPage() {
     request
       .get(`/cms/users/divisions`, payload)
       .then(function (response) {
-        setDivisionDatas(response.data.data);
-        setRecordsTotal(response.data.recordsTotal);
+        setDivisionDatas(response.data?.data);
+        setRecordsTotal(response.data?.recordsTotal);
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
   }, [debounceValue, page]);
@@ -84,8 +83,8 @@ export default function DivisionPage() {
                 <InputField
                   id={'search'}
                   name={'search'}
-                  placeholder={'Search for Division'}
                   type={'text'}
+                  placeholder={'Search for Division'}
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);

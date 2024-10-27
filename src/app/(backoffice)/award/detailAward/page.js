@@ -10,6 +10,7 @@ import { StateContext } from "@/app/(backoffice)/state";
 import InputField from "@/components/form/inputField";
 import Pagination from "@/components/pagination";
 import request from "@/app/utils/request";
+import LogoNotfound from '/public/assets/icon/notfound.svg';
 
 // Sorting Constants
 const ORDERING = 'name';
@@ -32,26 +33,24 @@ function DetailAwardPage() {
   const [recordsTotal, setRecordsTotal] = useState(0);
   const [debounceValue] = useDebounce(searchQuery, 500);
   const { setAwardName, setAwardId } = useContext(StateContext);
-  
   const [loading, setLoading] = useState(true);
 
   const fetchAward = useCallback(async () => {
     setLoading(true);
-    request
-      .get(`/cms/awards?id=${id}`)
-      .then(function (response) {
-        const data = response.data.data;
-        setTitle(data.title);
-        setIssuer(data.issuer);
-        setDescription(data.description);
-        setAwardName(data.title);
-        setAwardId(data.id);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
+    request.get(`/cms/awards?id=${id}`)
+    .then(function (response) {
+      const data = response.data.data;
+      setTitle(data.title);
+      setIssuer(data.issuer);
+      setDescription(data.description);
+      setAwardName(data.title);
+      setAwardId(data.id);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.error("Error :", error);
+      setLoading(false);
+    });
   }, [id, setAwardName, setAwardId]);
 
   const fetchContributor = useCallback(async () => {
@@ -72,7 +71,7 @@ function DetailAwardPage() {
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error("Error :", error);
         setLoading(false);
       });
   }, [id, debounceValue, page]);
@@ -118,19 +117,19 @@ function DetailAwardPage() {
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Issuer Award</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {issuer || "Not found"}
+                    {issuer ? issuer : "Issuer not found"}
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Title Award</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {title || "Not found"}
+                    {title ? title : "Title not found"}
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Description</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {description || "Not found"}
+                    {description ? description : "Description not found"}
                   </p>
                 </div>
               </div>
@@ -151,8 +150,8 @@ function DetailAwardPage() {
                       <InputField
                         id={"search"}
                         name={"search"}
-                        placeholder={"Search for contributor"}
                         type={"text"}
+                        placeholder={"Search for contributor"}
                         value={searchQuery}
                         onChange={(e) => {
                           setSearchQuery(e.target.value);
@@ -181,13 +180,19 @@ function DetailAwardPage() {
                               />
                             </div>
                           ) : (
-                            <div className="w-24 h-24 mb-3 bg-gray-200 rounded-full shadow-lg"></div>
+                            <div className="w-24 h-24 mb-3 rounded-full shadow-lg">
+                              <img
+                                className="object-cover w-24 h-24 rounded-full"
+                                src={LogoNotfound.src}
+                                alt="Profile Picture User"
+                              />
+                            </div>
                           )}
                           <h5 className="mb-1 text-xl font-medium text-gray-900">
-                            {data.name}
+                            {data.name ? data.name : "Name not found"}
                           </h5>
                           <span className="text-sm text-gray-500">
-                            {data.division.name}
+                            {data.division.name ? data.division.name : "Division not found"}
                           </span>
                           <div className="flex mt-4 md:mt-6">
                             <Link

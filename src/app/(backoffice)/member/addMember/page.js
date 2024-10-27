@@ -25,41 +25,41 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/web
 const formSchema = z.object({
   nim : z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long."})
-    .max(30, { message: "Name must be at most 30 characters long."}),
+    .min(3, { message: "Name must be at least 3 characters long"})
+    .max(30, { message: "Name must be at most 30 characters long"}),
   name : z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long."})
-    .max(30, { message: "Name must be at most 30 characters long."}),
+    .min(3, { message: "Name must be at least 3 characters long"})
+    .max(30, { message: "Name must be at most 30 characters long"}),
   email : z
     .string()
-    .email({ message: "Invalid email address."}),
+    .email({ message: "Invalid email address"}),
   password : z
     .string()
-    .min(8, { message: "Password must be at least 8 characters long."})
+    .min(8, { message: "Password must be at least 8 characters long"})
     .refine(value => /\d/.test(value), {
-      message: "Password must contain at least one number.",
+      message: "Password must contain at least one number",
     })
     .refine(value => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
-      message: "Password must contain at least one symbol.",
+      message: "Password must contain at least one symbol",
     }),
   major : z
     .string()
-    .min(3, { message: "Major must be at least 3 characters long."})
-    .max(30, { message: "Major must be at most 30 characters long."}),
+    .min(3, { message: "Major must be at least 3 characters long"})
+    .max(30, { message: "Major must be at most 30 characters long"}),
   linkedinUri : z
-    .string(),
-    // .url({ message: "Invalid URL."}),
+    .string()
+    .url({ message: "Invalid URL"}),
   phoneNumber : z
     .string()
-    .min(3, { message: "Phone number must be at least 3 characters long."})
-    .max(30, { message: "Phone number must be at most 30 characters long."}), 
+    .min(10, { message: "Phone number must be at least 10 characters long"})
+    .max(15, { message: "Phone number must be at most 15 characters long"}), 
   profileUri: z
     .any()
     .refine((file) => file?.size <= MAX_FILE_SIZE, `The maximum file size that can be uploaded is 2MB`)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
     ),
 });
 
@@ -137,23 +137,21 @@ export default function AddMemberPage() {
       });
 
       if (!validation.success) {
-        validation.error.errors.map((validation) => {
-          const key = [
-            {
-              name: validation.path[0],
-              message: validation.message,
-            },
-          ];
-          setValidations(validations => [...validations, ...key]);
-        })
-        setLoading(false);
+        setValidations(validation.error.errors.map(error => ({
+          name: error.path[0],
+          message: error.message
+        })));
         toast.dismiss();
-        toast.error("Invalid Input");
+        toast.error('Invalid Input');
+        setLoading(false);
         return;
       }
     } catch (error) {
-      console.error(error);
-    }
+      toast.dismiss();
+      toast.error(error.message);
+      setLoading(false);
+      return;
+    };
 
     request
       .post('/auth/register', {
@@ -174,23 +172,32 @@ export default function AddMemberPage() {
         isActive: isActive,
       })
       .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          router.push("/member");
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
-          setProfileUri("");
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
+        const { code, status, data, error } = response.data || {};
 
-        } else if (response.response.data.code === 500 ) {
-          console.error("INTERNAL_SERVER_ERROR")
+        if (code === 200 || code === 201) {
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.success(data?.message);
+          router.push('/member');
+        } else {
+          const formattedStatus = status
+            .split('_')
+            .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+          if (code === 400 && status === 'VALIDATION_ERROR') {
+            setValidations(error?.validation);
+            setProfileUri('');
+          }
+          toast.dismiss();
+          toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
         }
-        setLoading(false)
-      })
+        setLoading(false);
+      }).catch((error) => {
+        toast.dismiss();
+        const errorMessage = error?.response?.data?.message || error?.message || 'An unexpected error occurred';
+        toast.error(errorMessage);
+        setLoading(false);
+      }
+    );
   };
 
   useEffect(() => {
@@ -209,12 +216,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'nim'}
                   name={'nim'}
-                  placeholder={'123456789102'}
                   type={'text'}
-                  value={nim}
-                  required
+                  placeholder={'123456789102'}
                   label={'NIM'}
+                  value={nim}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setNim(e.target.value);
                   }}
@@ -225,9 +232,9 @@ export default function AddMemberPage() {
                   id={'roleId'}
                   name={'roleId'}
                   type={'text'}
+                  label={'Role'}
                   value={roleId}
                   required
-                  label={'Role'}
                   onChange={(e) => {
                     setRoleId(e.target.value);
                   }}
@@ -248,9 +255,9 @@ export default function AddMemberPage() {
                   id={'divisionId'}
                   name={'divisionId'}
                   type={'text'}
+                  label={'Division'}
                   value={divisionId}
                   required
-                  label={'Division'}
                   onChange={(e) => {
                     setDivisionId(e.target.value);
                   }}
@@ -270,12 +277,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'name'}
                   name={'name'}
-                  placeholder={'e.g. Agis Huda'}
                   type={'text'}
-                  value={name}
-                  required
+                  placeholder={'e.g. Agis Huda'}
                   label={'Name'}
+                  value={name}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
@@ -285,12 +292,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'email'}
                   name={'email'}
-                  placeholder={'example@gmail.com'}
                   type={'email'}
-                  value={email}
-                  required
+                  placeholder={'example@gmail.com'}
                   label={'Email'}
+                  value={email}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
@@ -300,12 +307,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'password'}
                   name={'password'}
-                  placeholder={''}
                   type={'password'}
-                  value={password}
-                  required
+                  placeholder={''}
                   label={'Password'}
+                  value={password}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
@@ -315,12 +322,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'major'}
                   name={'major'}
-                  placeholder={'e.g. S1 Informatika'}
                   type={'text'}
-                  value={major}
-                  required
+                  placeholder={'e.g. S1 Informatika'}
                   label={'Major'}
+                  value={major}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setMajor(e.target.value);
                   }}
@@ -330,12 +337,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'linkedinUri'}
                   name={'linkedinUri'}
-                  placeholder={'e.g. https://www.linkedin.com/in/example/'}
                   type={'text'}
-                  value={linkedinUri}
-                  required
+                  placeholder={'e.g. https://www.linkedin.com/in/example/'}
                   label={'LinkedIn URL'}
+                  value={linkedinUri}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setLinkedinUri(e.target.value);
                   }}
@@ -345,12 +352,12 @@ export default function AddMemberPage() {
                 <InputField
                   id={'phoneNumber'}
                   name={'phoneNumber'}
-                  placeholder={'e.g. 083211234567'}
                   type={'text'}
-                  value={phoneNumber}
-                  required
+                  placeholder={'e.g. 083211234567'}
                   label={'Phone number'}
+                  value={phoneNumber}
                   validations={validations}
+                  required
                   onChange={(e) => {
                     setPhoneNumber(e.target.value);
                   }}
@@ -362,8 +369,8 @@ export default function AddMemberPage() {
                   name={'profileUri'}
                   type={'image'}
                   label={'Profile Picture'}
-                  required           
                   validations={validations}
+                  required           
                   onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
                       const img = e.target.files[0];
@@ -376,9 +383,9 @@ export default function AddMemberPage() {
                 <InputSelect
                   id={'isActive'}
                   name={'isActive'}
+                  label={'Status'}
                   value={isActive}
                   required
-                  label={'Status'}
                   onChange={(e) => {
                     setIsActive(e.target.value);
                   }}
@@ -392,9 +399,9 @@ export default function AddMemberPage() {
                   id={'entryUniversity'}
                   name={'entryUniversity'}
                   type={'date'}
+                  label={'Entry university'}
                   value={yearUniversityEnrolled}
                   required
-                  label={'Entry university'}
                   onChange={(e) => {
                     setYearUniversityEnrolled(e.target.value);
                   }}

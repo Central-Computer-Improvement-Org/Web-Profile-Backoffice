@@ -25,24 +25,25 @@ const ListMember = ({
   const [loading, setLoading] = useState(false);
   
   const onDelete = async (e) => {
+    e.preventDefault();
     setLoading(true);
     toast.loading('Deleting data...');
-    e.preventDefault();
 
     request.delete(`/cms/users?nim=${nim}`).then(function (response) {
-      if (response.data?.code === 200 || response.data?.code === 201) {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
         toast.dismiss();
-        toast.success(response.data.data.message);
+        toast.success(data?.message);
+        router.push('/member');
         fetchData();
-      } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == 'NOT_FOUND'
-      ) {
+      } else {
+        const formattedStatus = status
+          .split('_')
+          .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
         toast.dismiss();
-        toast.error('Division not found.');
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
       }
       setLoading(false);
     });
@@ -77,7 +78,7 @@ const ListMember = ({
               src={
                 photoUri
                   ? `${process.env.NEXT_PUBLIC_HOST}` + photoUri
-                  : LogoNotfound
+                  : LogoNotfound.src
               }
               width={0}
               height={0}

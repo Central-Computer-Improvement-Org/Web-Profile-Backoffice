@@ -41,11 +41,11 @@ export default function InputSelect({
           (validation, index) =>
             (validation.name === name ||
               (validation.name === 'media_uri' && type === 'image')) && (
-              <p key={index} className="text-sm text-red-500 mt-2">
+              <p key={index} className="mt-2 text-sm text-red-500">
                 {validation.message}
               </p>
             )
         )}
     </div>
   );
-}
+};

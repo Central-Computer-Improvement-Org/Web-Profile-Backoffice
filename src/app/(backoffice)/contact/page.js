@@ -53,7 +53,7 @@ export default function ContactPage() {
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
   }, [debounceValue, page]);

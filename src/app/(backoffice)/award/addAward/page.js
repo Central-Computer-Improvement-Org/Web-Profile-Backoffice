@@ -22,21 +22,21 @@ const page = 1;
 const formSchema = z.object({
   issuer: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(30, { message: "Name must be at most 30 characters long." }),
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(30, { message: "Name must be at most 30 characters long" }),
   title: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(30, { message: "Name must be at most 30 characters long." }),
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(30, { message: "Name must be at most 30 characters long" }),
   description: z
     .string()
-    .min(3, { message: "Description must be at least 3 characters long." })
-    .max(255, { message: "Description must be at most 255 characters long." }),
+    .min(3, { message: "Description must be at least 3 characters long" })
+    .max(255, { message: "Description must be at most 255 characters long" }),
   contributor: z
     .array(z
       .number()
     )
-    .min(1, { message: "Contributor must be at least 1." }),
+    .min(1, { message: "Contributor must be at least 1" }),
 });
 
 
@@ -48,7 +48,6 @@ export default function AddAwardPage() {
   const [description, setDescription] = useState('');
   const [contributor, setContributor] = useState([]);
   const [membersData, setMembersData] = useState([]);
-
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -59,16 +58,15 @@ export default function AddAwardPage() {
       ordering: ORDERING,
       sort: SORT,
     };
-    request
-      .get('/cms/users', payload)
-      .then(function (response) {
-        setMembersData(response.data.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
+    request.get('/cms/users', payload)
+    .then(function (response) {
+      setMembersData(response.data.data);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.error("Error :", error);
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -79,10 +77,10 @@ export default function AddAwardPage() {
   }, [fetchMembers]);
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     setValidations([]);
     setLoading(true);
     toast.loading('Saving data...');
-    e.preventDefault();
 
     try {
       const validation = formSchema.safeParse({
@@ -93,49 +91,51 @@ export default function AddAwardPage() {
       });
 
       if (!validation.success) {
-        validation.error.errors.map((validation) => {
-          const key = [
-            {
-              name: validation.path[0],
-              message: validation.message,
-            },
-          ];
-          setValidations(validations => [...validations, ...key]);
-        })
-        setLoading(false);
+        setValidations(validation.error.errors.map(error => ({
+          name: error.path[0],
+          message: error.message
+        })));
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error('Invalid Input');
+        setLoading(false);
         return;
       }
     } catch (error) {
-      console.error(error);
+      toast.dismiss();
+      toast.error(error.message);
+      setLoading(false);
+      return;
     }
 
-    request
-      .post('/cms/awards', {
-        issuer: issuer,
-        title: title,
-        description: description,
-        contributors: JSON.stringify(contributor),
-      })
-      .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          router.push("/award");
-        } else if (response.response.data.code === 400 && response.response.data.status == "VALIDATION_ERROR") {
-          setValidations(response.response.data.error.validation);
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-
-        } else if (response.response.data.code === 500) {
-          console.error("INTERNAL_SERVER_ERROR")
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        }
-        setLoading(false)
-      })
-  }
+    request.post('/cms/awards', {
+      issuer: issuer,
+      title: title,
+      description: description,
+      contributors: JSON.stringify(contributor),
+    }).then(function (response) {
+        const { code, status, data, error } = response.data;
+    
+        if (code === 200 || code === 201) {
+            toast.dismiss();
+            toast.success(data?.message);
+            router.push("/award");
+        } else {
+            const formattedStatus = status
+              .split('_')
+              .map(res => res[0].toUpperCase() + res.slice(1).toLowerCase())
+              .join(' ');
+            setValidations(error?.validation);
+            toast.dismiss();
+            toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+        };
+        setLoading(false);
+    }).catch((error) => {
+      toast.dismiss();
+      toast.error(error?.message);
+      setLoading(false);
+    });    
+  };
+  
   return (
     <div>
       <HeadTitle>
@@ -149,11 +149,12 @@ export default function AddAwardPage() {
                   <InputField
                     id={'issuer'}
                     name={'issuer'}
-                    placeholder={'e.g Gemastik'}
                     type={'text'}
-                    value={issuer}
-                    required
+                    placeholder={'e.g Gemastik'}
                     label={'Issuer'}
+                    value={issuer}
+                    validations={validations}
+                    required
                     onChange={(e) => {
                       setIssuer(e.target.value);
                     }}
@@ -163,11 +164,12 @@ export default function AddAwardPage() {
                   <InputField
                     id={'title'}
                     name={'title'}
-                    placeholder={'e.g Juara 1 Gemastik'}
                     type={'text'}
-                    value={title}
-                    required
+                    placeholder={'e.g Juara 1 Gemastik'}
                     label={'Title'}
+                    value={title}
+                    validations={validations}
+                    required
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
@@ -178,9 +180,10 @@ export default function AddAwardPage() {
                     id={'description'}
                     name={'description'}
                     placeholder={'e.g Description ...'}
-                    value={description}
-                    required
                     label={'Description'}
+                    value={description}
+                    validations={validations}
+                    required
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
@@ -189,8 +192,8 @@ export default function AddAwardPage() {
                 <div className="sm:col-span-6">
                   <InputMultipleSelect
                     id={'contributor'}
-                    label={'Contributor'}
                     name={'contributor'}
+                    label={'Contributor'}
                     validations={validations}
                     onChange={(selectedOptions) => {
                       if (selectedOptions) {

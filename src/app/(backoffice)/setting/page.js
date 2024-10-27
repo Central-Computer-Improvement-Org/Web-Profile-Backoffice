@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from "next/navigation";
 import { z } from 'zod';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
@@ -21,24 +22,24 @@ const ACCEPTED_IMAGE_TYPES = [
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, { message: 'Name must be at least 3 characters long.' })
-    .max(30, { message: 'Name must be at most 30 characters long.' }),
+    .min(3, { message: 'Name must be at least 3 characters long' })
+    .max(30, { message: 'Name must be at most 30 characters long' }),
   address: z
     .string()
-    .min(3, { message: 'Address must be at least 3 characters long.' })
-    .max(255, { message: 'Address must be at most 255 characters long.' }),
+    .min(3, { message: 'Address must be at least 3 characters long' })
+    .max(255, { message: 'Address must be at most 255 characters long' }),
   titleWebsite: z
     .string()
-    .min(3, { message: 'Title website must be at least 3 characters long.' })
-    .max(30, { message: 'Title website must be at most 30 characters long.' }),
+    .min(3, { message: 'Title website must be at least 3 characters long' })
+    .max(30, { message: 'Title website must be at most 30 characters long' }),
   keyword: z
     .string()
-    .min(3, { message: 'Keyword must be at least 3 characters long.' })
-    .max(255, { message: 'Keyword must be at most 255 characters long.' }),
+    .min(3, { message: 'Keyword must be at least 3 characters long' })
+    .max(255, { message: 'Keyword must be at most 255 characters long' }),
   description: z
     .string()
-    .min(3, { message: 'Description must be at least 3 characters long.' })
-    .max(255, { message: 'Description must be at most 255 characters long.' }),
+    .min(3, { message: 'Description must be at least 3 characters long' })
+    .max(255, { message: 'Description must be at most 255 characters long' }),
   logoUri: z
     .any()
     .optional()
@@ -64,6 +65,8 @@ const formSchema = z.object({
 
 
 export default function SettingPage() {
+  const router = useRouter();
+  
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [logoUri, setLogoUri] = useState();
@@ -98,9 +101,9 @@ export default function SettingPage() {
           { name: validation.path[0], message: validation.message },
         ]);
       });
-      setLoading(false);
       toast.dismiss();
       toast.error('Invalid Input');
+      setLoading(false);
       return;
     }
   
@@ -114,33 +117,35 @@ export default function SettingPage() {
   
     if (logoUri && typeof logoUri !== 'string') {
       requestBody.logoUri = logoUri;
-    }
-  
-    try {
-      const response = await request.patch(`/cms/setting`, requestBody);
-      if (response.data?.code === 200 || response.data?.code === 201) {
+    };
+
+    request
+      .patch(`/cms/setting`, requestBody)
+      .then(function (response) {
+        const { code, status, data, error } = response.data;
+        if (code === 200 || code === 201) {
+          toast.dismiss();
+          toast.success(data?.message);
+          router.push('/setting');
+        } else {
+          const formattedStatus = status
+            .split('_')
+            .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+          if (code === 400 && status === 'VALIDATION_ERROR') {
+            setValidations(error?.validation);
+            setLogoUri('');
+          }
+          toast.dismiss();
+          toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+        }
+        setLoading(false);
+      }).catch((error) => {
         toast.dismiss();
-        toast.success(response.data.data.message);
-        location.reload();
-      } else if (
-        response.response.data.code === 400 &&
-        response.response.data.status == 'VALIDATION_ERROR'
-      ) {
-        setValidations(response.response.data.error.validation);
-        setLogoUri('');
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
+        toast.error(error?.message);
+        setLoading(false);
       }
-      setLoading(false);
-    } catch (error) {
-      toast.dismiss();
-      setLoading(false);
-      setLogoUri('');
-      toast.error(error.message || 'Something went wrong!');
-    }
+    );
   };
 
   useEffect(() => {
@@ -159,7 +164,7 @@ export default function SettingPage() {
         setOldData(data);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
   }, []);
@@ -179,7 +184,7 @@ export default function SettingPage() {
                       ? typeof logoUri === 'string'
                         ? `${process.env.NEXT_PUBLIC_HOST}${logoUri}`
                         : URL.createObjectURL(logoUri)
-                      : logoNotFound
+                      : logoNotFound.src
                   }
                   className="object-contain mb-4 rounded-lg w-28 h-28 sm:mb-0 xl:mb-4 2xl:mb-0"
                   alt="Logo CCI"
@@ -270,11 +275,11 @@ export default function SettingPage() {
                   <InputField
                     id={'name'}
                     name={'name'}
-                    placeholder={'Web Development'}
                     type={'text'}
+                    placeholder={'Web Development'}
                     value={name ?? ''}
-                    required
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setName(e.target.value);
                     }}
@@ -290,11 +295,11 @@ export default function SettingPage() {
                   <InputField
                     id={'address'}
                     name={'address'}
-                    placeholder={'e.g JL. example No. 69'}
                     type={'text'}
+                    placeholder={'e.g JL. example No. 69'}
                     value={address ?? ''}
-                    required
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setAddress(e.target.value);
                     }}
@@ -310,11 +315,11 @@ export default function SettingPage() {
                   <InputField
                     id={'titleWebsite'}
                     name={'titleWebsite'}
-                    placeholder={'e.g Web Profile CCI'}
                     type={'text'}
+                    placeholder={'e.g Web Profile CCI'}
                     value={titleWebsite ?? ''}
-                    required
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setTitleWebsite(e.target.value);
                     }}
@@ -331,10 +336,10 @@ export default function SettingPage() {
                     id={'keyword'}
                     name={'keyword'}
                     placeholder={'e.g keyword ...'}
-                    value={keyword ?? ''}
-                    required
                     // label={'Description'}
+                    value={keyword ?? ''}
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setKeyword(e.target.value);
                     }}
@@ -351,10 +356,10 @@ export default function SettingPage() {
                     id={'description'}
                     name={'description'}
                     placeholder={'e.g Description ...'}
-                    value={description ?? ''}
-                    required
                     // label={'Description'}
+                    value={description ?? ''}
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}

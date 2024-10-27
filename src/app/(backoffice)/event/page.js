@@ -14,7 +14,6 @@ import InputField from "@/components/form/inputField";
 import DefaultLink from "@/components/link/defaultLink";
 import HeadTitle from "@/components/headTitle";
 import DefaultTable from "@/components/table/defaultTable";
-import DefaultButton from "@/components/button/defaultButton";
 
 // Sorting Constants
 const ORDERING = "updatedAt";
@@ -28,6 +27,7 @@ export default function EventPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const page = searchParams.get("page") ?? "1";
+  
   const [eventDatas, setEventDatas] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [recordsTotal, setRecordsTotal] = useState(0);
@@ -59,17 +59,16 @@ export default function EventPage() {
       isActive: isActive.active == true && isActive.inActive == true ? undefined : (isActive.active)
     };
     
-    request
-      .get(`/cms/events`, payload)
-      .then(function (response) {
-        setEventDatas(response.data.data);
-        setRecordsTotal(response.data.recordsTotal);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
-      });
+    request.get(`/cms/events`, payload)
+    .then(function (response) {
+      setEventDatas(response.data.data);
+      setRecordsTotal(response.data.recordsTotal);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.error(error);
+      setLoading(false);
+    });
   };
   
   useEffect(() => {
@@ -98,8 +97,8 @@ export default function EventPage() {
               <InputField
                 id={"search"}
                 name={"search"}
-                placeholder={"Search for Event"}
                 type={"text"}
+                placeholder={"Search for Event"}
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -149,7 +148,6 @@ export default function EventPage() {
             )}
           </div>
         </div>
-
         <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
           <DefaultLink
             size={"small"}
