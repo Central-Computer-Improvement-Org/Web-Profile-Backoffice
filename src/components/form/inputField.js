@@ -1,7 +1,4 @@
-// components/InputField.js
-
 import React from "react";
-
 import Link from "next/link";
 
 const InputField = ({
@@ -30,10 +27,9 @@ const InputField = ({
             >
               {label}
             </label>
-            {/* Preview Image */}
             {previewImage && (
               <Link 
-                href={"http://103.187.147.80:8000" + previewImage} 
+                href={`${process.env.NEXT_PUBLIC_HOST}` + previewImage} 
                 target="_blank"
                 className="block mb-2 mr-4 text-sm font-medium text-gray-900">
                 Preview Image
@@ -41,7 +37,7 @@ const InputField = ({
             )}
           </div>
       )}
-
+        
       <div className="relative w-full ">
         <input
           id={id}
@@ -57,11 +53,10 @@ const InputField = ({
           readOnly={readOnly}
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
         />
-        {/* Handle Validation */}
         {validations && (
           validations.map((validation, index) => (
             (validation.name === name || (validation.name === "media_uri" && type === "image")) && (
-              <p key={index} className="text-sm text-red-500 mt-2">{validation.message}</p>
+              <p key={index} className="mt-2 text-sm text-red-500">{validation.message}</p>
             )
           ))
         )}

@@ -1,17 +1,15 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 
 import request from "@/app/utils/request";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
 import InputMultipleSelect from "@/components/form/inputMultipleSelect";
+import DefaultButton from "@/components/button/defaultButton";
 import TextareaField from "@/components/form/textareaField";
+import InputField from "@/components/form/inputField";
 import HeadTitle from "@/components/headTitle";
-
-import { toast } from "react-hot-toast";
-
-import { z } from "zod";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -32,25 +30,25 @@ const page = 1;
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(255, { message: "Name must be at most 255 characters long." }),
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(255, { message: "Name must be at most 255 characters long" }),
   description: z
     .string()
-    .min(3, { message: "Description must be at least 3 characters long." })
-    .max(255, { message: "Description must be at most 255 characters long." }),
+    .min(3, { message: "Description must be at least 3 characters long" })
+    .max(255, { message: "Description must be at most 255 characters long" }),
   productionUri: z
     .string()
-    .url({ message: "Production Uri must be a valid Uri." }),
+    .url({ message: "Production Uri must be a valid Uri" }),
   repositoryUri: z
     .string()
-    .url({ message: "Repository Uri must be a valid Uri." }),
-  budget: z.number().min(0, { message: "Budget must be at least 0." }),
+    .url({ message: "Repository Uri must be a valid Uri" }),
+  budget: z.number().min(0, { message: "Budget must be at least 0" }),
   contributor: z
     .array(z.number())
-    .min(1, { message: "Contributor must be at least 1." }),
+    .min(1, { message: "Contributor must be at least 1" }),
   divisions: z
     .array(z.string())
-    .min(1, { message: "Division must be at least 1." }),
+    .min(1, { message: "Division must be at least 1" }),
   imageUri: z
     .any()
     .refine(
@@ -59,7 +57,7 @@ const formSchema = z.object({
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
     ),
   iconUri: z
     .any()
@@ -69,9 +67,10 @@ const formSchema = z.object({
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
     ),
 });
+
 
 export default function AddProjectPage() {
   const router = useRouter();
@@ -85,7 +84,6 @@ export default function AddProjectPage() {
   const [divisions, setDivisions] = useState([]);
   const [imageUri, setImageUri] = useState("");
   const [iconUri, setIconUri] = useState("");
-
   const [divisionsData, setDivisionsData] = useState([]);
   const [membersData, setMembersData] = useState([]);
 
@@ -167,7 +165,7 @@ export default function AddProjectPage() {
         });
         setLoading(false);
         toast.dismiss();
-        toast.error("Invalid Input.");
+        toast.error("Invalid Input");
         return;
       }
     } catch (error) {
@@ -187,38 +185,38 @@ export default function AddProjectPage() {
         iconUri: iconUri,
       })
       .then(function (response) {
-        if (response.data?.code === 200 || response.data?.code === 201) {
+        if (response?.data?.code === 200 || response?.data?.code === 201) {
           toast.dismiss();
-          toast.success(response.data.data.message);
+          toast.success(response?.data?.data?.message);
           router.push("/project");
         } else if (
-          response.response.data.code === 400 &&
-          response.response.data.status == "VALIDATION_ERROR"
+          response?.data?.code === 400 &&
+          response?.data?.status == "VALIDATION_ERROR"
         ) {
-          setValidations(response.response.data.error.validation);
+          setValidations(response?.data?.error?.validation);
           setImageUri("");
           setIconUri("");
           toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500) {
+          toast.error(response?.data?.error?.message);
+        } else if (response?.data?.code === 500) {
           console.error("INTERNAL_SERVER_ERROR");
           toast.dismiss();
-          toast.error(response.response.data.error.message);
+          toast.error(response?.data?.error?.message);
         }
         setLoading(false);
-      });
+      }
+    );
   };
 
   return (
     <div>
       <HeadTitle>
         {loading ? (
-          // center the text
-          <div className="text-center flex">Loading...</div>
+          <div className="flex text-center">Loading...</div>
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="sm:col-span-6">
                   <InputField
                     id={"name"}
@@ -293,7 +291,6 @@ export default function AddProjectPage() {
                     }}
                   />
                 </div>
-
                 <div className="col-span-6 sm:col-span-3">
                   <InputMultipleSelect
                     id={"divisions"}
@@ -385,4 +382,4 @@ export default function AddProjectPage() {
       </HeadTitle>
     </div>
   );
-}
+};

@@ -1,18 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import request from "@/app/utils/request";
-import InputField from "@/components/form/inputField";
-import DefaultLink from "@/components/link/defaultLink";
-import Pagination from "@/components/pagination";
-import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { IoIosSearch } from "react-icons/io";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useDebounce } from 'use-debounce';
 import Link from "next/link";
 import { IoLinkSharp } from "react-icons/io5";
-import { currency } from "@/app/utils/numberFormat";
-import { StateContext } from "@/app/(backoffice)/state";
+import { IoIosSearch } from "react-icons/io";
 
-import { useDebounce } from 'use-debounce';
+import request from "@/app/utils/request";
+import { StateContext } from "@/app/(backoffice)/state";
+import { currency } from "@/app/utils/numberFormat";
+import DefaultLink from "@/components/link/defaultLink";
+import InputField from "@/components/form/inputField";
+import Pagination from "@/components/pagination";
+import LogoNotfound from '/public/assets/icon/notfound.svg';
 
 // Sorting Constants
 const ORDERING = 'name';
@@ -25,7 +26,6 @@ function DetailProjectPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
-
   const page = searchParams.get('page') ?? '1';
 
   const [name, setName] = useState("");
@@ -35,14 +35,11 @@ function DetailProjectPage() {
   const [productionUri, setProductionUri] = useState("");
   const [repositoryUri, setRepositoryUri] = useState("");
   const { setProjectName, setProjectId } = useContext(StateContext);
-
   const [contributors, setContributors] = useState([]);
+
   const [searchQuery, setSearchQuery] = useState('');
-
   const [recordsTotal, setRecordsTotal] = useState(0);
-
   const [debounceValue] = useDebounce(searchQuery, 500);
-
   const [loading, setLoading] = useState(true);
 
   const fetchProject = useCallback(async () => {
@@ -62,7 +59,7 @@ function DetailProjectPage() {
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
   }, [id, setProjectName, setProjectId]);
@@ -85,7 +82,7 @@ function DetailProjectPage() {
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
   }, [id, debounceValue, page]);
@@ -130,18 +127,22 @@ function DetailProjectPage() {
               <div className="flow-root">
                 <div className="mb-4">
                   <img
-                    src={`https://103-31-38-146.sslip.io${imageUri}`}
+                    src={
+                      imageUri
+                        ? `${process.env.NEXT_PUBLIC_HOST}` + imageUri
+                        : LogoNotfound.src
+                    }
                     width={0}
                     height={0}
                     className="w-full h-[250px] object-cover rounded-md"
-                    alt="profile"
+                    alt="Project Icon"
                   />
                 </div>
                 <div className="flex flex-col gap-4 mb-4">
                   <h3 className="text-xl font-semibold ">Title Project</h3>
-                  <p className="text-lg text-gray-500 md:text-lg">{name}</p>
+                  <p className="text-lg text-gray-500 md:text-lg">{name ? name : 'Not found'}</p>
                 </div>
-                
+
                 <div className="flex flex-col gap-4 mb-4">
                   <div className="flex gap-2">
                     <DefaultLink
@@ -169,7 +170,7 @@ function DetailProjectPage() {
                 <div className="flex flex-col gap-4 mb-4 ">
                   <h3 className="text-xl font-semibold ">Description</h3>
                   <p className="mb-3 text-lg text-gray-500 md:text-lg ">
-                    {description}
+                    {description ? description : 'Not found'}
                   </p>
                 </div>
               </div>
@@ -216,7 +217,12 @@ function DetailProjectPage() {
                               <div className="w-24 h-24 mb-3 rounded-full shadow-lg">
                                 <img
                                   className="object-cover w-24 h-24 rounded-full"
-                                  src={"http://103.187.147.80:8000" + data.profileUri}
+                                  src={
+                                    data.profileUri
+                                      ? `${process.env.NEXT_PUBLIC_HOST}` +
+                                        data.profileUri
+                                      : LogoNotfound.src
+                                  }
                                   alt="Bonnie image"
                                 />
                               </div>
@@ -242,7 +248,6 @@ function DetailProjectPage() {
                       </div>
                     ))}
                 </div>
-
                 <Pagination recordsTotal={recordsTotal} page={page} link={`project/detailProject?id=${id}`} />
               </div>
             </div>

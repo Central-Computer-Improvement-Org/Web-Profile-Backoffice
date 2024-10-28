@@ -1,15 +1,16 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import Logo from "../../../public/assets/image/logo.png";
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import InputField from "@/components/form/inputField";
-import DefaultButton from "@/components/button/defaultButton";
 import Link from "next/link";
-import request from "../utils/request";
+import Image from "next/image";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+
+import request from "../utils/request";
+import InputField from "@/components/form/inputField";
+import DefaultButton from "@/components/button/defaultButton";
+import Logo from "../../../public/assets/image/logo.png";
 
 const Login = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const Login = () => {
       localStorage.setItem("checkbox", rememberMe);
     } else {
       localStorage.removeItem("username");
-      localStorage.removeItem("checkboxxxxxx");
+      localStorage.removeItem("checkbox");
       router.push("/dashboard");
     }
     request
@@ -61,7 +62,6 @@ const Login = () => {
         password: password,
       })
       .then(function (response) {
-        console.info(response.data);
         if (response.data.code === 200 || response.data.code === 201) {
           Cookies.set("token", response.data.data.access);
           localStorage.setItem("nim", response.data.data.nim);
@@ -72,8 +72,8 @@ const Login = () => {
           window.alert("gagal login");
         }
       })
-      .catch(function (err) {
-        console.log(err);
+      .catch(function (error) {
+        console.log(error);
       });
   };
 
@@ -86,7 +86,7 @@ const Login = () => {
         >
           <Image className="w-24" src={Logo} width={0} height={0} alt="logo" />
         </Link>
-        <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0">
+        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Sign in to your account

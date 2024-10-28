@@ -7,38 +7,38 @@ import Cookies from 'js-cookie';
 
 //import Components
 import { StateContext } from './state';
+import request from '../utils/request';
 import DefaultButton from '@/components/button/defaultButton';
 import MenuSidebar from '@/components/menuSidebar';
 import NextBreadcrumb from '@/components/breadcrumbs';
-import request from '../utils/request';
-import Logo from '../../../public/assets/image/logo.png';
-import LogoProfile from '../../../public/assets/avatar/profile.jpg';
 
 //import Icon
-import { BiSolidDashboard } from 'react-icons/bi';
 import { BsCalendar2EventFill, BsFillPeopleFill } from 'react-icons/bs';
 import { IoNewspaper, IoSettings } from 'react-icons/io5';
-import { AiFillProject } from 'react-icons/ai';
-import { FaAward } from 'react-icons/fa6';
+import { BiSolidDashboard } from 'react-icons/bi';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { LiaAddressBook } from 'react-icons/lia';
-import { CgProfile } from 'react-icons/cg';
-import { PiAddressBookTabsLight } from 'react-icons/pi';
+import { AiFillProject } from 'react-icons/ai';
+import { FaAward } from 'react-icons/fa6';
+import LogoNotfound from '/public/assets/icon/notfound.svg';
+import LogoUserNotfound from '/public/assets/avatar/profile.jpg';
 
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
+
   const { divisionName, divisionId } = useContext(StateContext);
   const { projectName, projectId } = useContext(StateContext);
   const { memberName, memberNim } = useContext(StateContext);
-  const { awardName, awardId } = useContext(StateContext); 
-  const { newsName, newsId } = useContext(StateContext);   
-  const { eventName, eventId } = useContext(StateContext);                            
+  const { awardName, awardId } = useContext(StateContext);
+  const { newsName, newsId } = useContext(StateContext);
+  const { eventName, eventId } = useContext(StateContext);
   const [isDropdown, setIsDropdown] = useState(false);
   const [defaultLogoUri, setDefaultLogoUri] = useState();
   const [defaultProfileUri, setDefaultProfileUri] = useState();
   const [titleWebsite, setTitleWebsite] = useState('');
-  const [loading, setLoading] = useState(true); 
+
+  const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
     localStorage.removeItem('nim');
@@ -83,14 +83,15 @@ const MainLayout = ({ children }) => {
                   height={0}
                   src={
                     defaultLogoUri
-                      ? 'http://103.187.147.80:8000' + defaultLogoUri
-                      : Logo
+                      ? `${process.env.NEXT_PUBLIC_HOST}` + defaultLogoUri
+                      : LogoNotfound
                   }
+                  priority
                   className="object-cover w-full h-12"
-                  alt="FlowBite Logo"
+                  alt="Logo CCI"
                 />
                 <span className="self-center text-3xl font-semibold text-gray-500 whitespace-nowrap ">
-                  {titleWebsite ?? CCI}
+                  {titleWebsite ?? "CCI"}
                 </span>
               </Link>
             </div>
@@ -99,13 +100,12 @@ const MainLayout = ({ children }) => {
                 <Image
                   src={
                     defaultProfileUri
-                      ? 'http://103.187.147.80:8000' + defaultProfileUri
-                      : LogoProfile
+                      ? `${process.env.NEXT_PUBLIC_HOST}` + defaultProfileUri
+                      : LogoUserNotfound
                   }
-                  alt="Profile User Image"
+                  alt="User Profile Image"
                   width={131}
                   height={72}
-                  responsive="true"
                   className="w-[50px] h-[50px] sm:w-[70px] sm:h-[35px] md:w-[40px] md:h-[40px] rounded-[100px] cursor-pointer object-contain"
                 />
                 {isDropdown && (
@@ -147,7 +147,8 @@ const MainLayout = ({ children }) => {
           </div>
         </div>
       </nav>
-
+      
+      {/* Sidebar area */}
       <aside
         id="logo-sidebar"
         className="fixed top-0 left-0 z-40 w-64 h-screen pt-[100px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 "
@@ -233,11 +234,12 @@ const MainLayout = ({ children }) => {
           </ul> */}
         </div>
       </aside>
-
+      
+      {/* UI Url path area*/}
       <div className="sm:ml-64">
-        <div className="mt-16">
+        <div className="mt-20">
           <div className="items-center justify-between block px-4 py-4 bg-white sm:flex">
-            <div className="w-full mb-1">
+            <div className="w-full">
               <NextBreadcrumb
                 divisionId={divisionId}
                 projectId={projectId}

@@ -3,7 +3,7 @@ name: Deploy CCI staging
 on:
   push:
     branches:
-      - main
+      - misc
 
 jobs:
   build:

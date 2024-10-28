@@ -1,21 +1,18 @@
 'use client';
-
 import React, { useEffect, useState, useCallback } from 'react';
-import { host } from '@/app/utils/urlApi';
-import ListDivision from '@/components/listTable/listDivision';
-import InputField from '@/components/form/inputField';
-
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useDebounce } from 'use-debounce';
 import { IoIosSearch } from 'react-icons/io';
 import { FaPlus } from 'react-icons/fa6';
 
-import DefaultLink from '@/components/link/defaultLink';
-import HeadTitle from '@/components/headTitle';
-import DefaultTable from '@/components/table/defaultTable';
 import request from '@/app/utils/request';
+import ListDivision from '@/components/listTable/listDivision';
+import DefaultTable from '@/components/table/defaultTable';
+import DefaultLink from '@/components/link/defaultLink';
+import InputField from '@/components/form/inputField';
 import Pagination from '@/components/pagination';
+import HeadTitle from '@/components/headTitle';
 
-import { useDebounce } from 'use-debounce';
-import { useSearchParams, useRouter } from 'next/navigation';
 
 // Sorting Constants
 const ORDERING = 'updatedAt';
@@ -24,19 +21,16 @@ const SORT = 'desc';
 // Pagination Constants
 const LIMIT = 10;
 
+
 export default function DivisionPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const page = (searchParams.get("page")) ?? "1";
 
   const [divisionDatas, setDivisionDatas] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [recordsTotal, setRecordsTotal] = useState(0);
-
   const [debounceValue] = useDebounce(searchQuery, 500);
-
   const [loading, setLoading] = useState(true);
 
   const rowMenu = [
@@ -48,25 +42,25 @@ export default function DivisionPage() {
 
   const fetchDivisions = useCallback(async () => {
     const payload = {
-      name : debounceValue,
-      page : page,
-      limit : LIMIT,
-      ordering : ORDERING,
-      sort : SORT,
+      name: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
     }
 
     request
       .get(`/cms/users/divisions`, payload)
       .then(function (response) {
-        setDivisionDatas(response.data.data);
-        setRecordsTotal(response.data.recordsTotal);
+        setDivisionDatas(response.data?.data);
+        setRecordsTotal(response.data?.recordsTotal);
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
         setLoading(false);
-    });
-  }, [debounceValue, page])
+      });
+  }, [debounceValue, page]);
 
   useEffect(() => {
     if (page < 1) {
@@ -89,12 +83,11 @@ export default function DivisionPage() {
                 <InputField
                   id={'search'}
                   name={'search'}
-                  placeholder={'Search for Division'}
                   type={'text'}
+                  placeholder={'Search for Division'}
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    console.log(searchQuery);
                   }}
                   icon={<IoIosSearch />}
                 />
@@ -108,7 +101,7 @@ export default function DivisionPage() {
               title={'Add Division'}
               href={'/division/addDivision'}
               icon={<FaPlus />}
-              onClick={() => {}}
+              onClick={() => { }}
             />
           </div>
         </div>
@@ -121,7 +114,7 @@ export default function DivisionPage() {
             {divisionDatas.map(
               (
                 data,
-                index // Ubah 'awardDatas' menjadi 'data' untuk setiap iterasi
+                index
               ) => (
                 <ListDivision
                   key={index}
@@ -129,14 +122,14 @@ export default function DivisionPage() {
                   logoUri={data.logoUri}
                   description={data.description}
                   id={data.id}
-                  fetchData={fetchDivisions} 
+                  fetchData={fetchDivisions}
                 />
               )
             )}
           </DefaultTable>
-          <Pagination recordsTotal={recordsTotal} page={page} link="division"/>
+          <Pagination recordsTotal={recordsTotal} page={page} link="division" />
         </div>
       )}
     </div>
   );
-}
+};

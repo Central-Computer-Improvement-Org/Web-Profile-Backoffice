@@ -1,46 +1,47 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {toast} from 'react-hot-toast';
+
+import request from '@/app/utils/request';
 import { formatDescription } from '@/app/utils/stringUtils';
 import DefaultButton from '../button/defaultButton';
-import { useRouter } from 'next/navigation';
-import request from '@/app/utils/request';
 
-import {toast} from 'react-hot-toast';
 
 const ListAward = ({ issuer, title, description, id, fetchData }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const onDelete = async (e) => {
+    e.preventDefault();
     setLoading(true);
     toast.loading('Deleting data...');
-    e.preventDefault();
 
-    request
-      .delete(`/cms/awards?id=${id}`)
-      .then(function (response) {
-      if (response.data?.code === 200 || response.data?.code === 201) {
-        toast.dismiss();
-        toast.success(response.data.data.message);
-        fetchData();
-      } else if (
-        response.response.data.code === 404 &&
-        response.response.data.status == 'NOT_FOUND'
-      ) {
-        toast.dismiss();
-        toast.error('Award not found.');
-      } else if (response.response.data.code === 500) {
-        toast.dismiss();
-        toast.error(response.response.data.error.message);
-      }
+    request.delete(`/cms/awards?id=${id}`).then(function (response) {
+      const { code, status, data, error } = response.data;
+  
+      if (code === 200 || code === 201) {
+          toast.dismiss();
+          toast.success(data?.message);
+          router.push("/award");
+          fetchData();
+      } else {
+          const formattedStatus = status
+            .split('_')
+            .map(res => res[0].toUpperCase() + res.slice(1).toLowerCase())
+            .join(' ');
+          setValidations(error?.validation);
+          toast.dismiss();
+          toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+      };
       setLoading(false);
     });
   };
   
   return (
     <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      className="text-gray-700 bg-white border-b cursor-pointer hover:bg-gray-50"
       onClick={() => {
         router.push(`/award/detailAward?id=${id}`);
       }}
@@ -50,7 +51,7 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
           <input
             id="checkbox-table-search-2"
             type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  "
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 "
           />
           <label htmlFor="checkbox-table-search-2" className="sr-only">
             checkbox
@@ -58,12 +59,12 @@ const ListAward = ({ issuer, title, description, id, fetchData }) => {
         </div>
       </td>
 
-      <td className="text-xs font-medium px-6 py-4">{issuer}</td>
-      <td className="text-xs font-medium px-6 py-4">{title}</td>
-      <td className="text-xs font-medium px-6 py-4">
-        {formatDescription(description)}
+      <td className="px-6 py-4 text-xs font-medium">{issuer ? issuer : 'Issuer not found'}</td>
+      <td className="px-6 py-4 text-xs font-medium">{title ? title : 'Title not found'}</td>
+      <td className="px-6 py-4 text-xs font-medium">
+        {description ? formatDescription(description) : 'Description not found'}
       </td>
-      <td className="text-xs font-medium px-6 py-4 flex gap-3">
+      <td className="flex justify-end gap-3 px-6 py-4 text-xs font-medium">
         <DefaultButton
           onClick={(e) => {
             e.stopPropagation();

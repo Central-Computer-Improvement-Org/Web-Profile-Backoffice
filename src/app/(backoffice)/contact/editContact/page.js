@@ -1,17 +1,16 @@
 'use client';
-import DefaultButton from '@/components/button/defaultButton';
-import InputField from '@/components/form/inputField';
-import TextareaField from '@/components/form/textareaField';
-import InputSelect from '@/components/form/inputSelect';
-import HeadTitle from '@/components/headTitle';
-import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import request from '@/app/utils/request';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { z } from 'zod';
 import toast from 'react-hot-toast';
 
-import { z } from 'zod';
+import request from '@/app/utils/request';
+import DefaultButton from '@/components/button/defaultButton';
+import InputSelect from '@/components/form/inputSelect';
+import InputField from '@/components/form/inputField';
+import HeadTitle from '@/components/headTitle';
 
-const MAX_FILE_SIZE = 2000000;
+const MAX_FILE_SIZE = 2000000; // 2MB
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
@@ -22,12 +21,12 @@ const ACCEPTED_IMAGE_TYPES = [
 const formSchema = z.object({
   value: z
     .string()
-    .min(3, { message: 'Name must be at least 3 characters long.' })
-    .max(30, { message: 'Name must be at most 30 characters long.' }),
+    .min(3, { message: 'Name must be at least 3 characters long' })
+    .max(30, { message: 'Name must be at most 30 characters long' }),
   platform: z
     .string()
-    .min(3, { message: 'Platform must be at least 3 characters long.' })
-    .max(30, { message: 'Platform must be at most 30 characters long.' }),
+    .min(3, { message: 'Platform must be at least 3 characters long' })
+    .max(30, { message: 'Platform must be at most 30 characters long' }),
   iconUri: z
     .any()
     .refine(
@@ -36,34 +35,33 @@ const formSchema = z.object({
     )
     .refine(
       (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      'Only .jpg, .jpeg, .png and .webp formats are supported.'
+      'Only .jpg, .jpeg, .png and .webp formats are supported'
     ),
   accountUri: z
     .string()
-    .min(3, { message: 'Account URI must be at least 3 characters long.' })
-    .max(255, { message: 'Account URI must be at most 255 characters long.' }),
+    .min(3, { message: 'Account URI must be at least 3 characters long' })
+    .max(255, { message: 'Account URI must be at most 255 characters long' }),
 });
 
+
 export default function EditContactPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const id = searchParams.get('id');
 
   const [oldData, setOldData] = useState({});
-
-  const [iconUri, setIconUri] = useState(null);
-  const [platform, setPlatform] = useState('');
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [accountUri, setAccountUri] = useState('');
-
+  const [iconUri, setIconUri] = useState(null);
+  const [platform, setPlatform] = useState('');
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const onSubmit = async (e) => {
     setValidations([]);
     setLoading(true);
-    toast.loading('Saving data...');
+    toast.loading('Updating data...');
     e.preventDefault();
 
     const requestBody = {
@@ -77,54 +75,52 @@ export default function EditContactPage() {
       requestBody.iconUri = iconUri;
     }
 
-    console.log(requestBody);
-
     try {
       const validation = formSchema.safeParse(requestBody);
       if (!validation.success) {
-        validation.error.errors.map((validation) => {
-          const key = [
-            {
-              name: validation.path[0],
-              message: validation.message,
-            },
-          ];
-          setValidations((validations) => [...validations, ...key]);
-        });
-        setLoading(false);
+        setValidations(validation.error.errors.map(error => ({
+          name: error.path[0],
+          message: error.message
+        })));
         toast.dismiss();
-        toast.error('Invalid Input.');
+        toast.error("Invalid Input");
+        setLoading(false);
         return;
       }
     } catch (error) {
-      setLoading(false);
       toast.dismiss();
-      toast.error('Something went wrong!');
-      console.error(error);
+      toast.error(error.message);
+      setLoading(false);
+      return;
     }
-    request
-      .patch(`/cms/contact?id=${id}`, requestBody)
-      .then(function (response) {
-        console.log(response);
-        if (response.data?.code === 200 || response.data?.code === 201) {
-          toast.dismiss();
-          toast.success(response.data.data.message);
-          router.push('/contact');
-        } else if (
-          response.response.data.code === 400 &&
-          response.response.data.status == 'VALIDATION_ERROR'
-        ) {
-          setValidations(response.response.data.error.validation);
+
+    request.patch(`/cms/contact?id=${id}`, requestBody)
+    .then((response) => {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
+        toast.dismiss();
+        toast.success(data?.message);
+        router.push('/contact');
+      } else {
+        const formattedStatus = status
+          .split('_')
+          .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+
+        if (code === 400 && status === 'VALIDATION_ERROR') {
+          setValidations(error?.validation);
           setIconUri('');
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
-        } else if (response.response.data.code === 500) {
-          console.error('INTERNAL_SERVER_ERROR');
-          toast.dismiss();
-          toast.error(response.response.data.error.message);
         }
-        setLoading(false);
-      });
+        toast.dismiss();
+        toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+      }
+      setLoading(false);
+    }).catch(function (error) {
+      toast.dismiss();
+      toast.error(error?.message);
+      setLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -136,7 +132,6 @@ export default function EditContactPage() {
       .get(`/cms/contact?id=${id}`)
       .then((response) => {
         const data = response.data.data;
-        // setIconUri(data.iconUri || null);
         setPlatform(data.platform);
         setName(data.value);
         setStatus(data.isActive);
@@ -158,16 +153,15 @@ export default function EditContactPage() {
         ) : (
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 sm:p-6 ">
             <form onSubmit={onSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                 <div className="col-span-6 sm:col-span-2">
                   <InputField
                     id={'iconUri'}
                     name={'iconUri'}
                     type={'file'}
-                    multiple={false}
-                    previewImage={oldData.iconUri}
-                    imageOnly={true}
                     label={'Icon Platform'}
+                    imageOnly={true}
+                    previewImage={oldData.iconUri}
                     validations={validations}
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
@@ -181,12 +175,12 @@ export default function EditContactPage() {
                   <InputField
                     id={'platform'}
                     name={'platform'}
-                    placeholder={'e.g Gmail'}
                     type={'text'}
-                    value={platform}
-                    required
+                    placeholder={'e.g Gmail'}
                     label={'Platform'}
+                    value={platform}
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setPlatform(e.target.value);
                     }}
@@ -196,12 +190,12 @@ export default function EditContactPage() {
                   <InputField
                     id={'name'}
                     name={'name'}
-                    placeholder={'e.g cci.unitel'}
                     type={'text'}
-                    value={name}
-                    required
+                    placeholder={'e.g cci.unitel'}
                     label={'Name Account'}
+                    value={name}
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setName(e.target.value);
                     }}
@@ -211,12 +205,12 @@ export default function EditContactPage() {
                   <InputField
                     id={'accountUri'}
                     name={'accountUri'}
-                    placeholder={'e.g https://example.com/'}
                     type={'text'}
-                    value={accountUri}
-                    required
+                    placeholder={'e.g https://example.com/'}
                     label={'Account URI'}
+                    value={accountUri}
                     validations={validations}
+                    required
                     onChange={(e) => {
                       setAccountUri(e.target.value);
                     }}
@@ -226,11 +220,11 @@ export default function EditContactPage() {
                   <InputSelect
                     id={'status'}
                     name={'status'}
-                    placeholder={'e.g Active'}
                     type={'text'}
+                    placeholder={'e.g Active'}
+                    label={'Status'}
                     value={status}
                     required
-                    label={'Status'}
                     onChange={(e) => {
                       setStatus(e.target.value);
                     }}
@@ -254,4 +248,4 @@ export default function EditContactPage() {
       </HeadTitle>
     </div>
   );
-}
+};
