@@ -1,30 +1,30 @@
-'use client';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import Logo from '../../../public/assets/image/logo.png';
-import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
-import { useRouter } from 'next/navigation';
-import InputField from '@/components/form/inputField';
-import DefaultButton from '@/components/button/defaultButton';
-import Link from 'next/link';
-import request from '../utils/request';
-import Cookies from 'js-cookie';
-import toast from 'react-hot-toast';
+"use client";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import Logo from "../../../public/assets/image/logo.png";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { useRouter } from "next/navigation";
+import InputField from "@/components/form/inputField";
+import DefaultButton from "@/components/button/defaultButton";
+import Link from "next/link";
+import request from "../utils/request";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const router = useRouter();
 
   const [typeInput, setTypeInput] = useState(true);
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem('username');
-    const savedRememberMe = localStorage.getItem('checkbox');
+    const savedEmail = localStorage.getItem("username");
+    const savedRememberMe = localStorage.getItem("checkbox");
 
-    if (savedRememberMe && savedRememberMe !== '') {
-      setEmail(savedEmail || '');
+    if (savedRememberMe && savedRememberMe !== "") {
+      setEmail(savedEmail || "");
       setRememberMe(true);
     }
   }, []);
@@ -47,29 +47,29 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (rememberMe && email !== '' && password !== '') {
-      localStorage.setItem('username', email);
-      localStorage.setItem('checkbox', rememberMe);
+    if (rememberMe && email !== "" && password !== "") {
+      localStorage.setItem("username", email);
+      localStorage.setItem("checkbox", rememberMe);
     } else {
-      localStorage.removeItem('username');
-      localStorage.removeItem('checkboxxxxxx');
-      router.push('/dashboard');
+      localStorage.removeItem("username");
+      localStorage.removeItem("checkboxxxxxx");
+      router.push("/dashboard");
     }
     request
-      .post('/auth/login', {
+      .post("/auth/login", {
         email: email,
         password: password,
       })
       .then(function (response) {
         console.info(response.data);
         if (response.data.code === 200 || response.data.code === 201) {
-          Cookies.set('token', response.data.data.access);
-          localStorage.setItem('nim', response.data.data.nim);
+          Cookies.set("token", response.data.data.access);
+          localStorage.setItem("nim", response.data.data.nim);
           toast.dismiss();
-          toast.success('Success Login');
-          router.push('/dashboard');
+          toast.success("Success Login");
+          router.push("/dashboard");
         } else {
-          window.alert('gagal login');
+          window.alert("gagal login");
         }
       })
       .catch(function (err) {
@@ -93,21 +93,21 @@ const Login = () => {
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <InputField
-                id={'email'}
-                name={'email'}
+                id={"email"}
+                name={"email"}
                 onChange={handleChangeEmail}
-                placeholder={'user@gmail.com'}
-                type={'email'}
+                placeholder={"user@gmail.com"}
+                type={"email"}
                 value={email}
                 required
-                label={'Your email'}
+                label={"Your email"}
               />
               <InputField
-                id={'password'}
-                name={'password'}
+                id={"password"}
+                name={"password"}
                 onChange={handleChangePassword}
-                placeholder={'••••••••'}
-                type={typeInput ? 'password' : 'text'}
+                placeholder={"••••••••"}
+                type={typeInput ? "password" : "text"}
                 value={password}
                 required
                 icon={
@@ -117,7 +117,7 @@ const Login = () => {
                     <IoMdEye className="text-xl" onClick={handleClickType} />
                   )
                 }
-                label={'Password'}
+                label={"Password"}
               />
 
               <div className="flex items-center justify-between">
@@ -145,11 +145,11 @@ const Login = () => {
                 </Link>
               </div>
               <DefaultButton
-                title={'Sign in'}
-                type={'submit'}
+                title={"Sign in"}
+                type={"submit"}
                 full
-                status={'primary'}
-                size={'base'}
+                status={"primary"}
+                size={"base"}
               />
             </form>
           </div>
