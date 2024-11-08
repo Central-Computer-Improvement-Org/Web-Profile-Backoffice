@@ -1,19 +1,45 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import DefaultLink from "../link/defaultLink";
 import { formatDescription } from "@/app/utils/stringUtils";
 import DefaultButton from "../button/defaultButton";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import request from "@/app/utils/request";
 
-const ListNews = ({ title, description, id }) => {
+const ListNews = ({ title, description, id, fetchData }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = (id) => {
     router.push(`/news/editNews?id=${id}`);
   };
 
-  const handleDelete = (id) => {
-    router.push(`/news/delete/${id}`);
+  const onDelete = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    toast.loading("Deleting data...");
+
+    request.delete(`/cms/news?id=${id}`).then(function (response) {
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
+        toast.dismiss();
+        toast.success(data?.message);
+        router.push("/news");
+        fetchData();
+      } else {
+        const formattedStatus = status
+          .split("_")
+          .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ");
+        toast.dismiss();
+        toast.error(
+          `${formattedStatus}: ${error?.message || "An error occurred"}`
+        );
+      }
+      setLoading(false);
+    });
   };
 
   return (
@@ -49,8 +75,11 @@ const ListNews = ({ title, description, id }) => {
           status="primary"
           title="Edit"
         />
-        <DefaultLink
-          href={`/news/delete/${id}`}
+        <DefaultButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(e);
+          }}
           size="small"
           status="secondary"
           title="Delete"

@@ -1,11 +1,15 @@
 import React from "react";
 import Link from "next/link";
+import { CiFileOn } from "react-icons/ci";
+import { GiCancel } from "react-icons/gi";
+import { formatFileSize } from "@/app/utils/formatFileSize";
 
 const InputField = ({
   id,
   name,
   type,
   value,
+  multipleDatas = [],
   onChange,
   placeholder,
   previewImage,
@@ -16,50 +20,86 @@ const InputField = ({
   disabled = false,
   readOnly = false,
   validations,
+  onClickDelete,
 }) => {
+  console.log(multipleDatas);
   return (
     <div className="w-full ">
-      {label && (  
-          <div className="flex justify-between">
-            <label
-              htmlFor={id}
-              className="block mb-2 text-sm font-medium text-gray-900"
+      {label && (
+        <div className="flex justify-between">
+          <label
+            htmlFor={id}
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            {label}
+          </label>
+          {previewImage && (
+            <Link
+              href={`${process.env.NEXT_PUBLIC_HOST}` + previewImage}
+              target="_blank"
+              className="block mb-2 mr-4 text-sm font-medium text-gray-900"
             >
-              {label}
-            </label>
-            {previewImage && (
-              <Link 
-                href={`${process.env.NEXT_PUBLIC_HOST}` + previewImage} 
-                target="_blank"
-                className="block mb-2 mr-4 text-sm font-medium text-gray-900">
-                Preview Image
-              </Link>
-            )}
-          </div>
+              Preview Image
+            </Link>
+          )}
+        </div>
       )}
-        
+
       <div className="relative w-full ">
         <input
           id={id}
           name={name}
           accept={type == "image" ? "image/*" : "*"}
           type={type === "image" ? "file" : type}
-          value={value} 
+          value={value}
           onChange={onChange}
           placeholder={placeholder}
           multiple={multiple}
           required={required}
           disabled={disabled}
           readOnly={readOnly}
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5"
         />
-        {validations && (
-          validations.map((validation, index) => (
-            (validation.name === name || (validation.name === "media_uri" && type === "image")) && (
-              <p key={index} className="mt-2 text-sm text-red-500">{validation.message}</p>
-            )
-          ))
+        {/* Render multipleDatas if multiple is true */}
+        {multiple && multipleDatas.length > 0 && (
+          <div className="mt-2">
+            <ul className="space-y-2">
+              {multipleDatas.map((file, index) => (
+                <li key={index} className="text-gray-700">
+                  <div className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 flex justify-between">
+                    <div className="flex items-center space-x-4">
+                      <CiFileOn className="text-5xl" />
+                      <div className="flex flex-col">
+                        <p className="block  text-sm font-medium text-gray-900">
+                          {file.name}
+                        </p>
+                        <p className="block  text-sm font-medium text-gray-900">
+                          {formatFileSize(file.size)}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <GiCancel
+                        className="text-red-500 cursor-pointer"
+                        onClick={() => onClickDelete(index)}
+                      />
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
+        {validations &&
+          validations.map(
+            (validation, index) =>
+              (validation.name === name ||
+                (validation.name === "media_uri" && type === "image")) && (
+                <p key={index} className="mt-2 text-sm text-red-500">
+                  {validation.message}
+                </p>
+              )
+          )}
         {icon && (
           <div className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-black flex justify-center items-center">
             {icon}
