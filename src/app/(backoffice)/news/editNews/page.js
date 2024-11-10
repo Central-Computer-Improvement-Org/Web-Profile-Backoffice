@@ -56,6 +56,8 @@ export default function EditNewsPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
+  const [multipleDatas, setMultipleDatas] = useState([]); // State untuk file lokal
+  const [valueMultiple, setValueMultiple] = useState([]);
 
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
@@ -72,6 +74,7 @@ export default function EditNewsPage() {
         setTitle(data?.title);
         setDescription(data?.description);
         setMediaUrl(data?.mediaUri);
+        setValueMultiple(data?.detailNewsMedia);
         setLoading(false);
       })
       .catch(function (error) {
@@ -86,13 +89,19 @@ export default function EditNewsPage() {
     toast.loading("Updating data...");
     e.preventDefault();
 
-    const requestBody = {
-      title: title,
-      description: description,
-    };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("isPublished", "true");
 
     if (mediaUrl !== null && mediaUrl !== "") {
-      requestBody.mediaUrl = mediaUrl;
+      formData.append("mediaUri", mediaUrl);
+    }
+
+    if (detailsMedia !== null && detailsMedia !== "") {
+      detailsMedia.forEach((file) => {
+        formData.append("detailNewsMedia", file);
+      });
     }
 
     try {
@@ -147,6 +156,29 @@ export default function EditNewsPage() {
       });
   };
 
+  const handleChange = (event) => {
+    const files = Array.from(event.target.files);
+    setMultipleDatas((prevFiles) => [...prevFiles, ...files]);
+  };
+
+  // Fungsi untuk menghapus file dari database (valueMultiple)
+  // const handleDeleteImage = async (fileId) => {
+  //   try {
+  //     await axios.delete(`/api/files/${fileId}`); // Panggilan ke API untuk hapus data
+  //     setValueMultiple((prevFiles) =>
+  //       prevFiles.filter((file) => file.id !== fileId)
+  //     );
+  //   } catch (error) {
+  //     console.error("Failed to delete file:", error);
+  //   }
+  // };
+
+  // Fungsi untuk menghapus file dari multipleDatas (file lokal)
+  const handleDeleteLocalImage = (index) => {
+    setMultipleDatas((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  // console.log(dataDetailsMedia);
   return (
     <div>
       <HeadTitle>
@@ -195,6 +227,22 @@ export default function EditNewsPage() {
                     onChange={(htmlContent) => {
                       setDescription(htmlContent); // Simpan htmlContent di variabel description
                     }}
+                  />
+                </div>
+                <div className="col-span-6 sm:col-span-6">
+                  <InputField
+                    id="file-upload"
+                    name="media"
+                    type="file"
+                    multiple
+                    value=""
+                    multipleDatas={multipleDatas}
+                    valueMultiple={valueMultiple}
+                    onChange={handleChange}
+                    placeholder="Select files"
+                    label="Upload Files"
+                    // handleDeleteImage={handleDeleteImage} // Dihubungkan ke fungsi hapus API
+                    handleDeleteLocalImage={handleDeleteLocalImage} // Dihubungkan ke fungsi hapus lokal
                   />
                 </div>
                 <div className="col-span-6 sm:col-full flex gap-3">

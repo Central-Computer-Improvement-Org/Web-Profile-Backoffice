@@ -64,6 +64,72 @@ export default function AddNewsPage() {
 
   const router = useRouter();
 
+  // const onSubmit = async (e) => {
+  //   setValidations([]);
+  //   setLoading(true);
+  //   toast.loading("Saving data...");
+  //   e.preventDefault();
+
+  //   try {
+  //     const validation = formSchema.safeParse({
+  //       title: title,
+  //       description: description,
+  //       mediaUri: mediaUrl,
+  //     });
+
+  //     if (!validation.success) {
+  //       validation.error.errors.map((validation) => {
+  //         const key = [
+  //           {
+  //             name: validation.path[0],
+  //             message: validation.message,
+  //           },
+  //         ];
+  //         setValidations((validations) => [...validations, ...key]);
+  //       });
+  //       setLoading(false);
+  //       toast.dismiss();
+  //       toast.error("Invalid Input");
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("title", title);
+  //   formData.append("description", description);
+  //   formData.append("mediaUri", mediaUrl);
+  //   formData.append("isPublished", true);
+
+  //   // Append each file in detailsMedia to FormData
+  //   detailsMedia.forEach((file, index) => {
+  //     formData.append(`detailNewsMedia`, file);
+  //   });
+
+  //   console.log(formData);
+  //   request.post("/cms/news", formData).then(function (response) {
+  //     if (response?.data?.code === 200 || response?.data?.code === 201) {
+  //       toast.dismiss();
+  //       toast.success(response?.data?.data?.message);
+  //       router.push("/news");
+  //     } else if (
+  //       response?.data?.code === 400 &&
+  //       response?.data?.status == "VALIDATION_ERROR"
+  //     ) {
+  //       setValidations(response?.data?.error?.validation);
+  //       setMediaUrl("");
+  //       toast.dismiss();
+  //       toast.error(response?.data?.error?.message);
+  //     } else if (response?.data?.code === 500) {
+  //       console.error("INTERNAL_SERVER_ERROR");
+  //       toast.dismiss();
+  //       toast.error(response?.data?.error?.message);
+  //     }
+  //     setLoading(false);
+  //   });
+  // };
+
   const onSubmit = async (e) => {
     setValidations([]);
     setLoading(true);
@@ -78,7 +144,7 @@ export default function AddNewsPage() {
       });
 
       if (!validation.success) {
-        validation.error.errors.map((validation) => {
+        validation.error.errors.forEach((validation) => {
           const key = [
             {
               name: validation.path[0],
@@ -96,28 +162,33 @@ export default function AddNewsPage() {
       console.error(error);
     }
 
+    // Creating FormData for file upload
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("mediaUri", mediaUrl);
+    formData.append("isPublished", "true");
+
+    // Append each file with the same key "detailNewsMedia"
+    detailsMedia.forEach((file) => {
+      formData.append("detailNewsMedia", file);
+    });
+    // const images = new FormData();
+    // detailsMedia.forEach((file) => {
+    //   images.append("files", file);
+    // });
+    // console.log(images);
+    // Making the request
     request
-      .post("/cms/news", {
-        title: title,
-        description: description,
-        mediaUri: mediaUrl,
-      })
+      .post("/cms/news", formData)
       .then(function (response) {
         if (response?.data?.code === 200 || response?.data?.code === 201) {
           toast.dismiss();
           toast.success(response?.data?.data?.message);
           router.push("/news");
-          // if(detailsMedia != []){
-          //   request.post("cms/news/detail-news-media", {
-          //     title: title,
-          //     description: description,
-          //     newsId: res
-          //     mediaUri: mediaUrl,
-          //   });
-          // }
         } else if (
           response?.data?.code === 400 &&
-          response?.data?.status == "VALIDATION_ERROR"
+          response?.data?.status === "VALIDATION_ERROR"
         ) {
           setValidations(response?.data?.error?.validation);
           setMediaUrl("");
@@ -128,6 +199,12 @@ export default function AddNewsPage() {
           toast.dismiss();
           toast.error(response?.data?.error?.message);
         }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+        toast.dismiss();
+        toast.error("An error occurred while saving data");
         setLoading(false);
       });
   };
@@ -203,7 +280,7 @@ export default function AddNewsPage() {
 
                       // Jika total file yang ada + yang baru dipilih melebihi 5, batasi file baru yang ditambahkan
                       if (selectedFiles.length + detailsMedia.length > 5) {
-                        alert("You can only select up to 5 files.");
+                        toast.error("You can only select up to 5 files.");
                         const remainingSlots = 5 - detailsMedia.length;
                         setDetailsMedia((prevFiles) => [
                           ...prevFiles,
