@@ -4,7 +4,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 
-
 import request from "@/app/utils/request";
 import InputMultipleSelect from "@/components/form/inputMultipleSelect";
 import DefaultButton from "@/components/button/defaultButton";
@@ -71,7 +70,6 @@ const formSchema = z.object({
       "Only .jpg, .jpeg, .png and .webp formats are supported"
     ),
 });
-
 
 export default function EditProjectPage() {
   const searchParams = useSearchParams();
@@ -213,10 +211,12 @@ export default function EditProjectPage() {
     try {
       const validation = formSchema.safeParse(requestBody);
       if (!validation.success) {
-        setValidations(validation.error.errors.map(error => ({
-          name: error.path[0],
-          message: error.message
-        })));
+        setValidations(
+          validation.error.errors.map((error) => ({
+            name: error.path[0],
+            message: error.message,
+          }))
+        );
         toast.dismiss();
         toast.error("Invalid Input");
         setLoading(false);
@@ -239,27 +239,29 @@ export default function EditProjectPage() {
         if (code === 200 || code === 201) {
           toast.dismiss();
           toast.success(data?.message);
-          router.push('/project');
+          router.push("/project");
         } else {
           const formattedStatus = status
-            .split('_')
-            .map(word => word[0].toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
-          if (code === 400 && status === 'VALIDATION_ERROR') {
+            .split("_")
+            .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+          if (code === 400 && status === "VALIDATION_ERROR") {
             setValidations(error?.validation);
             setIconUri("");
             setImageUri("");
           }
           toast.dismiss();
-          toast.error(`${formattedStatus}: ${error?.message || 'An error occurred'}`);
+          toast.error(
+            `${formattedStatus}: ${error?.message || "An error occurred"}`
+          );
         }
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         toast.dismiss();
         toast.error(error?.message);
         setLoading(false);
-      }
-    );
+      });
   };
 
   return (
@@ -420,4 +422,4 @@ export default function EditProjectPage() {
       </HeadTitle>
     </div>
   );
-};
+}

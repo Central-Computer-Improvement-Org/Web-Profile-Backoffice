@@ -18,11 +18,17 @@ import Pagination from "@/components/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "use-debounce";
 
+// Sorting Constants
+const ORDERING = "updatedAt";
+const SORT = "desc";
+
+// Pagination Constants
+const LIMIT = 10;
+
 export default function NewsPage() {
   // Gunakan huruf besar untuk nama fungsi komponen
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const page = searchParams.get("page") ?? "1";
   const [searchQuery, setSearchQuery] = useState("");
   const [recordsTotal, setRecordsTotal] = useState(0);
@@ -38,15 +44,15 @@ export default function NewsPage() {
   ];
 
   const fetchNews = useCallback(async () => {
-    //   const payload = {
-    //     search: debounceValue,
-    //     page: page,
-    //     limit: LIMIT,
-    //     ordering: ORDERING,
-    //     sort: SORT,
-    //   };
+    const payload = {
+      search: debounceValue,
+      page: page,
+      limit: LIMIT,
+      ordering: ORDERING,
+      sort: SORT,
+    };
     request
-      .get(`/cms/news`)
+      .get(`/cms/news`, payload)
       .then(function (response) {
         setNewsDatas(response.data.data);
         setRecordsTotal(response.data.recordsTotal);
@@ -56,7 +62,7 @@ export default function NewsPage() {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [debounceValue, page]);
 
   useEffect(() => {
     if (page < 1) {
@@ -64,7 +70,7 @@ export default function NewsPage() {
     } else {
       fetchNews();
     }
-  }, [page, fetchNews, router]);
+  }, [debounceValue, page, fetchNews, router]);
 
   useEffect(() => {
     if (debounceValue !== "") {
@@ -130,7 +136,7 @@ export default function NewsPage() {
               )
             )}
           </DefaultTable>
-          <Pagination />
+          <Pagination recordsTotal={recordsTotal} page={page} link="news" />
         </div>
       )}
     </div>

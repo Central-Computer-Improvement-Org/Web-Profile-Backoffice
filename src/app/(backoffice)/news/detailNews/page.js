@@ -30,6 +30,7 @@ function DetailNewsPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
+  const [detailsMediaUrl, setDetailsMediaUrl] = useState([]);
   const { setNewsName, setNewsId } = useContext(StateContext);
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +46,7 @@ function DetailNewsPage() {
         setTitle(data.title);
         setDescription(data.description);
         setMediaUrl(data.mediaUri);
+        setDetailsMediaUrl(data.detailNewsMedia);
         setNewsName(data.title);
         setNewsId(data.id);
         setLoading(false); // Setelah data dimuat, atur loading menjadi false
@@ -92,8 +94,8 @@ function DetailNewsPage() {
                     <h3 className="flex justify-center mb-4 text-xl font-semibold">
                       {title}
                     </h3>
-                    <div className="relative w-full h-[500px] flex-shrink-0">
-                      <img
+                    <div className="relative w-full h-[500px] flex-shrink-0 mb-4">
+                      <Image
                         src={
                           mediaUrl
                             ? `${process.env.NEXT_PUBLIC_HOST}` + mediaUrl
@@ -105,6 +107,25 @@ function DetailNewsPage() {
                         alt="Logo Division CCI"
                       />
                     </div>
+                    <div className="flex flex-wrap gap-2 justify-between">
+                      {detailsMediaUrl.length > 0 &&
+                        detailsMediaUrl.map((data, i) => (
+                          <div key={i} className="flex-grow">
+                            <Image
+                              src={
+                                mediaUrl
+                                  ? `${process.env.NEXT_PUBLIC_HOST}` +
+                                    data.mediaUri
+                                  : LogoNotfound.src
+                              }
+                              width={100}
+                              height={100}
+                              className="object-cover w-full h-[200px]"
+                              alt="Logo Division CCI"
+                            />
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </div>
                 <div className="mb-8">
@@ -112,17 +133,6 @@ function DetailNewsPage() {
                     editorState={editorState}
                     onEditorStateChange={onEditorStateChange}
                   />
-                  {/* <p className="mb-3 text-gray-500 ">{description}</p>
-                  <p className="mb-3 text-white ">
-                    We are on the brink of a new era driven by technological
-                    advancements that fundamentally change the way we live and
-                    work. Breakthroughs in information and communication
-                    technology have ushered us into an era of boundless
-                    connectivity, where we can easily connect with the world
-                    through the internet and mobile devices. This ease of access
-                    has opened doors to various services and information,
-                    enabling us to lead more efficient and informed lifestyles.
-                  </p> */}
                 </div>
                 <div className="flex items-center">
                   <DefaultLink

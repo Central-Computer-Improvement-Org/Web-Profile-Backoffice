@@ -24,9 +24,6 @@ const InputField = ({
   handleDeleteImage, // Fungsi untuk hapus di API
   handleDeleteLocalImage, // Fungsi untuk hapus di local
 }) => {
-  console.log("Multiple Data:", multipleDatas);
-  console.log("Value Multiple:", valueMultiple);
-
   return (
     <div className="w-full">
       {label && (
@@ -87,7 +84,7 @@ const InputField = ({
                     <div>
                       <GiCancel
                         className="text-red-500 cursor-pointer"
-                        onClick={() => handleDeleteImage(file.id)}
+                        onClick={() => handleDeleteImage(file.id)} // Kirimkan file.id
                       />
                     </div>
                   </div>

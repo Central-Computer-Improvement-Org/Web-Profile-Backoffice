@@ -10,6 +10,7 @@ import request from "@/app/utils/request";
 const ListNews = ({ title, description, id, fetchData }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [processDelete, setProcessDelete] = useState(false);
 
   const handleEdit = (id) => {
     router.push(`/news/editNews?id=${id}`);
@@ -17,10 +18,16 @@ const ListNews = ({ title, description, id, fetchData }) => {
 
   const onDelete = async (e) => {
     e.preventDefault();
+
+    // Cegah permintaan jika proses delete sedang berlangsung
+    if (processDelete) return;
+
     setLoading(true);
+    setProcessDelete(true);
     toast.loading("Deleting data...");
 
-    request.delete(`/cms/news?id=${id}`).then(function (response) {
+    try {
+      const response = await request.delete(`/cms/news?id=${id}`);
       const { code, status, data, error } = response.data;
 
       if (code === 200 || code === 201) {
@@ -38,13 +45,19 @@ const ListNews = ({ title, description, id, fetchData }) => {
           `${formattedStatus}: ${error?.message || "An error occurred"}`
         );
       }
+    } catch (error) {
+      console.error(error);
+      toast.dismiss();
+      toast.error("Failed to delete data. Please try again.");
+    } finally {
+      setProcessDelete(false);
       setLoading(false);
-    });
+    }
   };
 
   return (
     <tr
-      className="bg-white border-b   hover:bg-gray-50 text-gray-700 cursor-pointer"
+      className="bg-white border-b hover:bg-gray-50 text-gray-700 cursor-pointer"
       onClick={() => {
         router.push(`/news/detailNews?id=${id}`);
       }}
@@ -54,7 +67,7 @@ const ListNews = ({ title, description, id, fetchData }) => {
           <input
             id="checkbox-table-search-2"
             type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500    focus:ring-2  "
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
           />
           <label htmlFor="checkbox-table-search-2" className="sr-only">
             checkbox
@@ -68,8 +81,8 @@ const ListNews = ({ title, description, id, fetchData }) => {
       <td className="text-xs font-medium px-6 py-4 flex gap-3 z-50">
         <DefaultButton
           onClick={(e) => {
-            e.stopPropagation(); // Menghentikan penyebaran event ke elemen parent (tr)
-            handleEdit(id); // Panggil fungsi untuk mengarahkan ke halaman edit
+            e.stopPropagation();
+            handleEdit(id);
           }}
           size="small"
           status="primary"
@@ -83,6 +96,7 @@ const ListNews = ({ title, description, id, fetchData }) => {
           size="small"
           status="secondary"
           title="Delete"
+          disabled={processDelete}
         />
       </td>
     </tr>

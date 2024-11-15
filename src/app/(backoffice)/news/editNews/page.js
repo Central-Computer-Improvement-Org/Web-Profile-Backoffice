@@ -7,7 +7,7 @@ import InputSelect from "@/components/form/inputSelect";
 import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import request from "@/app/utils/request";
 
 import dynamic from "next/dynamic";
@@ -33,18 +33,35 @@ const formSchema = z.object({
   title: z
     .string()
     .min(3, { message: "Title must be at least 3 characters long" })
-    .max(100, { message: "Title must be at most 100 characters long" }),
-  description: z.string(),
+    .max(100, { message: "Title must be at most 100 characters long" })
+    .optional(),
+  description: z.string().optional(),
   mediaUri: z
     .any()
+    .refine((file) => file?.size <= MAX_FILE_SIZE, {
+      message: "File size should not exceed 2MB",
+    })
+    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type), {
+      message: "Only .jpg, .jpeg, .png, and .webp formats are supported",
+    })
+    .optional(),
+  detailnewsmedia: z
+    .array(z.any()) // Validasi array file
+    .refine((files) => files.length <= 5, {
+      message: "You can only upload a maximum of 5 files for detailnewsmedia",
+    })
+    .refine((files) => files.every((file) => file?.size <= MAX_FILE_SIZE), {
+      message: "Each file in detailnewsmedia should not exceed 2MB",
+    })
     .refine(
-      (file) => !file || file?.size <= MAX_FILE_SIZE,
-      `The maximum file size that can be uploaded is 2MB`
+      (files) =>
+        files.every((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type)),
+      {
+        message:
+          "Each file in detailnewsmedia must be a .jpg, .jpeg, .png, or .webp",
+      }
     )
-    .refine(
-      (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported"
-    ),
+    .optional(),
 });
 
 export default function EditNewsPage() {
@@ -56,129 +73,207 @@ export default function EditNewsPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
   const [multipleDatas, setMultipleDatas] = useState([]); // State untuk file lokal
   const [valueMultiple, setValueMultiple] = useState([]);
 
   const [validations, setValidations] = useState([]);
   const [loading, setLoading] = useState(true); // State untuk menunjukkan bahwa data sedang dimuat
 
-  useEffect(() => {
+  const fetchDetailNews = useCallback(() => {
     if (!id) {
       router.push("/news");
       return;
     }
+
+    setLoading(true); // Tambahkan loading di awal
     request
       .get(`/cms/news?id=${id}`)
-      .then(function (response) {
+      .then((response) => {
         const data = response.data.data;
-        setTitle(data?.title);
-        setDescription(data?.description);
-        setMediaUrl(data?.mediaUri);
-        setValueMultiple(data?.detailNewsMedia);
+        setTitle(data?.title || "");
+        setDescription(data?.description || "");
+        setMediaUrl(data?.mediaUri || "");
+        setValueMultiple(data?.detailNewsMedia || []);
         setLoading(false);
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.error("Error fetching news data:", error);
         setLoading(false);
       });
   }, [id, router]);
 
+  useEffect(() => {
+    fetchDetailNews();
+  }, [fetchDetailNews]);
+
+  const handleValidationErrors = (errors) => {
+    // This will display the validation errors in the console or you can update UI accordingly
+    errors.forEach((error) => {
+      console.error(error.message); // Log each error message
+      setValidations((prevValidations) => [
+        ...prevValidations,
+        { name: error.path[0], message: error.message },
+      ]);
+    });
+  };
+
   const onSubmit = async (e) => {
+    e.preventDefault();
     setValidations([]);
     setLoading(true);
-    toast.loading("Updating data...");
-    e.preventDefault();
+    toast.loading("Saving data...");
 
+    // Prepare data for validation
+    const dataToValidate = {
+      title,
+      description,
+    };
+
+    // Conditionally add mediaUri if it's not empty
+    if (thumbnail) {
+      dataToValidate.mediaUri = thumbnail;
+    }
+
+    // Conditionally add detailnewsmedia if it's not empty
+    if (multipleDatas.length > 0) {
+      dataToValidate.detailnewsmedia = multipleDatas;
+    }
+
+    // Perform validation using the dynamic data object
+    const validation = formSchema.safeParse(dataToValidate);
+
+    if (!validation.success) {
+      // Handle validation errors
+      handleValidationErrors(validation.error.errors);
+      toast.dismiss();
+      toast.error("Invalid Input");
+      setLoading(false);
+      return;
+    }
+
+    // If validation is successful, proceed with form submission
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("isPublished", "true");
 
-    if (mediaUrl !== null && mediaUrl !== "") {
-      formData.append("mediaUri", mediaUrl);
+    // Only append mediaUri if it exists
+    if (thumbnail) {
+      formData.append("mediaUri", thumbnail);
     }
 
-    if (detailsMedia !== null && detailsMedia !== "") {
-      detailsMedia.forEach((file) => {
+    // Only append detailnewsmedia if there are files
+    if (multipleDatas != []) {
+      multipleDatas.forEach((file) => {
         formData.append("detailNewsMedia", file);
       });
     }
 
     try {
-      const validation = formSchema.safeParse(requestBody);
-      if (!validation.success) {
-        setValidations(
-          validation.error.errors.map((error) => ({
-            name: error.path[0],
-            message: error.message,
-          }))
-        );
+      const response = await request.patch(`/cms/news?id=${id}`, formData);
+      console.log(response);
+
+      if ([200, 201].includes(response?.data?.code)) {
         toast.dismiss();
-        toast.error("Invalid Input");
+        toast.success(response?.data?.data?.message);
         setLoading(false);
-        return;
+        router.push("/news");
+      } else if (
+        response?.data?.code === 400 &&
+        response?.data?.status === "VALIDATION_ERROR"
+      ) {
+        setValidations(response?.data?.error?.validation);
+        setMediaUrl(null);
+        toast.dismiss();
+        toast.error(response?.data?.error?.message);
+      } else if (response?.data?.code === 500) {
+        console.error("INTERNAL_SERVER_ERROR");
+        toast.dismiss();
+        toast.error(response?.data?.error?.message);
       }
     } catch (error) {
+      console.error("Request failed", error);
       toast.dismiss();
-      toast.error(error.message);
+      toast.error("An error occurred while saving data");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    request
-      .patch(`/cms/news?id=${id}`, requestBody)
-      .then((response) => {
-        const { code, status, data, error } = response.data;
-        if (code === 200 || code === 201) {
-          toast.dismiss();
-          toast.success(data?.message);
-          router.push("/news");
-        } else {
-          const formattedStatus = status
-            .split("_")
-            .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-            .join(" ");
-          if (code === 400 && status === "VALIDATION_ERROR") {
-            setValidations(error?.validation);
-            setMediaUrl("");
-          }
-          toast.dismiss();
-          toast.error(
-            `${formattedStatus}: ${error?.message || "An error occurred"}`
-          );
-        }
-        setLoading(false);
-      })
-      .catch(function (error) {
-        toast.dismiss();
-        toast.error(error?.message);
-        setLoading(false);
-      });
   };
 
   const handleChange = (event) => {
     const files = Array.from(event.target.files);
-    setMultipleDatas((prevFiles) => [...prevFiles, ...files]);
+
+    // Total files including existing files in valueMultiple and multipleDatas
+    const totalFiles = valueMultiple.length + multipleDatas.length;
+
+    // Check if total files exceed the limit (5 files)
+    if (totalFiles + files.length > 5) {
+      setValidations((prev) => {
+        const existingValidation = prev.find(
+          (v) =>
+            v.name === "Detail-media" &&
+            v.message === "You can only upload a maximum of 5 files."
+        );
+
+        if (!existingValidation) {
+          return [
+            ...prev,
+            {
+              name: "Detail-media",
+              message: "You can only upload a maximum of 5 files.",
+            },
+          ];
+        }
+
+        return prev; // Do not add duplicates
+      });
+      return; // Do not proceed with file selection
+    }
+
+    // Allow adding files to multipleDatas if total files are less than 5
+    setMultipleDatas((prevFiles) => {
+      // Add new files only if we have space (less than 5 total)
+      return [...prevFiles, ...files];
+    });
   };
 
-  // Fungsi untuk menghapus file dari database (valueMultiple)
-  // const handleDeleteImage = async (fileId) => {
-  //   try {
-  //     await axios.delete(`/api/files/${fileId}`); // Panggilan ke API untuk hapus data
-  //     setValueMultiple((prevFiles) =>
-  //       prevFiles.filter((file) => file.id !== fileId)
-  //     );
-  //   } catch (error) {
-  //     console.error("Failed to delete file:", error);
-  //   }
-  // };
-
-  // Fungsi untuk menghapus file dari multipleDatas (file lokal)
   const handleDeleteLocalImage = (index) => {
     setMultipleDatas((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
-  // console.log(dataDetailsMedia);
+  const onDelete = async (id) => {
+    setLoading(true);
+    toast.loading("Deleting data...");
+
+    try {
+      const response = await request.delete(
+        `/cms/news/detail-news-media?id=${id}`
+      );
+      const { code, status, data, error } = response.data;
+
+      if (code === 200 || code === 201) {
+        toast.dismiss();
+        toast.success(data?.message);
+        fetchDetailNews(); // Fetch data untuk memperbarui daftar
+      } else {
+        const formattedStatus = status
+          .split("_")
+          .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ");
+        toast.dismiss();
+        toast.error(
+          `${formattedStatus}: ${error?.message || "An error occurred"}`
+        );
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("An error occurred while deleting data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(multipleDatas);
   return (
     <div>
       <HeadTitle>
@@ -207,13 +302,12 @@ export default function EditNewsPage() {
                     id={"media"}
                     name={"media"}
                     type={"file"}
-                    // value={mediaUrl}
                     multiple={true}
                     validations={validations}
                     previewImage={mediaUrl}
                     label={"Media"}
                     onChange={(e) => {
-                      setMediaUrl(e.target.value);
+                      setThumbnail(e.target.value);
                     }}
                   />
                 </div>
@@ -231,8 +325,8 @@ export default function EditNewsPage() {
                 </div>
                 <div className="col-span-6 sm:col-span-6">
                   <InputField
-                    id="file-upload"
-                    name="media"
+                    id="Detail-media"
+                    name="Detail-media"
                     type="file"
                     multiple
                     value=""
@@ -241,8 +335,9 @@ export default function EditNewsPage() {
                     onChange={handleChange}
                     placeholder="Select files"
                     label="Upload Files"
-                    // handleDeleteImage={handleDeleteImage} // Dihubungkan ke fungsi hapus API
-                    handleDeleteLocalImage={handleDeleteLocalImage} // Dihubungkan ke fungsi hapus lokal
+                    handleDeleteImage={onDelete}
+                    handleDeleteLocalImage={handleDeleteLocalImage}
+                    validations={validations}
                   />
                 </div>
                 <div className="col-span-6 sm:col-full flex gap-3">
