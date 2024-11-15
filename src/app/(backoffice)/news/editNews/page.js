@@ -2,9 +2,6 @@
 import DefaultButton from "@/components/button/defaultButton";
 import DefaultLink from "@/components/link/defaultLink";
 import InputField from "@/components/form/inputField";
-// import RichTextEditor from "@/components/form/inputRichText";
-import InputSelect from "@/components/form/inputSelect";
-import TextareaField from "@/components/form/textareaField";
 import HeadTitle from "@/components/headTitle";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
