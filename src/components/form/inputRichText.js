@@ -8,7 +8,8 @@ import {
   Modifier,
   getDefaultKeyBinding,
 } from "draft-js";
-import draftToHtml from "draftjs-to-html";
+import draftToHtml from "draftjs-to-html"; // Import draftToHtml
+
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const RichTextEditor = ({
@@ -24,6 +25,10 @@ const RichTextEditor = ({
 }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const error = validations.find((v) => v.name === name);
+  let htmlToDraft = null;
+  if (typeof window === "object") {
+    htmlToDraft = require("html-to-draftjs").default;
+  }
 
   useEffect(() => {
     if (value) {
@@ -40,7 +45,7 @@ const RichTextEditor = ({
     setEditorState(newEditorState);
 
     const contentState = newEditorState.getCurrentContent();
-    const htmlContent = draftToHtml(convertToRaw(contentState));
+    const htmlContent = draftToHtml(convertToRaw(contentState)); // Now this will work
     const plainText = contentState.getPlainText().trim();
 
     if (!plainText) {
@@ -63,11 +68,11 @@ const RichTextEditor = ({
       const currentContent = editorState.getCurrentContent();
       const selection = editorState.getSelection();
 
-      // Tambahkan spasi untuk indentasi pada posisi saat ini
+      // Add spaces for indentation at the current position
       const newContent = Modifier.replaceText(
         currentContent,
         selection,
-        "    " // empat spasi untuk indentasi
+        "    " // Four spaces for indentation
       );
 
       const newEditorState = EditorState.push(
