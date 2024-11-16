@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Normal Text */
+.wrapper-class .editor-class p {
+  font-size: 1em;
+  line-height: 1.5;
+  margin-bottom: 0.5em;
+}
+
+/* Headings */
+.wrapper-class .editor-class h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  color: #333;
+}
+
+.wrapper-class .editor-class h2 {
+  font-size: 1.75em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  color: #444;
+}
+
+.wrapper-class .editor-class h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  color: #555;
+}
+
+.wrapper-class .editor-class h4 {
+  font-size: 1.25em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  color: #666;
+}
+
+.wrapper-class .editor-class h5 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  color: #777;
+}
+
+.wrapper-class .editor-class h6 {
+  font-size: 0.875em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  color: #888;
+}
+
+/* Blockquote */
+.wrapper-class .editor-class blockquote {
+  font-size: 1em;
+  font-style: italic;
+  color: #555;
+  border-left: 4px solid #ccc;
+  padding-left: 1em;
+  margin: 1em 0;
+  background-color: #f9f9f9;
+}
+
+/* Code */
+.wrapper-class .editor-class pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9em;
+  background-color: #f4f4f4;
+  padding: 0.75em;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.wrapper-class .editor-class code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9em;
+  background-color: #f4f4f4;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  color: #d63384;
+}
