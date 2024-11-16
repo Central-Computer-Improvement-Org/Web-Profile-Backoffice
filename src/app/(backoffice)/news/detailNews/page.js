@@ -3,25 +3,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { StateContext } from "@/app/(backoffice)/state";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
 import LogoNotfound from "/public/assets/icon/notfound.svg";
-import { default as htmlToDraft } from "html-to-draftjs";
-import { EditorState, ContentState, convertToRaw } from "draft-js";
-
-const EditorNoSSR = dynamic(
-  () => import("draft-js").then((mod) => mod.Editor),
-  {
-    ssr: false,
-  }
-);
 
 function DetailNewsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [editorState, setEditorState] = useState(null);
   const id = searchParams.get("id");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -52,26 +41,6 @@ function DetailNewsPage() {
         setLoading(false);
       });
   }, [id, router, setNewsName, setNewsId]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && description) {
-      const blocksFromHtml = htmlToDraft(description);
-      const contentState = ContentState.createFromBlockArray(
-        blocksFromHtml.contentBlocks,
-        blocksFromHtml.entityMap
-      );
-      const editorState = EditorState.createWithContent(contentState);
-      setEditorState(editorState);
-    }
-  }, [description]);
-
-  const onEditorStateChange = (newEditorState) => {
-    setEditorState(newEditorState);
-    const currentHtml = draftToHtml(
-      convertToRaw(newEditorState.getCurrentContent())
-    );
-    console.log(currentHtml);
-  };
 
   return (
     <div>
@@ -119,12 +88,12 @@ function DetailNewsPage() {
                   </div>
                 </div>
                 <div className="mb-8">
-                  {editorState && (
-                    <EditorNoSSR
-                      editorState={editorState}
-                      onChange={onEditorStateChange}
-                    />
-                  )}
+                  <div className="wrapper-class ">
+                    <div
+                      className="editor-class"
+                      dangerouslySetInnerHTML={{ __html: description }}
+                    ></div>
+                  </div>
                 </div>
                 <div className="flex items-center">
                   <DefaultLink
