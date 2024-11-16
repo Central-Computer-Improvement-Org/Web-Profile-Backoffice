@@ -7,16 +7,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import request from "@/app/utils/request";
 
-import dynamic from "next/dynamic";
 import { z } from "zod";
 import toast from "react-hot-toast";
-
-const RichTextEditor = dynamic(
-  () => import("@/components/form/inputRichText"),
-  {
-    ssr: false,
-  }
-);
+import InputRich from "@/components/form/InputRich";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -66,7 +59,6 @@ export default function EditNewsPage() {
   const router = useRouter();
   const id = searchParams.get("id");
 
-  // State untuk menyimpan data event
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
@@ -83,7 +75,7 @@ export default function EditNewsPage() {
       return;
     }
 
-    setLoading(true); // Tambahkan loading di awal
+    setLoading(true);
     request
       .get(`/cms/news?id=${id}`)
       .then((response) => {
@@ -309,7 +301,18 @@ export default function EditNewsPage() {
                   />
                 </div>
                 <div className="col-span-6 sm:col-span-6">
-                  <RichTextEditor
+                  <InputRich
+                    id="description"
+                    name="description"
+                    placeholder="e.g Description ..."
+                    value={description}
+                    required
+                    label="Description"
+                    onChange={(htmlContent) => {
+                      setDescription(htmlContent); // Simpan htmlContent di variabel description
+                    }}
+                  />
+                  {/* <RichTextEditor
                     id={"description"}
                     name={"description"}
                     placeholder={"e.g Description ..."}
@@ -318,7 +321,7 @@ export default function EditNewsPage() {
                     onChange={(htmlContent) => {
                       setDescription(htmlContent); // Simpan htmlContent di variabel description
                     }}
-                  />
+                  /> */}
                 </div>
                 <div className="col-span-6 sm:col-span-6">
                   <InputField
