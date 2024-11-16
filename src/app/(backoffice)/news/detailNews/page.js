@@ -2,12 +2,7 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
-import moment from "moment";
-import { FaLinkedin } from "react-icons/fa";
-import { MdOutlinePhoneAndroid } from "react-icons/md";
-import { MdEmail } from "react-icons/md";
 import { Editor, EditorState, ContentState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
@@ -15,9 +10,6 @@ import htmlToDraft from "html-to-draftjs";
 import { StateContext } from "@/app/(backoffice)/state";
 import request from "@/app/utils/request";
 import DefaultLink from "@/components/link/defaultLink";
-import DefaultButton from "@/components/button/defaultButton";
-import InputField from "@/components/form/inputField";
-import InputSelect from "@/components/form/inputSelect";
 import LogoNotfound from "/public/assets/icon/notfound.svg";
 
 function DetailNewsPage() {
