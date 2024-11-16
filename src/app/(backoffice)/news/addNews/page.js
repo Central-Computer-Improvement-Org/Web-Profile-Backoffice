@@ -8,13 +8,7 @@ import toast from "react-hot-toast";
 import request from "@/app/utils/request";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-
-const RichTextEditor = dynamic(
-  () => import("@/components/form/inputRichText"),
-  {
-    ssr: false,
-  }
-);
+import InputRich from "@/components/form/InputRich";
 
 const MAX_FILE_SIZE = 2000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -210,8 +204,19 @@ export default function AddNewsPage() {
                     onChange={(e) => setMediaUrl(e.target.files[0] || null)}
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-6">
+                {/* <div className="col-span-6 sm:col-span-6">
                   <RichTextEditor
+                    id="description"
+                    name="description"
+                    placeholder="e.g Description ..."
+                    value={description}
+                    required
+                    label="Description"
+                    onChange={setDescription}
+                  />
+                </div> */}
+                <div className="col-span-6 sm:col-span-6">
+                  <InputRich
                     id="description"
                     name="description"
                     placeholder="e.g Description ..."
@@ -236,6 +241,7 @@ export default function AddNewsPage() {
                     validations={validations}
                   />
                 </div>
+
                 <div className="sm:col-span-6">
                   <DefaultButton
                     size="small"
