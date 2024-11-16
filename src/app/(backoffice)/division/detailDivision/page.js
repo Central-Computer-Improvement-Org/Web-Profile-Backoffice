@@ -8,8 +8,8 @@ import ListDivisionMember from "@/components/listTable/listDivisionMember";
 import DefaultTable from "@/components/table/defaultTable";
 import DefaultLink from "@/components/link/defaultLink";
 import Pagination from "@/components/pagination";
-import LogoNotfound from '/public/assets/icon/notfound.svg';
-
+import LogoNotfound from "/public/assets/icon/notfound.svg";
+import Image from "next/image";
 
 function DetailDivisionPage() {
   const searchParams = useSearchParams();
@@ -32,21 +32,26 @@ function DetailDivisionPage() {
     { menu: "" },
   ];
 
-  const fetchDivision = useCallback(async (divisionId) => {
-    try {
-      const response = await request.get(`/cms/users/divisions?id=${divisionId}`);
-      const data = response.data?.data;
-      setName(data.name);
-      setLogoUri(data.logoUri);
-      setDescription(data.description);
-      setDivisionName(data.name);
-      setDivisionId(divisionId);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  }, [setDivisionName, setDivisionId]);
+  const fetchDivision = useCallback(
+    async (divisionId) => {
+      try {
+        const response = await request.get(
+          `/cms/users/divisions?id=${divisionId}`
+        );
+        const data = response.data?.data;
+        setName(data.name);
+        setLogoUri(data.logoUri);
+        setDescription(data.description);
+        setDivisionName(data.name);
+        setDivisionId(divisionId);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    },
+    [setDivisionName, setDivisionId]
+  );
 
   const fetchMembers = useCallback(async (divisionId) => {
     try {
@@ -79,7 +84,7 @@ function DetailDivisionPage() {
               <div className="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 ">
                 <div className="flow-root">
                   <h3 className="mb-4 text-xl font-semibold">Logo Division</h3>
-                  <img
+                  <Image
                     src={
                       logoUri
                         ? `${process.env.NEXT_PUBLIC_HOST}` + logoUri
@@ -98,11 +103,15 @@ function DetailDivisionPage() {
                 <div className="flow-root ">
                   <h3 className="mb-4 text-xl font-semibold">Division</h3>
                   <div className="mb-8">
-                    <p className="mb-3 text-gray-500">{name ? name : "No name found"}</p>
+                    <p className="mb-3 text-gray-500">
+                      {name ? name : "No name found"}
+                    </p>
                   </div>
                   <h3 className="mb-4 text-xl font-semibold">Description</h3>
                   <div className="mb-8">
-                    <p className="mb-3 text-gray-500">{description ? description : "No description found"}</p>
+                    <p className="mb-3 text-gray-500">
+                      {description ? description : "No description found"}
+                    </p>
                   </div>
                   <div className="flex items-center">
                     <DefaultLink
@@ -117,8 +126,8 @@ function DetailDivisionPage() {
             </div>
           </div>
         </div>
-      )};
-
+      )}
+      ;
       <div className="">
         <div className="p-4">
           <h3 className="text-xl font-semibold">
@@ -127,29 +136,27 @@ function DetailDivisionPage() {
         </div>
         <div className="">
           <DefaultTable rowMenu={rowMenu}>
-            {members.map(
-              (data, index) => (
-                <ListDivisionMember
-                  key={index}
-                  photoUri={data.profileUri}
-                  name={data.name}
-                  email={data.email}
-                  divisi={data.division}
-                  major={data.major}
-                  entryUniversity={data.yearUniversityEnrolled}
-                  entryCommunity={data.yearCommunityEnrolled}
-                  status={data.isActive}
-                  nim={data.nim}
-                  fetchData={() => fetchMembers(id)}
-                />
-              )
-            )}
+            {members.map((data, index) => (
+              <ListDivisionMember
+                key={index}
+                photoUri={data.profileUri}
+                name={data.name}
+                email={data.email}
+                divisi={data.division}
+                major={data.major}
+                entryUniversity={data.yearUniversityEnrolled}
+                entryCommunity={data.yearCommunityEnrolled}
+                status={data.isActive}
+                nim={data.nim}
+                fetchData={() => fetchMembers(id)}
+              />
+            ))}
           </DefaultTable>
           <Pagination />
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default DetailDivisionPage;
