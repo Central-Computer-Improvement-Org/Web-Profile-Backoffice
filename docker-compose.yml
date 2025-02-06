@@ -15,12 +15,9 @@ services:
       - .env
     environment:
       - NODE_ENV=development
-    expose:
-      - '3000'
     volumes:
       - ./:/app
-      - /app/node_modules 
-    command: npm run dev
+    command: sh -c "npm install && npm run dev"
 
 networks:
   nextjs-network:
