@@ -2,9 +2,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json /app/
 RUN npm install
 
-COPY . .
+COPY . /app
 
 EXPOSE 3000
