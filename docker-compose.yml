@@ -4,7 +4,7 @@ services:
   nextjs:
     container_name: cci-web-profile-backoffice
     build:
-      context: ./
+      context: .
     image: fe-cci-web-profile-backoffice
     ports:
       - '3000:3000'
@@ -16,8 +16,8 @@ services:
     environment:
       - NODE_ENV=development
     volumes:
-      - ./:/app
-    command: sh -c "npm install && npm run dev"
+      - .:/app
+      - /app/node_modules
 
 networks:
   nextjs-network:
