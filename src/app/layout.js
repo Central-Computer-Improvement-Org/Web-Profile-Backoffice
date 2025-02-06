@@ -4,7 +4,10 @@ import { Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { StateProvider } from './(backoffice)/state';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap', 
+});
 
 export const metadata = {
   title: 'Dashboard - Central Computer Improvement',
